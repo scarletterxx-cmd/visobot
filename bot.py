@@ -19,8 +19,8 @@ def run():
 
 Thread(target=run).start()  # Flask'i ayrı threadde çalıştır
 
-load_dotenv()
-TOKEN = os.getenv("TOKEN")  # artık None olmayacakpip install PyNaClpip install PyNaCl
+# ================== AYARLAR ==================
+TOKEN = os.getenv("TOKEN")
 
 WARNINGS_FILE = "warnings.json"
 LOG_CHANNEL_ID = 1435663818528129117
@@ -151,39 +151,8 @@ async def send_log(guild, embed):
 # ================== READY ==================
 @bot.event
 async def on_ready():
-    print(f"{bot.user} online 😎")
-    guild = bot.get_guild(GUILD_ID)
-    channel = guild.get_channel(VOICE_CHANNEL_ID)
-    
-    if channel:
-        # bot kanala giriyor ama sessiz
-        await channel.connect()
-        vc = bot.voice_clients[0]
-        # await vc.disconnect()  # ilk başta bağlı değilken bağlantıyı kapat, isteğe göre kaldırabilirsin
-        print(f"{bot.user} {channel.name} kanalında sessiz duruyor 🫡")
-
-# ================== CEVAP ==================
-
-@bot.event
-async def on_message(message):
-    if message.author == bot.user:
-        return  # kendine cevap verme
-
-    # mesaja cevap
-    if "selam" in message.content.lower():
-        await message.channel.send(f"Selam, {message.author.mention}!")
-    
-    if "içtim şarabı" in message.content.lower():
-        await message.channel.send("siktim arabı :sunglasses:")
-
-    if "sa" in message.content.lower():
-        await message.channel.send(f"Selam, {message.author.mention}!")
-    
-    if message.author.id == DAILY_MESSAGE_USER_ID:
-        if should_send_daily_message(DAILY_MESSAGE_USER_ID):
-            await message.channel.send(f"<@{DAILY_MESSAGE_USER_ID}> mal")
-
-    await bot.process_commands(message)  # komutları da çalıştır
+    await temizle_ve_rolleri_guncelle()
+    print("🤖 BOT HAZIR | uyarilar temizlendi + roller sync")
 
 # ================== MUTE ==================
 @bot.command()
