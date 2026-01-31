@@ -3,7 +3,21 @@ from discord.ext import commands
 from datetime import datetime, timedelta, timezone
 import json
 from dotenv import load_dotenv
+from flask import Flask
+from threading import Thread
 import os
+
+app = Flask("")
+
+@app.route("/")
+def home():
+    return "BOT AYAKTA KARDES 😎"
+
+def run():
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 3000)))
+
+# Botu ayrı threadde çalıştır
+Thread(target=run).start()
 
 load_dotenv()
 TOKEN = os.getenv("TOKEN")  # artık None olmayacakpip install PyNaClpip install PyNaCl
