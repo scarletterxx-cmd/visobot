@@ -14,10 +14,10 @@ def home():
     return "BOT AYAKTA KARDES 😎"
 
 def run():
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 3000)))
+    port = int(os.environ.get("PORT", 3000))  # Render PORT varsa al, yoksa 3000
+    app.run(host="0.0.0.0", port=port)
 
-# Botu ayrı threadde çalıştır
-Thread(target=run).start()
+Thread(target=run).start()  # Flask'i ayrı threadde çalıştır
 
 load_dotenv()
 TOKEN = os.getenv("TOKEN")  # artık None olmayacakpip install PyNaClpip install PyNaCl
