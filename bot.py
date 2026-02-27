@@ -167,23 +167,24 @@ async def on_ready():
 @bot.event
 async def on_message(message):
     if message.author == bot.user:
-        return  # kendine cevap verme
+        return
 
-    # mesaja cevap
-    if "selam" in message.content.lower():
-        await message.channel.send(f"Selam, {message.author.mention}!")
-    
-    if "içtim şarabı" in message.content.lower():
-        await message.channel.send("siktim arabı :sunglasses:")
+    content = message.content.lower().strip()
 
-    if "sa" in message.content.lower():
+    if content == "selam":
         await message.channel.send(f"Selam, {message.author.mention}!")
-    
-    if message.author.id == DAILY_MESSAGE_USER_ID:
+
+    elif content == "içtim şarabı":
+        await message.channel.send("siktim arabı 😎")
+
+    elif content == "sa":
+        await message.channel.send(f"Selam, {message.author.mention}!")
+
+    elif message.author.id == DAILY_MESSAGE_USER_ID:
         if should_send_daily_message(DAILY_MESSAGE_USER_ID):
             await message.channel.send(f"<@{DAILY_MESSAGE_USER_ID}> mal")
 
-    await bot.process_commands(message)  # komutları da çalıştır
+    await bot.process_commands(message)
 
 # ================== MUTE ==================
 @bot.command()
@@ -305,4 +306,5 @@ async def uyarilar(ctx, member: discord.Member = None):
     await ctx.send(embed=embed)
 
 # ================== RUN ==================
+
 bot.run(TOKEN)
