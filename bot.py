@@ -317,7 +317,7 @@ async def bakiye(ctx):
     await ctx.send(embed=embed)
 
 @bot.command()
-async def daily(ctx):
+async def günlük(ctx):
     data = load_data()
     user = get_user(data, ctx.author.id)
 
@@ -333,7 +333,7 @@ async def daily(ctx):
         )
         return await ctx.send(embed=embed)
 
-    miktar = random.randint(100, 300)
+    miktar = random.randint(300, 500)
     user["money"] += miktar
     user["last_daily"] = now
     save_data(data)
@@ -571,6 +571,7 @@ async def uyarilar(ctx, member: discord.Member = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
