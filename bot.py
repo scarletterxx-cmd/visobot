@@ -296,6 +296,71 @@ async def mute(ctx, member: discord.Member, sure: int, *, sebep="Sebep belirtilm
     await send_log(ctx.guild, embed)
     await ctx.send(embed=embed)
 
+# ================== EKONOMI-KOMUT ==================
+
+@bot.command()
+async def bakiye(ctx):
+    data = load_data()
+    user = get_user(data, ctx.author.id)
+    await ctx.send(f"💰 Paran: **{user['money']}**")
+
+@bot.command()
+async def daily(ctx):
+    data = load_data()
+    user = get_user(data, ctx.author.id)
+
+    now = time.time()
+    if now - user["last_daily"] < 86400:
+        kalan = int(86400 - (now - user["last_daily"]))
+        saat = kalan // 3600
+        return await ctx.send(f"⏳ Günlük için {saat} saat bekle.")
+
+    miktar = random.randint(100, 300)
+    user["money"] += miktar
+    user["last_daily"] = now
+
+    save_data(data)
+    await ctx.send(f"🎁 Günlük aldın: **{miktar}**")
+
+# -----------------
+# KASA SISTEMI
+# -----------------
+
+KASA_FIYAT = 250
+
+@bot.command()
+async def kasa(ctx):
+    data = load_data()
+    user = get_user(data, ctx.author.id)
+
+    if user["money"] < KASA_FIYAT:
+        return await ctx.send("❌ Paran yetmiyor.")
+
+    user["money"] -= KASA_FIYAT
+
+    roll = random.random()
+
+    if roll < 0.60:
+        kazanc = random.randint(50, 150)
+        rarity = "Sıradan"
+
+    elif roll < 0.90:
+        kazanc = random.randint(200, 400)
+        rarity = "Ender"
+
+    else:
+        kazanc = random.randint(600, 900)
+        rarity = "DESTANSI"
+
+    user["money"] += kazanc
+    save_data(data)
+
+    await ctx.send(
+        f"📦 Kasanı açtın!\n"
+        f"✨ Enderlik: **{rarity}**\n"
+        f"💰 Para: **{kazanc}**"
+    )
+
 # ================== UYARILAR ==================
 @bot.command()
 async def uyarilar(ctx, member: discord.Member = None):
@@ -338,5 +403,6 @@ async def uyarilar(ctx, member: discord.Member = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
