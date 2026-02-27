@@ -399,6 +399,25 @@ SHOP_ITEMS = {
 }
 
 @bot.command()
+async def paraekle(ctx, miktar: int):
+    YETKILI_USER_ID = 686628029987946600
+
+    # kullanıcı kontrolü
+    if ctx.author.id != YETKILI_USER_ID:
+        return await ctx.send("❌ Bu komutu kullanamazsın.")
+
+    if miktar <= 0:
+        return await ctx.send("❌ Geçerli bir miktar gir.")
+
+    data = load_data()
+    user = get_user(data, ctx.author.id)
+
+    user["money"] += miktar
+    save_data(data)
+
+    await ctx.send(f"💰 Kendine **{miktar}** para ekledin.")
+
+@bot.command()
 async def satinal(ctx, item_id: str):
     item_id = item_id.lower()
 
@@ -476,6 +495,7 @@ async def uyarilar(ctx, member: discord.Member = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
