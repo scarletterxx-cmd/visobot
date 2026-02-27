@@ -384,6 +384,15 @@ async def envanter(ctx):
 
     await ctx.send(msg)
 
+@bot.command()
+async def market(ctx):
+    msg = "🛒 **Market**\n\n"
+
+    for item_id, item in SHOP_ITEMS.items():
+        msg += f"**{item_id}** — {item['name']} | 💰 {item['price']}\n"
+
+    msg += "\nSatın almak için: `!satinal <ürün>`"
+    await ctx.send(msg)
 
 SHOP_ITEMS = {
     "kumarbaz": {
@@ -495,6 +504,7 @@ async def uyarilar(ctx, member: discord.Member = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
