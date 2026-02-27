@@ -70,8 +70,13 @@ def get_user(data, user_id):
     if user_id not in data:
         data[user_id] = {
             "money": 0,
-            "last_daily": 0
+            "last_daily": 0,
+            "inventory": {}
         }
+    else:
+        # eski kullanıcıda inventory yoksa ekle
+        data[user_id].setdefault("inventory", {})
+
     return data[user_id]
 
 
@@ -366,7 +371,7 @@ async def envanter(ctx):
     data = load_data()
     user = get_user(data, ctx.author.id)
 
-    inv = user["inventory"]
+    inv = user.get("inventory", {})
 
     if not inv:
         return await ctx.send("🎒 Envanterin boş.")
@@ -379,24 +384,55 @@ async def envanter(ctx):
 
     await ctx.send(msg)
 
-@bot.command()
-async def market(ctx):
-    msg = "🛒 **Market**\n\n"
-
-    for item_id, item in SHOP_ITEMS.items():
-        msg += f"**{item_id}** — {item['name']} | 💰 {item['price']}\n"
-
-    msg += "\nSatın almak için: `!satinal <ürün>`"
-    await ctx.send(msg)
-
 
 SHOP_ITEMS = {
     "kumarbaz": {
         "price": 5000,
         "name": "🌟 Kumarbaz Rolü",
-        "role_id": 1476980019262914612  # BURAYA GERÇEK ROL ID
+        "role_id": 1476980019262914612
     }
 }
+
+@bot.command()
+async def satinal(ctx, item_id: str):
+    item_id = item_id.lower().strip()
+
+    if item_id not in SHOP_ITEMS:
+        return await ctx.send("❌ Böyle bir ürün yok.")
+
+    data = load_data()
+    user = get_user(data, ctx.author.id)
+    item = SHOP_ITEMS[item_id]
+
+    if user["money"] < item["price"]:
+        return await ctx.send("💸 Paran yetmiyor.")
+
+    # para düş
+    user["money"] -= item["price"]
+
+    # envantere ekle
+    inv = user.setdefault("inventory", {})
+    inv[item_id] = inv.get(item_id, 0) + 1
+
+    save_data(data)
+
+    # rol verme
+    if "role_id" in item:
+        role = ctx.guild.get_role(item["role_id"])
+
+        if role is None:
+            return await ctx.send("⚠️ Rol bulunamadı.")
+
+        try:
+            await ctx.author.add_roles(role)
+            await ctx.send(f"✅ Satın aldın ve rol verildi: **{item['name']}**")
+        except discord.Forbidden:
+            await ctx.send("⚠️ Rol veremedim. Botun yetkisini kontrol et.")
+        except Exception as e:
+            await ctx.send(f"⚠️ Hata: {e}")
+    else:
+        await ctx.send(f"✅ Satın alındı: **{item['name']}**")
+
 
 @bot.command()
 async def paraekle(ctx, miktar: int):
@@ -495,6 +531,7 @@ async def uyarilar(ctx, member: discord.Member = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
