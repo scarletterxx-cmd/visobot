@@ -175,12 +175,12 @@ async def on_message(message):
         await message.channel.send(f"Selam, {message.author.mention}!")
 
     elif content == "içtim şarabı":
-        await message.channel.send("siktim arabı 😎")
+        await message.channel.send("siktim arabı :sunglasses:")
 
     elif content == "sa":
         await message.channel.send(f"Selam, {message.author.mention}!")
 
-    elif message.author.id == DAILY_MESSAGE_USER_ID:
+    if message.author.id == DAILY_MESSAGE_USER_ID:
         if should_send_daily_message(DAILY_MESSAGE_USER_ID):
             await message.channel.send(f"<@{DAILY_MESSAGE_USER_ID}> mal")
 
@@ -308,3 +308,4 @@ async def uyarilar(ctx, member: discord.Member = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
