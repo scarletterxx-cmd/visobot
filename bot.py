@@ -6,6 +6,8 @@ from dotenv import load_dotenv
 from flask import Flask
 from threading import Thread
 import os
+import random
+import time
 
 app = Flask("")
 
@@ -44,6 +46,34 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 
 GUILD_ID = 1289651738046890086  # sunucu id
 VOICE_CHANNEL_ID = 1289652557244792833  # botun gireceği sesli kanal id
+
+
+DATA_FILE = "data.json"
+
+# -----------------
+# DATA
+# -----------------
+
+def load_data():
+    try:
+        with open(DATA_FILE, "r") as f:
+            return json.load(f)
+    except:
+        return {}
+
+def save_data(data):
+    with open(DATA_FILE, "w") as f:
+        json.dump(data, f, indent=4)
+
+def get_user(data, user_id):
+    user_id = str(user_id)
+    if user_id not in data:
+        data[user_id] = {
+            "money": 0,
+            "last_daily": 0
+        }
+    return data[user_id]
+
 
 # ================== DOSYA ==================
 def load_warnings():
@@ -308,4 +338,5 @@ async def uyarilar(ctx, member: discord.Member = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
