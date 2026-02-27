@@ -307,7 +307,14 @@ async def mute(ctx, member: discord.Member, sure: int, *, sebep="Sebep belirtilm
 async def bakiye(ctx):
     data = load_data()
     user = get_user(data, ctx.author.id)
-    await ctx.send(f"💰 Paran: **{user['money']}**")
+
+    embed = discord.Embed(
+        title="💵 Bakiye",
+        description=f"{ctx.author.mention}, şu anki paran: **{user['money']}**",
+        color=discord.Color.green(),
+        timestamp=datetime.now(timezone.utc)
+    )
+    await ctx.send(embed=embed)
 
 @bot.command()
 async def daily(ctx):
@@ -318,14 +325,26 @@ async def daily(ctx):
     if now - user["last_daily"] < 86400:
         kalan = int(86400 - (now - user["last_daily"]))
         saat = kalan // 3600
-        return await ctx.send(f"⏳ Günlük için {saat} saat bekle.")
+        embed = discord.Embed(
+            title="⏳ Günlük",
+            description=f"{ctx.author.mention}, günlük için {saat} saat bekle.",
+            color=discord.Color.orange(),
+            timestamp=datetime.now(timezone.utc)
+        )
+        return await ctx.send(embed=embed)
 
     miktar = random.randint(100, 300)
     user["money"] += miktar
     user["last_daily"] = now
-
     save_data(data)
-    await ctx.send(f"🎁 Günlük aldın: **{miktar}**")
+
+    embed = discord.Embed(
+        title="🎁 Günlük Alındı",
+        description=f"{ctx.author.mention}, bugün **{miktar}** para aldın!",
+        color=discord.Color.gold(),
+        timestamp=datetime.now(timezone.utc)
+    )
+    await ctx.send(embed=embed)
 
 # -----------------
 # KASA SISTEMI
@@ -339,32 +358,39 @@ async def kasa(ctx):
     user = get_user(data, ctx.author.id)
 
     if user["money"] < KASA_FIYAT:
-        return await ctx.send("❌ Paran yetmiyor.")
+        embed = discord.Embed(
+            title="❌ Yetersiz Para",
+            description=f"{ctx.author.mention}, kasayı açmak için yeterli paran yok! ({KASA_FIYAT} gerekir)",
+            color=discord.Color.red(),
+            timestamp=datetime.now(timezone.utc)
+        )
+        return await ctx.send(embed=embed)
 
     user["money"] -= KASA_FIYAT
 
     roll = random.random()
-
     if roll < 0.60:
         kazanc = random.randint(50, 150)
         rarity = "Sıradan"
-
     elif roll < 0.90:
         kazanc = random.randint(200, 400)
         rarity = "Ender"
-
     else:
         kazanc = random.randint(600, 900)
-        rarity = "DESTANSI"
+        rarity = "Destansı"
 
     user["money"] += kazanc
     save_data(data)
 
-    await ctx.send(
-        f"📦 Kasanı açtın!\n"
-        f"✨ Enderlik: **{rarity}**\n"
-        f"💰 Para: **{kazanc}**"
+    embed = discord.Embed(
+        title="📦 Kasa Açıldı",
+        description=f"{ctx.author.mention}, kasanı açtın!",
+        color=discord.Color.purple(),
+        timestamp=datetime.now(timezone.utc)
     )
+    embed.add_field(name="✨ Enderlik", value=rarity, inline=True)
+    embed.add_field(name="💰 Kazanç", value=kazanc, inline=True)
+    await ctx.send(embed=embed)
 
 @bot.command()
 async def envanter(ctx):
@@ -374,26 +400,45 @@ async def envanter(ctx):
     inv = user.get("inventory", {})
 
     if not inv:
-        return await ctx.send("🎒 Envanterin boş.")
+        embed = discord.Embed(
+            title="🎒 Envanter",
+            description=f"{ctx.author.mention}, envanterin boş 😢",
+            color=discord.Color.greyple(),
+            timestamp=datetime.now(timezone.utc)
+        )
+        return await ctx.send(embed=embed)
 
-    msg = "🎒 **Envanterin**\n\n"
+    embed = discord.Embed(
+        title="🎒 Envanter",
+        description=f"{ctx.author.mention} şu anki eşyaların:",
+        color=discord.Color.blue(),
+        timestamp=datetime.now(timezone.utc)
+    )
 
     for item_id, amount in inv.items():
         name = SHOP_ITEMS.get(item_id, {}).get("name", item_id)
-        msg += f"{name} x{amount}\n"
+        embed.add_field(name=name, value=f"x{amount}", inline=True)
 
-    await ctx.send(msg)
+    await ctx.send(embed=embed)
 
 @bot.command()
 async def market(ctx):
-    msg = "🛒 **Market**\n\n"
+    embed = discord.Embed(
+        title="🛒 Market",
+        description="Satın almak için `!satinal <ürün>`",
+        color=discord.Color.gold(),
+        timestamp=datetime.now(timezone.utc)
+    )
 
     for item_id, item in SHOP_ITEMS.items():
-        msg += f"**{item_id}** — {item['name']} | 💰 {item['price']}\n"
+        embed.add_field(
+            name=f"{item['name']} ({item_id})",
+            value=f"💰 Fiyat: {item['price']}",
+            inline=False
+        )
 
-    msg += "\nSatın almak için: `!satinal <ürün>`"
-    await ctx.send(msg)
-
+    await ctx.send(embed=embed)
+    
 SHOP_ITEMS = {
     "kumarbaz": {
         "price": 5000,
@@ -407,41 +452,63 @@ async def satinal(ctx, item_id: str):
     item_id = item_id.lower().strip()
 
     if item_id not in SHOP_ITEMS:
-        return await ctx.send("❌ Böyle bir ürün yok.")
+        embed = discord.Embed(
+            title="❌ Hata",
+            description="Böyle bir ürün yok!",
+            color=discord.Color.red()
+        )
+        return await ctx.send(embed=embed)
 
     data = load_data()
     user = get_user(data, ctx.author.id)
     item = SHOP_ITEMS[item_id]
 
     if user["money"] < item["price"]:
-        return await ctx.send("💸 Paran yetmiyor.")
+        embed = discord.Embed(
+            title="💸 Yetersiz Para",
+            description="Paran yetmiyor!",
+            color=discord.Color.red()
+        )
+        return await ctx.send(embed=embed)
 
-    # para düş
     user["money"] -= item["price"]
-
-    # envantere ekle
     inv = user.setdefault("inventory", {})
     inv[item_id] = inv.get(item_id, 0) + 1
-
     save_data(data)
 
-    # rol verme
+    # Rol verme
     if "role_id" in item:
         role = ctx.guild.get_role(item["role_id"])
-
-        if role is None:
-            return await ctx.send("⚠️ Rol bulunamadı.")
-
-        try:
-            await ctx.author.add_roles(role)
-            await ctx.send(f"✅ Satın aldın ve rol verildi: **{item['name']}**")
-        except discord.Forbidden:
-            await ctx.send("⚠️ Rol veremedim. Botun yetkisini kontrol et.")
-        except Exception as e:
-            await ctx.send(f"⚠️ Hata: {e}")
+        if role:
+            try:
+                await ctx.author.add_roles(role)
+                embed = discord.Embed(
+                    title="✅ Satın Alındı",
+                    description=f"{ctx.author.mention}, **{item['name']}** rolünü aldın!",
+                    color=discord.Color.green()
+                )
+                await ctx.send(embed=embed)
+            except:
+                embed = discord.Embed(
+                    title="⚠️ Hata",
+                    description="Rol veremedim! Yetkini ve rol sırasını kontrol et.",
+                    color=discord.Color.red()
+                )
+                await ctx.send(embed=embed)
+        else:
+            embed = discord.Embed(
+                title="⚠️ Hata",
+                description="Rol bulunamadı.",
+                color=discord.Color.red()
+            )
+            await ctx.send(embed=embed)
     else:
-        await ctx.send(f"✅ Satın alındı: **{item['name']}**")
-
+        embed = discord.Embed(
+            title="✅ Satın Alındı",
+            description=f"{ctx.author.mention}, **{item['name']}** satın alındı!",
+            color=discord.Color.green()
+        )
+        await ctx.send(embed=embed)
 
 @bot.command()
 async def paraekle(ctx, miktar: int):
@@ -504,6 +571,7 @@ async def uyarilar(ctx, member: discord.Member = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
