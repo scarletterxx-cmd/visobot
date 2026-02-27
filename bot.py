@@ -326,7 +326,7 @@ async def daily(ctx):
 # KASA SISTEMI
 # -----------------
 
-KASA_FIYAT = 250
+KASA_FIYAT = 400
 
 @bot.command()
 async def kasa(ctx):
@@ -495,6 +495,7 @@ async def uyarilar(ctx, member: discord.Member = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
