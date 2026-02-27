@@ -361,6 +361,79 @@ async def kasa(ctx):
         f"💰 Para: **{kazanc}**"
     )
 
+@bot.command()
+async def envanter(ctx):
+    data = load_data()
+    user = get_user(data, ctx.author.id)
+
+    inv = user["inventory"]
+
+    if not inv:
+        return await ctx.send("🎒 Envanterin boş.")
+
+    msg = "🎒 **Envanterin**\n\n"
+
+    for item_id, amount in inv.items():
+        name = SHOP_ITEMS.get(item_id, {}).get("name", item_id)
+        msg += f"{name} x{amount}\n"
+
+    await ctx.send(msg)
+
+@bot.command()
+async def market(ctx):
+    msg = "🛒 **Market**\n\n"
+
+    for item_id, item in SHOP_ITEMS.items():
+        msg += f"**{item_id}** — {item['name']} | 💰 {item['price']}\n"
+
+    msg += "\nSatın almak için: `!satinal <ürün>`"
+    await ctx.send(msg)
+
+
+SHOP_ITEMS = {
+    "kumarbaz": {
+        "price": 5000,
+        "name": "🌟 Kumarbaz Rolü",
+        "role_id": 1476980019262914612  # BURAYA GERÇEK ROL ID
+    }
+}
+
+@bot.command()
+async def satinal(ctx, item_id: str):
+    item_id = item_id.lower()
+
+    if item_id not in SHOP_ITEMS:
+        return await ctx.send("❌ Böyle bir ürün yok.")
+
+    data = load_data()
+    user = get_user(data, ctx.author.id)
+    item = SHOP_ITEMS[item_id]
+
+    if user["money"] < item["price"]:
+        return await ctx.send("💸 Paran yetmiyor.")
+
+    user["money"] -= item["price"]
+
+    # envantere ekle
+    inv = user["inventory"]
+    inv[item_id] = inv.get(item_id, 0) + 1
+
+    save_data(data)
+
+    # 🔥 ROL VERME KISMI
+    if "role_id" in item:
+        role = ctx.guild.get_role(item["role_id"])
+        if role:
+            try:
+                await ctx.author.add_roles(role)
+                await ctx.send(f"✅ Satın aldın: **{item['name']}**")
+            except discord.Forbidden:
+                await ctx.send("⚠️ Rol veremedim (yetkim yok).")
+        else:
+            await ctx.send("⚠️ Rol kaldırıldı.")
+    else:
+        await ctx.send(f"✅ Satın alındı: **{item['name']}**")
+
 # ================== UYARILAR ==================
 @bot.command()
 async def uyarilar(ctx, member: discord.Member = None):
@@ -403,6 +476,7 @@ async def uyarilar(ctx, member: discord.Member = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
