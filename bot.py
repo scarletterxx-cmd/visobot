@@ -221,6 +221,44 @@ async def on_message(message):
 
     await bot.process_commands(message)
 
+
+@bot.command
+async def coinflip(ctx, choice: str = None):
+    if choice is None:
+        await ctx.send("🪙 tahmin gir knk: `yazi` veya `tura`")
+        return
+
+    choice = choice.lower()
+    if choice not in ["yazi", "tura"]:
+        await ctx.send("❌ sadece `yazi` veya `tura` yazabilirsin")
+        return
+
+    # animasyon kareleri
+    frames = [
+        "🪙 | Donuyor...",
+        "🔄 | Flip atiliyor...",
+        "✨ | Havada suzuluyor...",
+        "🎲 | Sonuc geliyor..."
+    ]
+
+    msg = await ctx.send("🪙 | Hazirlaniyor...")
+
+    # animasyon oynat
+    for frame in frames:
+        await asyncio.sleep(0.6)
+        await msg.edit(content=frame)
+
+    # sonuc
+    result = random.choice(["yazi", "tura"])
+
+    await asyncio.sleep(0.5)
+
+    if result == choice:
+        await msg.edit(content=f"🎉 **{result.upper()}** geldi! kazandin knk 😎")
+    else:
+        await msg.edit(content=f"💀 **{result.upper()}** geldi! kaybettin...")
+
+
 # ================== MUTE ==================
 @bot.command()
 @commands.has_permissions(moderate_members=True)
@@ -571,6 +609,7 @@ async def uyarilar(ctx, member: discord.Member = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
