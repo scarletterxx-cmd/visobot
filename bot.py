@@ -9,6 +9,21 @@ import os
 import random
 import time
 import asyncio
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
+uri = "mongodb+srv://visocoin_bot:visobotontop@visobot.4thlp6v.mongodb.net/?appName=VisoBot"
+# Create a new client and connect to the server
+client = MongoClient(uri, server_api=ServerApi('1'))
+# Send a ping to confirm a successful connection
+try:
+    client.admin.command('ping')
+    print("Pinged your deployment. You successfully connected to MongoDB!")
+except Exception as e:
+    print(e)
+
+users_col = db["users"]          # coin, inventory, daily
+warnings_col = db["warnings"]    # uyari kayitlari
+daily_col = db["daily"]          # günlük mesaj takibi
 
 app = Flask("")
 
@@ -71,19 +86,20 @@ def save_data(data):
     with open(DATA_FILE, "w") as f:
         json.dump(data, f, indent=4)
 
-def get_user(data, user_id):
-    user_id = str(user_id)
-    if user_id not in data:
-        data[user_id] = {
+def get_user(user_id):
+    user = users_col.find_one({"user_id": user_id})
+    if not user:
+        user = {
+            "user_id": user_id,
             "money": 0,
-            "last_daily": 0,
-            "inventory": {}
+            "inventory": {},
+            "last_daily": 0
         }
-    else:
-        # eski kullanıcıda inventory yoksa ekle
-        data[user_id].setdefault("inventory", {})
+        users_col.insert_one(user)
+    return user
 
-    return data[user_id]
+def save_user(user):
+    users_col.update_one({"user_id": user["user_id"]}, {"$set": user}, upsert=True)
 
 
 # ================== DOSYA ==================
@@ -125,12 +141,16 @@ def load_warnings():
         with open(WARNINGS_FILE, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=4, ensure_ascii=False)
 
-    return data
+    return list(warnings_col.find())
 
 
-def save_warnings(data):
-    with open(WARNINGS_FILE, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=4, ensure_ascii=False)
+
+def save_warning(guild_id, user_id, uyari):
+    warnings_col.update_one(
+        {"guild_id": guild_id, "user_id": user_id},
+        {"$push": {"uyarilar": uyari}},
+        upsert=True
+    )
 
 
 def load_daily_message():
@@ -146,13 +166,11 @@ def save_daily_message(data):
 
 
 def should_send_daily_message(user_id):
-    data = load_daily_message()
     today = str(datetime.now(timezone.utc).date())
-    last_date = data.get(str(user_id))
+    record = daily_col.find_one({"user_id": user_id})
     
-    if last_date != today:
-        data[str(user_id)] = today
-        save_daily_message(data)
+    if not record or record.get("last_date") != today:
+        daily_col.update_one({"user_id": user_id}, {"$set": {"last_date": today}}, upsert=True)
         return True
     return False
 
@@ -253,16 +271,13 @@ async def coinflip(ctx, choice: str = None, miktar: int = None):
         return await ctx.send("❌ Geçerli bir miktar gir.")
 
     data = load_data()
-    user = get_user(data, ctx.author.id)
+    user = get_user(ctx.author.id)
 
     if user["money"] < miktar:
         return await ctx.send("💸 Yetersiz bakiye.")
 
-    coinflip_cd[user_id] = now + COINFLIP_COOLDOWN
-
-    # ================= PARA DUS =================
     user["money"] -= miktar
-    save_data(data)
+    save_user(user)
 
     frames = [
         "🎡 | Dönüyor...",
@@ -649,6 +664,7 @@ async def uyarilar(ctx, member: discord.Member = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
