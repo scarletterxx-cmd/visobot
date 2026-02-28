@@ -51,6 +51,11 @@ VOICE_CHANNEL_ID = 1289652557244792833  # botun gireceği sesli kanal id
 
 DATA_FILE = "data.json"
 
+# ================= COINFLIP COOLDOWN =================
+coinflip_cd = {}
+COINFLIP_COOLDOWN = 15  # saniye
+
+
 # -----------------
 # DATA
 # -----------------
@@ -229,15 +234,11 @@ async def coinflip(ctx, choice: str = None, miktar: int = None):
     now = int(time.time())
 
     # ================= COOLDOWN =================
-    user_id = ctx.author.id
-    now = int(time.time())
-
-# cooldown kontrol
     if user_id in coinflip_cd and coinflip_cd[user_id] > now:
         bitis = coinflip_cd[user_id]
         return await ctx.send(
-        f"⏳ yavas la 😎 tekrar kullanabilirsin: <t:{bitis}:R>"
-    )
+            f"⏳ yavas la 😎 tekrar kullanabilirsin: <t:{bitis}:R>"
+        )
 
     # ================= VALIDATION =================
     if choice is None or miktar is None:
@@ -648,6 +649,7 @@ async def uyarilar(ctx, member: discord.Member = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
