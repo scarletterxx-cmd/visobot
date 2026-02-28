@@ -413,10 +413,10 @@ async def günlük(ctx):
     now = time.time()
     if now - user["last_daily"] < 86400:
         kalan = int(86400 - (now - user["last_daily"]))
-        saat = kalan // 3600
+        bitis_zamani = datetime.fromtimestamp(now + kalan, tz=timezone.utc)
         embed = discord.Embed(
             title="⏳ Günlük",
-            description=f"{ctx.author.mention}, günlük için {saat} saat bekle.",
+            description=f"{ctx.author.mention}, günlük için <t:{int(bitis_zamani.timestamp())}:R> bekle.",
             color=discord.Color.orange(),
             timestamp=datetime.now(timezone.utc)
         )
@@ -659,6 +659,7 @@ async def uyarilar(ctx, member: discord.Member = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
