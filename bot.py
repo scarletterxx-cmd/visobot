@@ -413,13 +413,13 @@ async def günlük(ctx):
     now = time.time()
     if now - user["last_daily"] < 86400:
         kalan = int(86400 - (now - user["last_daily"]))
-        bitis_zamani = datetime.fromtimestamp(now + kalan, tz=timezone.utc)
-        embed = discord.Embed(
-            title="⏳ Günlük",
-            description=f"{ctx.author.mention}, günlük için <t:{int(bitis_zamani.timestamp())}:R> bekle.",
-            color=discord.Color.orange(),
-            timestamp=datetime.now(timezone.utc)
-        )
+    bitis_zamani = datetime.fromtimestamp(now + kalan, tz=timezone.utc)
+    embed = discord.Embed(
+        title="⏳ Günlük",
+        description=f"{ctx.author.mention}, günlük için <t:{int(bitis_zamani.timestamp())}:f> bekle.",
+        color=discord.Color.orange(),
+        timestamp=datetime.now(timezone.utc)
+    )
         return await ctx.send(embed=embed)
 
     miktar = random.randint(300, 500)
@@ -659,6 +659,7 @@ async def uyarilar(ctx, member: discord.Member = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
