@@ -11,10 +11,9 @@ import time
 import asyncio
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
-uri = "mongodb+srv://visocoin_bot:visobotontop@visobot.4thlp6v.mongodb.net/?appName=VisoBot"
 db = client["visocoin_bot"]
 # Create a new client and connect to the server
-client = MongoClient(uri, server_api=ServerApi('1'))
+client = MongoClient(MONGO_URI)
 # Send a ping to confirm a successful connection
 try:
     client.admin.command('ping')
@@ -665,6 +664,7 @@ async def uyarilar(ctx, member: discord.Member = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
