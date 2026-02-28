@@ -387,7 +387,7 @@ async def bakiye(ctx):
 
     embed = discord.Embed(
         title="💵 Bakiye",
-        description=f"{ctx.author.mention}, şu anki paran: **{user['money']}**",
+        description=f"{ctx.author.mention}, şu anki VisoCoin miktarın: **{user['money']}**",
         color=discord.Color.green(),
         timestamp=datetime.now(timezone.utc)
     )
@@ -417,7 +417,7 @@ async def günlük(ctx):
 
     embed = discord.Embed(
         title="🎁 Günlük Alındı",
-        description=f"{ctx.author.mention}, bugün **{miktar}** para aldın!",
+        description=f"{ctx.author.mention}, bugün **{miktar}** VisoCoin aldın!",
         color=discord.Color.gold(),
         timestamp=datetime.now(timezone.utc)
     )
@@ -436,8 +436,8 @@ async def kasa(ctx):
 
     if user["money"] < KASA_FIYAT:
         embed = discord.Embed(
-            title="❌ Yetersiz Para",
-            description=f"{ctx.author.mention}, kasayı açmak için yeterli paran yok! ({KASA_FIYAT} gerekir)",
+            title="❌ Yetersiz VisoCoin",
+            description=f"{ctx.author.mention}, kasayı açmak için yeterli VisoCoin'in yok! ({KASA_FIYAT} gerekiyor.)",
             color=discord.Color.red(),
             timestamp=datetime.now(timezone.utc)
         )
@@ -542,8 +542,8 @@ async def satinal(ctx, item_id: str):
 
     if user["money"] < item["price"]:
         embed = discord.Embed(
-            title="💸 Yetersiz Para",
-            description="Paran yetmiyor!",
+            title="💸 Yetersiz VisoCoin",
+            description="VisoCoin'in yetmiyor!",
             color=discord.Color.red()
         )
         return await ctx.send(embed=embed)
@@ -588,7 +588,7 @@ async def satinal(ctx, item_id: str):
         await ctx.send(embed=embed)
 
 @bot.command()
-async def paraekle(ctx, miktar: int):
+async def visocoinekle(ctx, miktar: int):
     YETKILI_USER_ID = 686628029987946600
 
     # kullanıcı kontrolü
@@ -604,7 +604,7 @@ async def paraekle(ctx, miktar: int):
     user["money"] += miktar
     save_data(data)
 
-    await ctx.send(f"💰 Kendine **{miktar}** para ekledin.")
+    await ctx.send(f"💰 Kendine **{miktar}** VisoCoin ekledin.")
 
 # ================== UYARILAR ==================
 @bot.command()
@@ -648,6 +648,7 @@ async def uyarilar(ctx, member: discord.Member = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
