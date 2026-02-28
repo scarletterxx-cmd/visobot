@@ -233,7 +233,6 @@ async def coinflip(ctx, choice: str = None):
         await ctx.send("❌ sadece `yazi` veya `tura` yazabilirsin")
         return
 
-    # animasyon kareleri
     frames = [
         "🪙 | Donuyor...",
         "🔄 | Flip atiliyor...",
@@ -241,22 +240,23 @@ async def coinflip(ctx, choice: str = None):
         "🎲 | Sonuc geliyor..."
     ]
 
-    msg = await ctx.send("🪙 | Hazirlaniyor...")
+    try:
+        msg = await ctx.send("🪙 | Hazirlaniyor...")
 
-    # animasyon oynat
-    for frame in frames:
-        await asyncio.sleep(0.6)
-        await msg.edit(content=frame)
+        for frame in frames:
+            await asyncio.sleep(0.7)
+            await msg.edit(content=frame)
 
-    # sonuc
-    result = random.choice(["yazi", "tura"])
+        result = random.choice(["yazi", "tura"])
+        await asyncio.sleep(0.5)
 
-    await asyncio.sleep(0.5)
+        if result == choice:
+            await msg.edit(content=f"🎉 **{result.upper()}** geldi! kazandin 😎")
+        else:
+            await msg.edit(content=f"💀 **{result.upper()}** geldi! kaybettin...")
 
-    if result == choice:
-        await msg.edit(content=f"🎉 **{result.upper()}** geldi! kazandin knk 😎")
-    else:
-        await msg.edit(content=f"💀 **{result.upper()}** geldi! kaybettin...")
+    except Exception as e:
+        await ctx.send(f"hata yakalandi: `{e}`")
 
 
 # ================== MUTE ==================
@@ -609,6 +609,7 @@ async def uyarilar(ctx, member: discord.Member = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
