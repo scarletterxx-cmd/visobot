@@ -224,40 +224,78 @@ async def on_message(message):
 
 
 @bot.command(name="coinflip")
-async def coinflip(ctx, choice: str = None):
-    if choice is None:
-        await ctx.send("🪙 tahmin gir knk: `yazi` veya `tura`")
-        return
+async def coinflip(ctx, choice: str = None, miktar: int = None):
+    user_id = ctx.author.id
+    now = int(time.time())
+
+    # ================= COOLDOWN =================
+    user_id = ctx.author.id
+    now = int(time.time())
+
+# cooldown kontrol
+    if user_id in coinflip_cd and coinflip_cd[user_id] > now:
+        bitis = coinflip_cd[user_id]
+        return await ctx.send(
+        f"⏳ yavas la 😎 tekrar kullanabilirsin: <t:{bitis}:R>"
+    )
+
+    # ================= VALIDATION =================
+    if choice is None or miktar is None:
+        return await ctx.send("🪙 Kullanım: `!coinflip yazi/tura miktar`")
 
     choice = choice.lower()
+
     if choice not in ["yazi", "tura"]:
-        await ctx.send("❌ sadece `yazi` veya `tura` yazabilirsin")
-        return
+        return await ctx.send("❌ Seçenek olarak `yazi` veya `tura` girebilirsin.")
+
+    if miktar <= 0:
+        return await ctx.send("❌ Geçerli bir miktar gir.")
+
+    data = load_data()
+    user = get_user(data, ctx.author.id)
+
+    if user["money"] < miktar:
+        return await ctx.send("💸 Yetersiz bakiye.")
+
+    coinflip_cd[user_id] = now + COINFLIP_COOLDOWN
+
+    # ================= PARA DUS =================
+    user["money"] -= miktar
+    save_data(data)
 
     frames = [
-        "🪙 | Donuyor...",
-        "🔄 | Flip atiliyor...",
-        "✨ | Havada suzuluyor...",
-        "🎲 | Sonuc geliyor..."
+        "🎡 | Dönüyor...",
+        "🔄 | Zar atılıyor...",
+        "✨ | Havada süzülüyor...",
+        "🎲 | Sonuç geliyor..."
     ]
 
-    try:
-        msg = await ctx.send("🪙 | Hazirlaniyor...")
+    msg = await ctx.send("🪙 | Hazırlanıyor...")
 
-        for frame in frames:
-            await asyncio.sleep(0.7)
-            await msg.edit(content=frame)
+    for frame in frames:
+        await asyncio.sleep(0.7)
+        await msg.edit(content=frame)
 
-        result = random.choice(["yazi", "tura"])
-        await asyncio.sleep(0.5)
+    result = random.choice(["yazi", "tura"])
+    await asyncio.sleep(0.5)
 
-        if result == choice:
-            await msg.edit(content=f"🎉 **{result.upper()}** geldi! kazandin 😎")
-        else:
-            await msg.edit(content=f"💀 **{result.upper()}** geldi! kaybettin...")
+    # tekrar yukle
+    data = load_data()
+    user = get_user(data, ctx.author.id)
 
-    except Exception as e:
-        await ctx.send(f"hata yakalandi: `{e}`")
+    if result == choice:
+        kazanc = miktar * 2
+        user["money"] += kazanc
+        save_data(data)
+
+        await msg.edit(
+            content=f"🎉 **{result.upper()}** geldi! +{kazanc} VisoCoin kazandın. 😎"
+        )
+    else:
+        save_data(data)
+        await msg.edit(
+            content=f"💀 **{result.upper()}** geldi! {miktar} VisoCoin'ler kayboldu..."
+        )
 
 
 # ================== MUTE ==================
@@ -610,6 +648,7 @@ async def uyarilar(ctx, member: discord.Member = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
