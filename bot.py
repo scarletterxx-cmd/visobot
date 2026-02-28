@@ -271,7 +271,7 @@ async def coinflip(ctx, choice: str = None, miktar: int = None):
     if miktar <= 0:
         return await ctx.send("❌ Geçerli bir miktar gir.")
 
-    data = load_data()
+    save_user(user)
     user = get_user(ctx.author.id)
 
     if user["money"] < miktar:
@@ -297,8 +297,8 @@ async def coinflip(ctx, choice: str = None, miktar: int = None):
     await asyncio.sleep(0.5)
 
     # tekrar yukle
-    data = load_data()
-    user = get_user(data, ctx.author.id)
+    save_user(user)
+    user = get_user(ctx.author.id)
 
     if result == choice:
         kazanc = miktar * 2
@@ -399,8 +399,8 @@ async def mute(ctx, member: discord.Member, sure: int, *, sebep="Sebep belirtilm
 
 @bot.command()
 async def bakiye(ctx):
-    data = load_data()
-    user = get_user(data, ctx.author.id)
+    save_user(user)
+    user = get_user(ctx.author.id)
 
     embed = discord.Embed(
         title="💵 Bakiye",
@@ -412,8 +412,8 @@ async def bakiye(ctx):
 
 @bot.command()
 async def günlük(ctx):
-    data = load_data()
-    user = get_user(data, ctx.author.id)
+    save_user(user)
+    user = get_user(ctx.author.id)
 
     now = time.time()
     if now - user["last_daily"] < 86400:
@@ -448,8 +448,8 @@ KASA_FIYAT = 400
 
 @bot.command()
 async def kasa(ctx):
-    data = load_data()
-    user = get_user(data, ctx.author.id)
+    save_user(user)
+    user = get_user(ctx.author.id)
 
     if user["money"] < KASA_FIYAT:
         embed = discord.Embed(
@@ -488,8 +488,8 @@ async def kasa(ctx):
 
 @bot.command()
 async def envanter(ctx):
-    data = load_data()
-    user = get_user(data, ctx.author.id)
+    save_user(user)
+    user = get_user(ctx.author.id)
 
     inv = user.get("inventory", {})
 
@@ -553,8 +553,8 @@ async def satinal(ctx, item_id: str):
         )
         return await ctx.send(embed=embed)
 
-    data = load_data()
-    user = get_user(data, ctx.author.id)
+    save_user(user)
+    user = get_user(ctx.author.id)
     item = SHOP_ITEMS[item_id]
 
     if user["money"] < item["price"]:
@@ -615,8 +615,8 @@ async def visocoinekle(ctx, miktar: int):
     if miktar <= 0:
         return await ctx.send("❌ Geçerli bir miktar gir.")
 
-    data = load_data()
-    user = get_user(data, ctx.author.id)
+    save_user(user)
+    user = get_user(ctx.author.id)
 
     user["money"] += miktar
     save_data(data)
@@ -665,6 +665,7 @@ async def uyarilar(ctx, member: discord.Member = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
