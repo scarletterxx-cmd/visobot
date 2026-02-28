@@ -399,7 +399,6 @@ async def mute(ctx, member: discord.Member, sure: int, *, sebep="Sebep belirtilm
 
 @bot.command()
 async def bakiye(ctx):
-    save_user(user)
     user = get_user(ctx.author.id)
 
     embed = discord.Embed(
@@ -665,6 +664,7 @@ async def uyarilar(ctx, member: discord.Member = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
