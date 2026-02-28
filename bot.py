@@ -252,7 +252,7 @@ async def coinflip(ctx, choice: str = None, miktar: int = None):
     if user_id in coinflip_cd and coinflip_cd[user_id] > now:
         bitis = coinflip_cd[user_id]
         return await ctx.send(
-            f"⏳ yavas la 😎 tekrar kullanabilirsin: <t:{bitis}:R>"
+            f"⏳ Bekleme süresindesin: <t:{bitis}:R>"
         )
 
     # ================= VALIDATION =================
@@ -659,6 +659,7 @@ async def uyarilar(ctx, member: discord.Member = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
