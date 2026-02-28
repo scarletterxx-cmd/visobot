@@ -222,7 +222,7 @@ async def on_message(message):
     await bot.process_commands(message)
 
 
-@bot.command
+@bot.command(name="coinflip")
 async def coinflip(ctx, choice: str = None):
     if choice is None:
         await ctx.send("🪙 tahmin gir knk: `yazi` veya `tura`")
@@ -609,6 +609,7 @@ async def uyarilar(ctx, member: discord.Member = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
