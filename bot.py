@@ -8,6 +8,7 @@ from threading import Thread
 import os
 import random
 import time
+import asyncio
 
 app = Flask("")
 
@@ -609,6 +610,7 @@ async def uyarilar(ctx, member: discord.Member = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
