@@ -243,7 +243,7 @@ async def on_message(message):
     await bot.process_commands(message)
 
 
-@bot.command(name="coinflip")
+@bot.command(name="coinflip", aliases=["cf", "yazitura", "yt"])
 async def coinflip(ctx, choice: str = None, miktar: int = None):
     user_id = ctx.author.id
     now = int(time.time())
@@ -257,23 +257,26 @@ async def coinflip(ctx, choice: str = None, miktar: int = None):
 
     # ================= VALIDATION =================
     if choice is None or miktar is None:
-        return await ctx.send("🪙 Kullanım: `!coinflip yazi/tura miktar`")
+        return await ctx.send("🪙 Kullanım: `!coinflip yazı/tura miktar`")
 
     choice = choice.lower()
 
-    if choice not in ["yazi", "tura"]:
-        return await ctx.send("❌ Seçenek olarak `yazi` veya `tura` girebilirsin.")
+    if choice not in ["yazı", "tura"]:
+        return await ctx.send("❌ Seçenek olarak `yazı` veya `tura` girebilirsin.")
 
     if miktar <= 0:
         return await ctx.send("❌ Geçerli bir miktar gir.")
 
-    user = get_user(ctx.author.id)
+    user = get_user(user_id)
 
     if user["money"] < miktar:
         return await ctx.send("💸 Yetersiz bakiye.")
 
+    # parayı düş
     user["money"] -= miktar
     save_user(user)
+
+    msg = await ctx.send("🪙 | Hazırlanıyor...")
 
     frames = [
         "🎡 | Dönüyor...",
@@ -282,18 +285,16 @@ async def coinflip(ctx, choice: str = None, miktar: int = None):
         "🎲 | Sonuç geliyor..."
     ]
 
-    msg = await ctx.send("🪙 | Hazırlanıyor...")
-
     for frame in frames:
         await asyncio.sleep(0.7)
         await msg.edit(content=frame)
 
-    result = random.choice(["yazi", "tura"])
+    result = random.choice(["yazı", "tura"])
+    coinflip_cd[user_id] = now + 30  # ✅ COOLDOWN BURADA
+
     await asyncio.sleep(0.5)
 
-    # tekrar yukle
-    user = get_user(ctx.author.id)
-    save_user(user)
+    user = get_user(user_id)
 
     if result == choice:
         kazanc = miktar * 2
@@ -312,7 +313,7 @@ async def coinflip(ctx, choice: str = None, miktar: int = None):
 
 
 # ================== MUTE ==================
-@bot.command()
+@bot.command(name="mute", aliases=["sustur"])
 @commands.has_permissions(moderate_members=True)
 async def mute(ctx, member: discord.Member, sure: int, *, sebep="Sebep belirtilmedi"):
     warnings = load_warnings()
@@ -393,7 +394,7 @@ async def mute(ctx, member: discord.Member, sure: int, *, sebep="Sebep belirtilm
 
 # ================== EKONOMI-KOMUT ==================
 
-@bot.command()
+@bot.command(name="bakiye", aliases=["para", "visocoin", "money"])
 async def bakiye(ctx):
     user = get_user(ctx.author.id)
 
@@ -405,7 +406,7 @@ async def bakiye(ctx):
     )
     await ctx.send(embed=embed)
 
-@bot.command()
+@bot.command(name="daily", aliases=["günlük"])
 async def günlük(ctx):
     user = get_user(ctx.author.id)
 
@@ -440,7 +441,7 @@ async def günlük(ctx):
 
 KASA_FIYAT = 400
 
-@bot.command()
+@bot.command(name="kasa", aliases=["crate", "case", "box"])
 async def kasa(ctx):
     user = get_user(ctx.author.id)
     save_user(user)
@@ -480,7 +481,7 @@ async def kasa(ctx):
     embed.add_field(name="💰 Kazanç", value=kazanc, inline=True)
     await ctx.send(embed=embed)
 
-@bot.command()
+@bot.command(name="envanter", aliases=["env", "inventory", "inv"])
 async def envanter(ctx):
     user = get_user(ctx.author.id)
     save_user(user)
@@ -509,7 +510,7 @@ async def envanter(ctx):
 
     await ctx.send(embed=embed)
 
-@bot.command()
+@bot.command(name="market", aliases=["shop"])
 async def market(ctx):
     embed = discord.Embed(
         title="🛒 Market",
@@ -535,7 +536,7 @@ SHOP_ITEMS = {
     }
 }
 
-@bot.command()
+@bot.command(name="satinal", aliases=["buy"])
 async def satinal(ctx, item_id: str):
     item_id = item_id.lower().strip()
 
@@ -617,7 +618,7 @@ async def visocoinekle(ctx, miktar: int):
     await ctx.send(f"💰 Kendine **{miktar}** VisoCoin ekledin.")
 
 # ================== UYARILAR ==================
-@bot.command()
+@bot.command(name="uyarılar", aliases=["warns", "warnings", "uyarı"])
 async def uyarilar(ctx, member: discord.Member = None):
     member = member or ctx.author
     warnings = load_warnings()
@@ -658,6 +659,7 @@ async def uyarilar(ctx, member: discord.Member = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
