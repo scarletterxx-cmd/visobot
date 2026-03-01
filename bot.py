@@ -71,6 +71,13 @@ DATA_FILE = "data.json"
 coinflip_cd = {}
 COINFLIP_COOLDOWN = 15  # saniye
 
+# ================= SOHBET PARA ÖDÜLÜ =================
+CHAT_REWARD_CHANCE = 0.05  # %5 şans
+CHAT_REWARD_MIN = 10
+CHAT_REWARD_MAX = 75
+chat_reward_cd = {}
+CHAT_REWARD_COOLDOWN = 30  # mesajlar arası minimum bekleme (saniye)
+
 
 # -----------------
 # DATA
@@ -239,6 +246,33 @@ async def on_message(message):
     if message.author.id == DAILY_MESSAGE_USER_ID:
         if should_send_daily_message(DAILY_MESSAGE_USER_ID):
             await message.channel.send(f"<@{DAILY_MESSAGE_USER_ID}> mal")
+
+    # ================= SOHBET PARA ÖDÜLÜ =================
+    user_id = message.author.id
+    now = int(time.time())
+
+    # Cooldown kontrolü (spam engeli)
+    if user_id not in chat_reward_cd or chat_reward_cd[user_id] <= now:
+        chat_reward_cd[user_id] = now + CHAT_REWARD_COOLDOWN
+
+        # Düşük şansla para ver
+        if random.random() < CHAT_REWARD_CHANCE:
+            kazanc = random.randint(CHAT_REWARD_MIN, CHAT_REWARD_MAX)
+            user = get_user(user_id)
+            user["money"] += kazanc
+            save_user(user)
+
+            embed = discord.Embed(
+                title="🍀 Şanslı Mesaj!",
+                description=(
+                    f"{message.author.mention}, sohbet ederken **{kazanc} VisoCoin** buldu!\n"
+                    f"💰 Yeni bakiyesi: **{user['money']}** VisoCoin"
+                ),
+                color=discord.Color.green(),
+                timestamp=datetime.now(timezone.utc)
+            )
+            embed.set_footer(text="Sohbet et, şansını dene!")
+            await message.channel.send(embed=embed)
 
     await bot.process_commands(message)
 
@@ -420,7 +454,7 @@ async def günlük(ctx):
         color=discord.Color.orange(),
         timestamp=datetime.now(timezone.utc)
     )
-        return await ctx.send(embed=embed)
+    return await ctx.send(embed=embed)
 
     miktar = random.randint(300, 500)
     user["money"] += miktar
@@ -659,34 +693,3 @@ async def uyarilar(ctx, member: discord.Member = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
