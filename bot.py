@@ -72,7 +72,8 @@ coinflip_cd = {}
 COINFLIP_COOLDOWN = 15  # saniye
 
 # ================= SOHBET PARA ÖDÜLÜ =================
-CHAT_REWARD_CHANCE = 0.100  # %100 şans
+CHAT_REWARD_CHANNEL_ID = 1389166576242266175
+CHAT_REWARD_CHANCE = 0.05  # %5 şans
 CHAT_REWARD_MIN = 10
 CHAT_REWARD_MAX = 75
 chat_reward_cd = {}
@@ -248,12 +249,13 @@ async def on_message(message):
             await message.channel.send(f"<@{DAILY_MESSAGE_USER_ID}> mal")
 
     # ================= SOHBET PARA ÖDÜLÜ =================
-    user_id = message.author.id
-    now = int(time.time())
+    if message.channel.id == CHAT_REWARD_CHANNEL_ID:
+        user_id = message.author.id
+        now = int(time.time())
 
-    # Cooldown kontrolü (spam engeli)
-    if user_id not in chat_reward_cd or chat_reward_cd[user_id] <= now:
-        chat_reward_cd[user_id] = now + CHAT_REWARD_COOLDOWN
+        # Cooldown kontrolü (spam engeli)
+        if user_id not in chat_reward_cd or chat_reward_cd[user_id] <= now:
+            chat_reward_cd[user_id] = now + CHAT_REWARD_COOLDOWN
 
         # Düşük şansla para ver
         if random.random() < CHAT_REWARD_CHANCE:
@@ -693,33 +695,3 @@ async def uyarilar(ctx, member: discord.Member = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
