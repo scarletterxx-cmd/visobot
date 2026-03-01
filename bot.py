@@ -99,6 +99,7 @@ def get_user(user_id):
             "money": 0,
             "inventory": {},
             "last_daily": 0
+            "daily_streak": 0
         }
         users_col.insert_one(user)
     return user
@@ -442,33 +443,52 @@ async def bakiye(ctx):
     )
     await ctx.send(embed=embed)
 
-@bot.command(name="daily", aliases=["günlük"])
+@bot.command(name="günlük", aliases=["daily"])
 async def günlük(ctx):
     user = get_user(ctx.author.id)
 
-    now = time.time()
-    if now - user["last_daily"] < 86400:
-        kalan = int(86400 - (now - user["last_daily"]))
-    bitis_zamani = datetime.fromtimestamp(now + kalan, tz=timezone.utc)
-    embed = discord.Embed(
-        title="⏳ Günlük",
-        description=f"{ctx.author.mention}, günlük için <t:{int(bitis_zamani.timestamp())}:f> bekle.",
-        color=discord.Color.orange(),
-        timestamp=datetime.now(timezone.utc)
-    )
-    return await ctx.send(embed=embed)
+    now = int(time.time())
+    cooldown = 86400  # 24 saat
 
-    miktar = random.randint(300, 500)
-    user["money"] += miktar
+    # ⛔ cooldown kontrol
+    if now - user["last_daily"] < cooldown:
+        kalan = cooldown - (now - user["last_daily"])
+        saat = kalan // 3600
+        dakika = (kalan % 3600) // 60
+
+        embed = discord.Embed(
+            title="⏳ Günlük Ödül",
+            description=f"Tekrar almak için **{saat}s {dakika}dk** beklemelisin.",
+            color=discord.Color.orange()
+        )
+        return await ctx.send(embed=embed)
+
+    # 🔥 streak hesaplama
+    if now - user["last_daily"] <= 172800:  # 48 saat içinde aldıysa
+        user["daily_streak"] += 1
+    else:
+        user["daily_streak"] = 1
+
+    # 💰 ödül hesaplama
+    base_reward = 150
+    streak_bonus = user["daily_streak"] * 25
+    reward = base_reward + streak_bonus
+
+    user["money"] += reward
     user["last_daily"] = now
+
     save_user(user)
 
     embed = discord.Embed(
-        title="🎁 Günlük Alındı",
-        description=f"{ctx.author.mention}, bugün **{miktar}** VisoCoin aldın!",
-        color=discord.Color.gold(),
+        title="🎁 Günlük Ödül Alındı!",
+        description=(
+            f"💰 Kazanılan: **{reward} VisoCoin**\n"
+            f"🔥 Günlük Seri: **{user['daily_streak']} gün**"
+        ),
+        color=discord.Color.green(),
         timestamp=datetime.now(timezone.utc)
     )
+
     await ctx.send(embed=embed)
 
 # -----------------
@@ -695,4 +715,5 @@ async def uyarilar(ctx, member: discord.Member = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
