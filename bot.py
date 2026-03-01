@@ -12,16 +12,20 @@ import asyncio
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 
-# Create a new client and connect to the server
+load_dotenv()
+
+TOKEN = os.getenv("TOKEN")
 MONGO_URI = os.getenv("MONGO_URI")
-client = MongoClient(MONGO_URI)
+
+# Create a new client and connect to the server
+client = MongoClient(MONGO_URI, server_api=ServerApi('1'))
 db = client["visocoin_bot"]
 
 try:
     client.admin.command('ping')
     print("Pinged your deployment. You successfully connected to MongoDB!")
 except Exception as e:
-    print(e)
+    print(f"MongoDB baglanti hatasi: {e}")
 
 users_col = db["users"]
 warnings_col = db["warnings"]
@@ -38,9 +42,6 @@ def run():
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 3000)))
 
 Thread(target=run).start()
-
-load_dotenv()
-TOKEN = os.getenv("TOKEN")
 
 WARNINGS_FILE = "warnings.json"
 LOG_CHANNEL_ID = 1435663818528129117
@@ -2059,3 +2060,4 @@ async def yardim(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
