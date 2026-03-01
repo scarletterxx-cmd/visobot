@@ -60,7 +60,7 @@ intents.members = True
 intents.message_content = True
 intents.voice_states = True
 
-bot = commands.Bot(command_prefix="!", intents=intents)
+bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
 
 GUILD_ID = 1289651738046890086
 VOICE_CHANNEL_ID = 1289652557244792833
@@ -2060,4 +2060,5 @@ async def yardim(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
