@@ -98,7 +98,7 @@ def get_user(user_id):
             "user_id": user_id,
             "money": 0,
             "inventory": {},
-            "last_daily": 0
+            "last_daily": 0,
             "daily_streak": 0
         }
         users_col.insert_one(user)
@@ -715,5 +715,6 @@ async def uyarilar(ctx, member: discord.Member = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
