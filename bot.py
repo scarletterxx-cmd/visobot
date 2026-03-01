@@ -495,10 +495,10 @@ async def kasa(ctx):
 
     roll = random.random()
     if roll < 0.60:
-        kazanc = random.randint(50, 150)
+        kazanc = random.randint(200, 400)
         rarity = "Sıradan"
     elif roll < 0.90:
-        kazanc = random.randint(200, 400)
+        kazanc = random.randint(400, 600)
         rarity = "Ender"
     else:
         kazanc = random.randint(600, 900)
@@ -695,3 +695,4 @@ async def uyarilar(ctx, member: discord.Member = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
