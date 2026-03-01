@@ -72,7 +72,7 @@ coinflip_cd = {}
 COINFLIP_COOLDOWN = 15  # saniye
 
 # ================= SOHBET PARA ÖDÜLÜ =================
-CHAT_REWARD_CHANCE = 0.05  # %5 şans
+CHAT_REWARD_CHANCE = 0.100  # %100 şans
 CHAT_REWARD_MIN = 10
 CHAT_REWARD_MAX = 75
 chat_reward_cd = {}
@@ -693,3 +693,33 @@ async def uyarilar(ctx, member: discord.Member = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
