@@ -625,8 +625,8 @@ def bj_embed(author, miktar, player_hand, dealer_hand, durum="oyun", sonuc_text=
 
     # Ust bar
     bar = f"Bahis: **{miktar:,}** VisoCoin"
-    p_text = f"{p_val} (*)" if p_soft else f"{p_val}"
-    d_text = f"{d_val} (*)" if d_soft else f"{d_val}"
+    p_text = f"{p_val}*" if p_soft else f"{p_val}"
+    d_text = f"{d_val}*" if d_soft else f"{d_val}"
 
     if durum == "oyun":
         # Oyun devam ediyor - krupiyenin 2. karti gizli
@@ -2205,6 +2205,7 @@ async def yardim(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
