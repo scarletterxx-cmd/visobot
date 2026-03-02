@@ -600,18 +600,17 @@ def draw_card():
     return random.choice(cards)
 
 def hand_value(hand):
-    """Toplam değeri ve soft olup olmadığını döndür."""
+    """Toplam ve soft durumunu döndür."""
     total = sum(hand)
     aces = hand.count(11)
-    soft = False
 
-    # Eğer As 11 olarak kalabiliyorsa soft'tur
-    if aces > 0 and total <= 21:
-        soft = True
-
+    # Önce As'ları düşür
     while total > 21 and aces > 0:
         total -= 10
         aces -= 1
+
+    # Eğer hala 11 sayılan As varsa → soft
+    soft = aces > 0
 
     return total, soft
 
@@ -2206,6 +2205,7 @@ async def yardim(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
