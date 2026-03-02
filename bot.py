@@ -593,50 +593,262 @@ async def coinflip(ctx, choice: str = None, miktar: int = None):
 #                        BLACKJACK
 # ======================================================================
 
-def blackjack_card_value(card):
-    """Kart değerini döndür."""
-    if card in ["J", "Q", "K"]:
-        return 10
-    if card == "A":
-        return 11
-    return card
+def draw_card():
+    """Rastgele bir kart çek (sadece sayılar)."""
+    cards = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11]
+    return random.choice(cards)
 
-def blackjack_hand_value(hand):
-    """Eldeki kartların toplam değerini hesapla (As için akıllı hesaplama)."""
-    total = 0
-    aces = 0
-    for card in hand:
-        val = blackjack_card_value(card)
-        if card == "A":
-            aces += 1
-        total += val
+def hand_value(hand):
+    """Eldeki kartların toplam değerini hesapla (11 için akıllı hesaplama)."""
+    total = sum(hand)
+    aces = hand.count(11)
     while total > 21 and aces > 0:
         total -= 10
         aces -= 1
     return total
 
-def blackjack_card_display(card):
-    """Kartı gösterim için formatlama."""
-    suits = ["Kupa", "Karo", "Maça", "Sinek"]
-    suit = random.choice(suits)
-    if card == "A":
-        return f"As ({suit})"
-    if card == "J":
-        return f"Vale ({suit})"
-    if card == "Q":
-        return f"Kız ({suit})"
-    if card == "K":
-        return f"Papaz ({suit})"
-    return f"{card} ({suit})"
-
-def draw_card():
-    """Rastgele bir kart cek."""
-    cards = [2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K", "A"]
-    return random.choice(cards)
-
 def format_hand(hand):
-    """Eli gosterim formatina çevir."""
-    return ", ".join([blackjack_card_display(c) for c in hand])
+    """Eli gösterim formatına çevir."""
+    return " | ".join([f"`{c}`" for c in hand])
+
+def bj_embed(author, miktar, player_hand, dealer_hand, durum="oyun", sonuc_text=""):
+    """Blackjack embed oluştur."""
+    p_val = hand_value(player_hand)
+    d_val = hand_value(dealer_hand)
+
+    # Ust bar
+    bar = f"Bahis: **{miktar:,}** VisoCoin"
+
+    if durum == "oyun":
+        # Oyun devam ediyor - krupiyenin 2. karti gizli
+        desc = (
+            f"{bar}\n"
+            f"{'━' * 25}\n\n"
+            f"**Senin Elin:** ({p_val})\n"
+            f"{format_hand(player_hand)}\n\n"
+            f"**VisoBot:** (?)\n"
+            f"`{dealer_hand[0]}` | `?`\n\n"
+            f"{'━' * 25}\n"
+            f"Kart çek veya dur."
+        )
+        renk = discord.Color.blue()
+        baslik = f"🃏 Blackjack - {author.display_name}"
+
+    elif durum == "blackjack":
+        desc = (
+            f"{bar}\n"
+            f"{'━' * 25}\n\n"
+            f"**Senin Elin:** ({p_val})\n"
+            f"{format_hand(player_hand)}\n\n"
+            f"**VisoBot** ({d_val})\n"
+            f"{format_hand(dealer_hand)}\n\n"
+            f"{'━' * 25}\n"
+            f"{sonuc_text}"
+        )
+        renk = discord.Color.gold()
+        baslik = "🃏 BLACKJACK!"
+
+    elif durum == "kazan":
+        desc = (
+            f"{bar}\n"
+            f"{'━' * 25}\n\n"
+            f"**Senin Elin:** ({p_val})\n"
+            f"{format_hand(player_hand)}\n\n"
+            f"**VisoBot:** ({d_val})\n"
+            f"{format_hand(dealer_hand)}\n\n"
+            f"{'━' * 25}\n"
+            f"{sonuc_text}"
+        )
+        renk = discord.Color.green()
+        baslik = "🃏 Kazandin!"
+
+    elif durum == "kaybet":
+        desc = (
+            f"{bar}\n"
+            f"{'━' * 25}\n\n"
+            f"**Senin Elin:** ({p_val})\n"
+            f"{format_hand(player_hand)}\n\n"
+            f"**VisoBot:** ({d_val})\n"
+            f"{format_hand(dealer_hand)}\n\n"
+            f"{'━' * 25}\n"
+            f"{sonuc_text}"
+        )
+        renk = discord.Color.red()
+        baslik = "🃏 Kaybettin!"
+
+    elif durum == "berabere":
+        desc = (
+            f"{bar}\n"
+            f"{'━' * 25}\n\n"
+            f"**Senin Elin:** ({p_val})\n"
+            f"{format_hand(player_hand)}\n\n"
+            f"**VisoBot:** ({d_val})\n"
+            f"{format_hand(dealer_hand)}\n\n"
+            f"{'━' * 25}\n"
+            f"{sonuc_text}"
+        )
+        renk = discord.Color.orange()
+        baslik = "🃏 Berabere!"
+
+    else:
+        desc = sonuc_text
+        renk = discord.Color.greyple()
+        baslik = "🃏 Blackjack"
+
+    embed = discord.Embed(title=baslik, description=desc, color=renk, timestamp=datetime.now(timezone.utc))
+    embed.set_footer(text=f"{author.display_name}", icon_url=author.display_avatar.url)
+    return embed
+
+
+class BlackjackView(discord.ui.View):
+    """Blackjack buton kontrolleri."""
+
+    def __init__(self, ctx, miktar, player_hand, dealer_hand):
+        super().__init__(timeout=60)
+        self.ctx = ctx
+        self.miktar = miktar
+        self.player_hand = player_hand
+        self.dealer_hand = dealer_hand
+        self.user_id = ctx.author.id
+        self.msg = None
+        self.bitti = False
+
+    async def interaction_check(self, interaction: discord.Interaction) -> bool:
+        """Sadece komutu kullanan kişi butonlara basabilir."""
+        if interaction.user.id != self.user_id:
+            await interaction.response.send_message("Bu senin oyunun değil!", ephemeral=True)
+            return False
+        return True
+
+    async def on_timeout(self):
+        """Zamanaşımı - bütün butonları kapat."""
+        if not self.bitti:
+            self.bitti = True
+            blackjack_cd[self.user_id] = int(time.time()) + BLACKJACK_COOLDOWN
+            update_quest_progress(self.user_id, "blackjack", 1)
+            for item in self.children:
+                item.disabled = True
+            embed = bj_embed(self.ctx.author, self.miktar, self.player_hand, self.dealer_hand,
+                             durum="kaybet", sonuc_text=f"Zamanaşımı! **{self.miktar:,} VisoCoin** kaybettin.")
+            if self.msg:
+                await self.msg.edit(embed=embed, view=self)
+
+    async def sonuclandir(self, interaction: discord.Interaction):
+        """VisoBot turunu oyna ve sonucu göster."""
+        self.bitti = True
+        now = int(time.time())
+        blackjack_cd[self.user_id] = now + BLACKJACK_COOLDOWN
+        update_quest_progress(self.user_id, "blackjack", 1)
+
+        p_val = hand_value(self.player_hand)
+
+        # Krupiye 17'ye kadar cekmeli
+        while hand_value(self.dealer_hand) < 17:
+            self.dealer_hand.append(draw_card())
+
+        d_val = hand_value(self.dealer_hand)
+
+        # Butonlari kapat
+        for item in self.children:
+            item.disabled = True
+
+        user = get_user(self.user_id)
+
+        if d_val > 21:
+            kazanc = self.miktar * 2
+            user["money"] += kazanc
+            save_user(user)
+            embed = bj_embed(self.ctx.author, self.miktar, self.player_hand, self.dealer_hand,
+                             durum="kazan", sonuc_text=f"VisoBot patladı! **+{kazanc:,} VisoCoin** kazandın!")
+        elif p_val > d_val:
+            kazanc = self.miktar * 2
+            user["money"] += kazanc
+            save_user(user)
+            embed = bj_embed(self.ctx.author, self.miktar, self.player_hand, self.dealer_hand,
+                             durum="kazan", sonuc_text=f"**+{kazanc:,} VisoCoin** kazandın!")
+        elif p_val == d_val:
+            user["money"] += self.miktar
+            save_user(user)
+            embed = bj_embed(self.ctx.author, self.miktar, self.player_hand, self.dealer_hand,
+                             durum="berabere", sonuc_text=f"Bahsin geri verildi: **{self.miktar:,} VisoCoin**")
+        else:
+            save_user(user)
+            embed = bj_embed(self.ctx.author, self.miktar, self.player_hand, self.dealer_hand,
+                             durum="kaybet", sonuc_text=f"**{self.miktar:,} VisoCoin** kaybettin.")
+
+        await interaction.response.edit_message(embed=embed, view=self)
+
+    @discord.ui.button(label="Kart Çek", style=discord.ButtonStyle.primary, emoji=None, custom_id="bj_cek")
+    async def cek_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+        """Kart çek butonu"""
+        self.player_hand.append(draw_card())
+        p_val = hand_value(self.player_hand)
+
+        if p_val > 21:
+            # Bust - oyuncu patladi
+            self.bitti = True
+            now = int(time.time())
+            blackjack_cd[self.user_id] = now + BLACKJACK_COOLDOWN
+            update_quest_progress(self.user_id, "blackjack", 1)
+            for item in self.children:
+                item.disabled = True
+            embed = bj_embed(self.ctx.author, self.miktar, self.player_hand, self.dealer_hand,
+                             durum="kaybet", sonuc_text=f"Patladın! ({p_val}) **{self.miktar:,} VisoCoin** kaybettin.")
+            await interaction.response.edit_message(embed=embed, view=self)
+            self.stop()
+            return
+
+        if p_val == 21:
+            # Tam 21 - otomatik dur
+            await self.sonuclandir(interaction)
+            self.stop()
+            return
+
+        # Oyun devam ediyor
+        embed = bj_embed(self.ctx.author, self.miktar, self.player_hand, self.dealer_hand, durum="oyun")
+        await interaction.response.edit_message(embed=embed, view=self)
+
+    @discord.ui.button(label="Dur", style=discord.ButtonStyle.secondary, emoji=None, custom_id="bj_dur")
+    async def dur_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+        """Dur butonu - VisoBot'un turu başlar."""
+        await self.sonuclandir(interaction)
+        self.stop()
+
+    @discord.ui.button(label="2x Bahis", style=discord.ButtonStyle.danger, emoji=None, custom_id="bj_double")
+    async def double_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+        """Çiftaşağı - bahisi ikiye katla, 1 kart çek ve dur."""
+        user = get_user(self.user_id)
+        if user["money"] < self.miktar:
+            await interaction.response.send_message("2x için yeterli bakiyen yok!", ephemeral=True)
+            return
+
+        # Ek bahsi kes
+        user["money"] -= self.miktar
+        save_user(user)
+        self.miktar *= 2
+
+        # 1 kart cek
+        self.player_hand.append(draw_card())
+        p_val = hand_value(self.player_hand)
+
+        if p_val > 21:
+            # Bust
+            self.bitti = True
+            now = int(time.time())
+            blackjack_cd[self.user_id] = now + BLACKJACK_COOLDOWN
+            update_quest_progress(self.user_id, "blackjack", 1)
+            for item in self.children:
+                item.disabled = True
+            embed = bj_embed(self.ctx.author, self.miktar, self.player_hand, self.dealer_hand,
+                             durum="kaybet", sonuc_text=f"Patladın! ({p_val}) **{self.miktar:,} VisoCoin** kaybettin.")
+            await interaction.response.edit_message(embed=embed, view=self)
+            self.stop()
+            return
+
+        # Krupiye turuna gec
+        await self.sonuclandir(interaction)
+        self.stop()
+
 
 @bot.command(name="blackjack", aliases=["bj", "21"])
 async def blackjack(ctx, miktar: int = None):
@@ -660,15 +872,14 @@ async def blackjack(ctx, miktar: int = None):
     user["money"] -= miktar
     save_user(user)
 
-    # Kartlari dag
+    # Kartlari dagit
     player_hand = [draw_card(), draw_card()]
     dealer_hand = [draw_card(), draw_card()]
 
-    player_val = blackjack_hand_value(player_hand)
-    dealer_val = blackjack_hand_value(dealer_hand)
+    p_val = hand_value(player_hand)
 
     # Blackjack kontrolu (ilk dagitimda 21)
-    if player_val == 21:
+    if p_val == 21:
         kazanc = int(miktar * 2.5)
         user = get_user(user_id)
         user["money"] += kazanc
@@ -676,151 +887,15 @@ async def blackjack(ctx, miktar: int = None):
         blackjack_cd[user_id] = now + BLACKJACK_COOLDOWN
         update_quest_progress(user_id, "blackjack", 1)
 
-        embed = discord.Embed(
-            title="🃏 BLACKJACK!",
-            description=(
-                f"{ctx.author.mention}\n\n"
-                f"**Senin elin:** {format_hand(player_hand)} = **{player_val}**\n"
-                f"**Krupiyenin eli:** {format_hand(dealer_hand)} = **{dealer_val}**\n\n"
-                f"BLACKJACK! **+{kazanc} VisoCoin** kazandın!"
-            ),
-            color=discord.Color.gold(),
-            timestamp=datetime.now(timezone.utc)
-        )
+        embed = bj_embed(ctx.author, miktar, player_hand, dealer_hand,
+                         durum="blackjack", sonuc_text=f"BLACKJACK! **+{kazanc:,} VisoCoin** kazandın!")
         return await ctx.send(embed=embed)
 
-    # Oyun embedini olustur
-    embed = discord.Embed(
-        title="🃏 Blackjack",
-        description=(
-            f"{ctx.author.mention} | Bahis: **{miktar}** VisoCoin\n\n"
-            f"**Senin elin:** {format_hand(player_hand)} = **{player_val}**\n"
-            f"**VisoBot:** {blackjack_card_display(dealer_hand[0])}, ???\n\n"
-            f"**`çek`** = Kart çek | **`dur`** = Kal"
-        ),
-        color=discord.Color.blue(),
-        timestamp=datetime.now(timezone.utc)
-    )
-
-    msg = await ctx.send(embed=embed)
-
-    def check(m):
-        return m.author.id == user_id and m.channel.id == ctx.channel.id and m.content.lower() in ["çek", "dur", "hit", "stand"]
-
-    # Oyuncu turu
-    while player_val < 21:
-        try:
-            response = await bot.wait_for("message", check=check, timeout=30)
-        except asyncio.TimeoutError:
-            # Zaman asimi - oyuncu kaybeder
-            blackjack_cd[user_id] = now + BLACKJACK_COOLDOWN
-            update_quest_progress(user_id, "blackjack", 1)
-
-            embed = discord.Embed(
-                title="🃏 Blackjack - Zaman Aşımı",
-                description=f"{ctx.author.mention}, 30 saniye içinde cevap vermedin. **{miktar} VisoCoin** kaybettin.",
-                color=discord.Color.red(),
-                timestamp=datetime.now(timezone.utc)
-            )
-            return await msg.edit(embed=embed)
-
-        if response.content.lower() in ["cek", "hit"]:
-            player_hand.append(draw_card())
-            player_val = blackjack_hand_value(player_hand)
-
-            if player_val > 21:
-                break
-
-            embed = discord.Embed(
-                title="Blackjack",
-                description=(
-                    f"{ctx.author.mention} | Bahis: **{miktar}** VisoCoin\n\n"
-                    f"**Senin elin:** {format_hand(player_hand)} = **{player_val}**\n"
-                    f"**VisoBot:** {blackjack_card_display(dealer_hand[0])}, ???\n\n"
-                    f"**`çek`** = Kart çek | **`dur`** = Kal"
-                ),
-                color=discord.Color.blue(),
-                timestamp=datetime.now(timezone.utc)
-            )
-            await msg.edit(embed=embed)
-        else:
-            break
-
-    blackjack_cd[user_id] = now + BLACKJACK_COOLDOWN
-    update_quest_progress(user_id, "blackjack", 1)
-
-    # Oyuncu bust
-    if player_val > 21:
-        embed = discord.Embed(
-            title="🃏 Blackjack - Kaybettin!",
-            description=(
-                f"{ctx.author.mention}\n\n"
-                f"**Senin elin:** {format_hand(player_hand)} = **{player_val}** (BUST!)\n"
-                f"**VisoBot:** {format_hand(dealer_hand)} = **{dealer_val}**\n\n"
-                f"**{miktar} VisoCoin** kaybettin."
-            ),
-            color=discord.Color.red(),
-            timestamp=datetime.now(timezone.utc)
-        )
-        return await msg.edit(embed=embed)
-
-    # VisoBot turu
-    while dealer_val < 17:
-        dealer_hand.append(draw_card())
-        dealer_val = blackjack_hand_value(dealer_hand)
-
-    # Sonuc
-    user = get_user(user_id)
-
-    if dealer_val > 21 or player_val > dealer_val:
-        kazanc = miktar * 2
-        user["money"] += kazanc
-        save_user(user)
-        update_quest_progress(user_id, "coinflip_kazan", kazanc)
-
-        embed = discord.Embed(
-            title="🃏 Blackjack - Kazandın!",
-            description=(
-                f"{ctx.author.mention}\n\n"
-                f"**Senin elin:** {format_hand(player_hand)} = **{player_val}**\n"
-                f"**VisoBot:** {format_hand(dealer_hand)} = **{dealer_val}**"
-                f"{' (PATLADI!)' if dealer_val > 21 else ''}\n\n"
-                f"**+{kazanc} VisoCoin** kazandın!"
-            ),
-            color=discord.Color.green(),
-            timestamp=datetime.now(timezone.utc)
-        )
-    elif player_val == dealer_val:
-        user["money"] += miktar
-        save_user(user)
-
-        embed = discord.Embed(
-            title="🃏 Blackjack - Berabere!",
-            description=(
-                f"{ctx.author.mention}\n\n"
-                f"**Senin elin:** {format_hand(player_hand)} = **{player_val}**\n"
-                f"**VisoBot:** {format_hand(dealer_hand)} = **{dealer_val}**\n\n"
-                f"Bahsin geri verildi: **{miktar} VisoCoin**"
-            ),
-            color=discord.Color.orange(),
-            timestamp=datetime.now(timezone.utc)
-        )
-    else:
-        save_user(user)
-
-        embed = discord.Embed(
-            title="🃏 Blackjack - Kaybettin!",
-            description=(
-                f"{ctx.author.mention}\n\n"
-                f"**Senin elin:** {format_hand(player_hand)} = **{player_val}**\n"
-                f"**VisoBot:** {format_hand(dealer_hand)} = **{dealer_val}**\n\n"
-                f"**{miktar} VisoCoin** kaybettin."
-            ),
-            color=discord.Color.red(),
-            timestamp=datetime.now(timezone.utc)
-        )
-
-    await msg.edit(embed=embed)
+    # Oyunu baslat - butonlu embed
+    view = BlackjackView(ctx, miktar, player_hand, dealer_hand)
+    embed = bj_embed(ctx.author, miktar, player_hand, dealer_hand, durum="oyun")
+    msg = await ctx.send(embed=embed, view=view)
+    view.msg = msg
 
 
 # ======================================================================
@@ -2060,6 +2135,7 @@ async def yardim(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
