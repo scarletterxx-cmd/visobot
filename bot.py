@@ -660,7 +660,7 @@ def bj_embed(author, miktar, player_hand, dealer_hand, durum="oyun", sonuc_text=
             f"{sonuc_text}"
         )
         renk = discord.Color.green()
-        baslik = "🃏 Kazandin!"
+        baslik = "🃏 Kazandın!"
 
     elif durum == "kaybet":
         desc = (
@@ -2135,6 +2135,7 @@ async def yardim(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
