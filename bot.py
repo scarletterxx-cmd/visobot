@@ -47,6 +47,7 @@ WARNINGS_FILE = "warnings.json"
 LOG_CHANNEL_ID = 1435663818528129117
 DAILY_MESSAGE_USER_ID = 594917441054834698
 DAILY_MESSAGE_FILE = "daily_message.json"
+PER_PAGE = 10
 
 UYARI_ROLLERI = {
     1: 1404957774525239406,
@@ -1399,41 +1400,102 @@ async def caldir(ctx, member: discord.Member = None):
 #                        LEADERBOARD (SIRALAMA)
 # ======================================================================
 
-@bot.command(name="sıralama", aliases=["leaderboard", "lb", "top", "zenginler"])
-async def siralama(ctx):
-    # MongoDB'den en zengin 10 kullaniciyi cek
-    top_users = list(users_col.find().sort("money", -1).limit(10))
+class LeaderboardView(discord.ui.View):
+    def __init__(self, ctx, mode="money"):
+        super().__init__(timeout=120)
+        self.ctx = ctx
+        self.mode = mode  # "money" or "level"
+        self.page = 0
 
-    if not top_users:
-        return await ctx.send("Henuz kimsenin parasi yok!")
+    async def interaction_check(self, interaction: discord.Interaction):
+        if interaction.user.id != self.ctx.author.id:
+            await interaction.response.send_message(
+                "Bu butonlar sana ait degil 😏", ephemeral=True
+            )
+            return False
+        return True
 
-    medal_emojis = {0: "1.", 1: "2.", 2: "3."}
-    desc = ""
+    def get_sorted(self):
+        if self.mode == "money":
+            return list(users_col.find().sort("money", -1))
+        else:
+            return list(users_col.find().sort("level", -1))
 
-    for i, u in enumerate(top_users):
-        uid = u["user_id"]
-        money = u.get("money", 0)
-        level = u.get("level", 1)
-        prefix = medal_emojis.get(i, f"{i + 1}.")
+    def build_embed(self):
+        data = self.get_sorted()
+        start = self.page * PER_PAGE
+        end = start + PER_PAGE
+        sliced = data[start:end]
 
-        member = ctx.guild.get_member(uid)
-        name = member.display_name if member else f"Bilinmeyen ({uid})"
+        medal_emojis = {0: "🥇", 1: "🥈", 2: "🥉"}
+        desc = ""
 
-        desc += f"**{prefix}** {name} - **{money:,}** VisoCoin (Sv. {level})\n"
+        for i, u in enumerate(sliced, start=start):
+            uid = u["user_id"]
+            money = u.get("money", 0)
+            level = u.get("level", 1)
+            prefix = medal_emojis.get(i, f"{i + 1}.")
 
-    # Komutu kullananin sirasi
-    caller = get_user(ctx.author.id)
-    all_users = list(users_col.find().sort("money", -1))
-    caller_rank = next((i + 1 for i, u in enumerate(all_users) if u["user_id"] == ctx.author.id), "?")
+            member = self.ctx.guild.get_member(uid)
+            name = member.display_name if member else f"Bilinmeyen ({uid})"
 
-    embed = discord.Embed(
-        title="💎 VisoCoin Sıralaması",
-        description=desc,
-        color=discord.Color.gold(),
-        timestamp=datetime.now(timezone.utc)
-    )
-    embed.set_footer(text=f"Senin sıran: #{caller_rank} | {caller['money']:,} VisoCoin")
-    await ctx.send(embed=embed)
+            if self.mode == "money":
+                desc += f"**{prefix}** {name} — **{money:,}** VisoCoin (Sv. {level})\n"
+            else:
+                desc += f"**{prefix}** {name} — **Sv. {level}** ({money:,} VisoCoin)\n"
+
+        title = "💰 VisoCoin Sıralaması" if self.mode == "money" else "⭐ Seviye Sıralaması"
+
+        embed = discord.Embed(
+            title=title,
+            description=desc or "Veri yok.",
+            color=discord.Color.gold(),
+            timestamp=datetime.now(timezone.utc),
+        )
+
+        max_page = max(1, (len(data) - 1) // PER_PAGE + 1)
+        embed.set_footer(text=f"Sayfa {self.page + 1}/{max_page}")
+
+        return embed
+
+    # ===== MODE BUTTONS =====
+
+    @discord.ui.button(label="💰 Para", style=discord.ButtonStyle.success)
+    async def money_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+        self.mode = "money"
+        self.page = 0
+        await interaction.response.edit_message(embed=self.build_embed(), view=self)
+
+    @discord.ui.button(label="⭐ Seviye", style=discord.ButtonStyle.primary)
+    async def level_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+        self.mode = "level"
+        self.page = 0
+        await interaction.response.edit_message(embed=self.build_embed(), view=self)
+
+    # ===== PAGE BUTTONS =====
+
+    @discord.ui.button(label="⬅️", style=discord.ButtonStyle.secondary)
+    async def prev_page(self, interaction: discord.Interaction, button: discord.ui.Button):
+        if self.page > 0:
+            self.page -= 1
+        await interaction.response.edit_message(embed=self.build_embed(), view=self)
+
+    @discord.ui.button(label="➡️", style=discord.ButtonStyle.secondary)
+    async def next_page(self, interaction: discord.Interaction, button: discord.ui.Button):
+        data_len = len(self.get_sorted())
+        max_page = (data_len - 1) // PER_PAGE
+        if self.page < max_page:
+            self.page += 1
+        await interaction.response.edit_message(embed=self.build_embed(), view=self)
+
+
+# ================= KOMUT =================
+
+@bot.command(name="leaderboard", aliases=["lb", "top", "siralama"])
+async def leaderboard(ctx):
+    view = LeaderboardView(ctx, mode="money")
+    embed = view.build_embed()
+    await ctx.send(embed=embed, view=view)
 
 
 # ======================================================================
@@ -2135,6 +2197,7 @@ async def yardim(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
