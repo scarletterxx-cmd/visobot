@@ -48,6 +48,8 @@ LOG_CHANNEL_ID = 1435663818528129117
 DAILY_MESSAGE_USER_ID = 594917441054834698
 DAILY_MESSAGE_FILE = "daily_message.json"
 PER_PAGE = 10
+BOT_START_TIME = time.time()
+STARTUP_LOCK_SECONDS = 90  # istersen 120 yap
 
 UYARI_ROLLERI = {
     1: 1404957774525239406,
@@ -67,6 +69,16 @@ GUILD_ID = 1289651738046890086
 VOICE_CHANNEL_ID = 1289652557244792833
 
 DATA_FILE = "data.json"
+
+@bot.check
+async def global_startup_lock(ctx):
+    if time.time() - BOT_START_TIME < STARTUP_LOCK_SECONDS:
+        kalan = int(STARTUP_LOCK_SECONDS - (time.time() - BOT_START_TIME))
+        await ctx.send(
+            f"🔧 Bot başlatılıyor… {kalan}s sonra tekrar dene."
+        )
+        return False
+    return True
 
 # ================= COOLDOWNS =================
 coinflip_cd = {}
@@ -2205,6 +2217,7 @@ async def yardim(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
