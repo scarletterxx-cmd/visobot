@@ -152,31 +152,31 @@ def get_level_bonus(level):
 
 # ================= GOREV SISTEMI =================
 DAILY_QUESTS = [
-    {"id": "mesaj_10", "name": "Sohbetci", "desc": "10 mesaj gonder", "type": "mesaj", "goal": 10, "reward": 150},
-    {"id": "mesaj_30", "name": "Konuskan", "desc": "30 mesaj gonder", "type": "mesaj", "goal": 30, "reward": 350},
-    {"id": "mesaj_75", "name": "Sohbet Ustasi", "desc": "75 mesaj gonder", "type": "mesaj", "goal": 75, "reward": 750},
-    {"id": "coinflip_3", "name": "Kumar Meraklisi", "desc": "3 coinflip oyna", "type": "coinflip", "goal": 3, "reward": 200},
-    {"id": "coinflip_10", "name": "Kumarhane Krali", "desc": "10 coinflip oyna", "type": "coinflip", "goal": 10, "reward": 500},
-    {"id": "kasa_2", "name": "Kasa Acici", "desc": "2 kasa ac", "type": "kasa", "goal": 2, "reward": 300},
-    {"id": "kasa_5", "name": "Kasa Baronu", "desc": "5 kasa ac", "type": "kasa", "goal": 5, "reward": 650},
-    {"id": "daily_1", "name": "Gunluk Rutin", "desc": "Gunluk odulunu topla", "type": "daily", "goal": 1, "reward": 100},
-    {"id": "kazan_500", "name": "Kazanc Avcisi", "desc": "Coinflipte toplam 500 VisoCoin kazan", "type": "coinflip_kazan", "goal": 500, "reward": 400},
+    {"id": "mesaj_10", "name": "Sohbetçi", "desc": "10 mesaj gönder", "type": "mesaj", "goal": 10, "reward": 150},
+    {"id": "mesaj_30", "name": "Konuşkan", "desc": "30 mesaj gönder", "type": "mesaj", "goal": 30, "reward": 350},
+    {"id": "mesaj_75", "name": "Sohbet Ustası", "desc": "75 mesaj gönder", "type": "mesaj", "goal": 75, "reward": 750},
+    {"id": "coinflip_3", "name": "Kumar Meraklısı", "desc": "3 coinflip oyna", "type": "coinflip", "goal": 3, "reward": 200},
+    {"id": "coinflip_10", "name": "Kumarhane Kralı", "desc": "10 coinflip oyna", "type": "coinflip", "goal": 10, "reward": 500},
+    {"id": "kasa_2", "name": "Kasa Acemisi", "desc": "2 kasa aç", "type": "kasa", "goal": 2, "reward": 300},
+    {"id": "kasa_5", "name": "Kasa Baronu", "desc": "5 kasa aç", "type": "kasa", "goal": 5, "reward": 650},
+    {"id": "daily_1", "name": "Gunluk Rutin", "desc": "Gunluk ödülünü topla", "type": "daily", "goal": 1, "reward": 100},
+    {"id": "kazan_500", "name": "Kazanc Avcısı", "desc": "Coinflipte toplam 500 VisoCoin kazan", "type": "coinflip_kazan", "goal": 500, "reward": 400},
     {"id": "harca_1000", "name": "Buyuk Harcama", "desc": "Toplam 1000 VisoCoin harca (kasa/market)", "type": "harca", "goal": 1000, "reward": 500},
-    {"id": "blackjack_3", "name": "Kart Cambazi", "desc": "3 blackjack oyna", "type": "blackjack", "goal": 3, "reward": 250},
-    {"id": "slot_5", "name": "Slot Avcisi", "desc": "5 slot cevir", "type": "slot", "goal": 5, "reward": 300},
-    {"id": "rulet_3", "name": "Rulet Ustasi", "desc": "3 rulet oyna", "type": "rulet", "goal": 3, "reward": 250},
-    {"id": "duello_2", "name": "Duellocu", "desc": "2 duello yap", "type": "duello", "goal": 2, "reward": 350},
+    {"id": "blackjack_3", "name": "Kart Cambazı", "desc": "3 blackjack oyna", "type": "blackjack", "goal": 3, "reward": 250},
+    {"id": "slot_5", "name": "Slot Avcısı", "desc": "5 slot çevir", "type": "slot", "goal": 5, "reward": 300},
+    {"id": "rulet_3", "name": "🎱 Rulet Ustası", "desc": "3 rulet oyna", "type": "rulet", "goal": 3, "reward": 250},
+    {"id": "duello_2", "name": "Düellocu", "desc": "2 düello yap", "type": "duello", "goal": 2, "reward": 350},
 ]
 
 WEEKLY_QUESTS = [
-    {"id": "w_mesaj_200", "name": "Haftalik Sohbetci", "desc": "200 mesaj gonder", "type": "mesaj", "goal": 200, "reward": 1500},
-    {"id": "w_mesaj_500", "name": "Efsane Sohbetci", "desc": "500 mesaj gonder", "type": "mesaj", "goal": 500, "reward": 3500},
-    {"id": "w_coinflip_25", "name": "Haftalik Kumarbaz", "desc": "25 coinflip oyna", "type": "coinflip", "goal": 25, "reward": 1200},
-    {"id": "w_kasa_10", "name": "Haftalik Kasa Avcisi", "desc": "10 kasa ac", "type": "kasa", "goal": 10, "reward": 1800},
+    {"id": "w_mesaj_200", "name": "Aktif Sohbetçi", "desc": "200 mesaj gönder", "type": "mesaj", "goal": 200, "reward": 1500},
+    {"id": "w_mesaj_500", "name": "Efsane Sohbetçi", "desc": "500 mesaj gönder", "type": "mesaj", "goal": 500, "reward": 3500},
+    {"id": "w_coinflip_25", "name": "Haftalık Kumarbaz", "desc": "25 coinflip oyna", "type": "coinflip", "goal": 25, "reward": 1200},
+    {"id": "w_kasa_10", "name": "Haftalık Kasa Avcısı", "desc": "10 kasa aç", "type": "kasa", "goal": 10, "reward": 1800},
     {"id": "w_kazan_3000", "name": "Zengin Ol", "desc": "Coinflipte toplam 3000 VisoCoin kazan", "type": "coinflip_kazan", "goal": 3000, "reward": 2500},
-    {"id": "w_harca_5000", "name": "Para Yakici", "desc": "Toplam 5000 VisoCoin harca", "type": "harca", "goal": 5000, "reward": 2000},
+    {"id": "w_harca_5000", "name": "Para Yakıcı", "desc": "Toplam 5000 VisoCoin harca", "type": "harca", "goal": 5000, "reward": 2000},
     {"id": "w_blackjack_15", "name": "Kart Baronu", "desc": "15 blackjack oyna", "type": "blackjack", "goal": 15, "reward": 1500},
-    {"id": "w_slot_20", "name": "Slot Imparatoru", "desc": "20 slot cevir", "type": "slot", "goal": 20, "reward": 1800},
+    {"id": "w_slot_20", "name": "Slot Imparatoru", "desc": "20 slot çevir", "type": "slot", "goal": 20, "reward": 1800},
 ]
 
 DAILY_QUEST_COUNT = 3
@@ -433,9 +433,9 @@ async def on_message(message):
             save_user(user)
 
             embed = discord.Embed(
-                title="Seviye Atladin!",
+                title="⏫ Seviye Atladın!",
                 description=(
-                    f"{message.author.mention} **Seviye {new_level}** oldu!\n\n"
+                    f"{message.author.mention}, **{new_level} Seviye** oldu!\n\n"
                     f"Bonus: **+{bonus} VisoCoin**\n"
                     f"Toplam XP: **{user['xp']}**\n"
                     f"Bakiye: **{user['money']}** VisoCoin"
@@ -463,7 +463,7 @@ async def on_message(message):
                 save_user(user)
 
                 embed = discord.Embed(
-                    title="Sansli Mesaj!",
+                    title="🍀 Şanslı Mesaj!",
                     description=(
                         f"{message.author.mention}, sohbet ederken **{kazanc} VisoCoin** buldun!\n"
                         f"Yeni bakiyen: **{user['money']}** VisoCoin"
@@ -481,19 +481,19 @@ async def on_message(message):
 #                        EKONOMI KOMUTLARI
 # ======================================================================
 
-@bot.command(name="bakiye", aliases=["para", "visocoin", "money"])
+@bot.command(name="bakiye", aliases=["para", "visocoin", "money", "cash"])
 async def bakiye(ctx):
     user = get_user(ctx.author.id)
 
     embed = discord.Embed(
-        title="Bakiye",
-        description=f"{ctx.author.mention}, su anki VisoCoin miktarin: **{user['money']}**",
+        title="💰 Bakiye",
+        description=f"{ctx.author.mention}, şu anki VisoCoin miktarın: **{user['money']}**",
         color=discord.Color.green(),
         timestamp=datetime.now(timezone.utc)
     )
     await ctx.send(embed=embed)
 
-@bot.command(name="daily", aliases=["gunluk"])
+@bot.command(name="daily", aliases=["günlük"])
 async def gunluk(ctx):
     user = get_user(ctx.author.id)
 
@@ -502,8 +502,8 @@ async def gunluk(ctx):
         kalan = int(86400 - (now - user["last_daily"]))
         bitis_zamani = datetime.fromtimestamp(now + kalan, tz=timezone.utc)
         embed = discord.Embed(
-            title="Gunluk",
-            description=f"{ctx.author.mention}, gunluk icin <t:{int(bitis_zamani.timestamp())}:f> bekle.",
+            title="✨ Günlük",
+            description=f"{ctx.author.mention}, günlük için <t:{int(bitis_zamani.timestamp())}:f> zamanına kadar bekle.",
             color=discord.Color.orange(),
             timestamp=datetime.now(timezone.utc)
         )
@@ -517,9 +517,9 @@ async def gunluk(ctx):
     update_quest_progress(ctx.author.id, "daily", 1)
 
     embed = discord.Embed(
-        title="Gunluk Alindi",
-        description=f"{ctx.author.mention}, bugun **{miktar}** VisoCoin aldin!",
-        color=discord.Color.gold(),
+        title="✅ Günlük Alındı",
+        description=f"{ctx.author.mention}, bugün **{miktar}** VisoCoin aldın!",
+        color=discord.Color.green(),
         timestamp=datetime.now(timezone.utc)
     )
     await ctx.send(embed=embed)
@@ -528,22 +528,22 @@ async def gunluk(ctx):
 #                        COINFLIP
 # ======================================================================
 
-@bot.command(name="coinflip", aliases=["cf", "yazitura", "yt"])
+@bot.command(name="coinflip", aliases=["cf", "yazıtura", "yt", "yazitura"])
 async def coinflip(ctx, choice: str = None, miktar: int = None):
     user_id = ctx.author.id
     now = int(time.time())
 
     if user_id in coinflip_cd and coinflip_cd[user_id] > now:
         bitis = coinflip_cd[user_id]
-        return await ctx.send(f"Bekleme suresindesin: <t:{bitis}:R>")
+        return await ctx.send(f"Bekleme süresindesin: <t:{bitis}:R>")
 
     if choice is None or miktar is None:
-        return await ctx.send("Kullanim: `!coinflip yazi/tura miktar`")
+        return await ctx.send("Kullanım: `!coinflip tura/tura miktar`")
 
     choice = choice.lower()
 
-    if choice not in ["yazi", "tura"]:
-        return await ctx.send("Secenek olarak `yazi` veya `tura` girebilirsin.")
+    if choice not in ["yazı", "tura"]:
+        return await ctx.send("Seçenek olarak `yazı` veya `tura` girebilirsin.")
 
     if miktar <= 0:
         return await ctx.send("Gecerli bir miktar gir.")
@@ -556,20 +556,20 @@ async def coinflip(ctx, choice: str = None, miktar: int = None):
     user["money"] -= miktar
     save_user(user)
 
-    msg = await ctx.send("Hazirlaniyor...")
+    msg = await ctx.send("Hazırlanıyor...")
 
     frames = [
-        "Donuyor...",
-        "Zar atiliyor...",
-        "Havada suzuluyor...",
-        "Sonuc geliyor..."
+        "🎡 Dönüyor...",
+        "🎲 Zar atılıyor...",
+        "🍃 Havada süzülüyor...",
+        "👁 Sonuç geliyor..."
     ]
 
     for frame in frames:
         await asyncio.sleep(0.7)
         await msg.edit(content=frame)
 
-    result = random.choice(["yazi", "tura"])
+    result = random.choice(["yazı", "tura"])
     coinflip_cd[user_id] = now + COINFLIP_COOLDOWN
 
     update_quest_progress(user_id, "coinflip", 1)
@@ -583,7 +583,7 @@ async def coinflip(ctx, choice: str = None, miktar: int = None):
         user["money"] += kazanc
         save_user(user)
         update_quest_progress(user_id, "coinflip_kazan", kazanc)
-        await msg.edit(content=f"**{result.upper()}** geldi! +{kazanc} VisoCoin kazandin.")
+        await msg.edit(content=f"**{result.upper()}** geldi! +{kazanc} VisoCoin kazandın.")
     else:
         save_user(user)
         await msg.edit(content=f"**{result.upper()}** geldi! {miktar} VisoCoin'ler kayboldu...")
@@ -594,7 +594,7 @@ async def coinflip(ctx, choice: str = None, miktar: int = None):
 # ======================================================================
 
 def blackjack_card_value(card):
-    """Kart degerini dondur."""
+    """Kart değerini döndür."""
     if card in ["J", "Q", "K"]:
         return 10
     if card == "A":
@@ -602,7 +602,7 @@ def blackjack_card_value(card):
     return card
 
 def blackjack_hand_value(hand):
-    """Eldeki kartlarin toplam degerini hesapla (As icin akilli hesaplama)."""
+    """Eldeki kartların toplam değerini hesapla (As için akıllı hesaplama)."""
     total = 0
     aces = 0
     for card in hand:
@@ -616,15 +616,15 @@ def blackjack_hand_value(hand):
     return total
 
 def blackjack_card_display(card):
-    """Karti gosterim icin formatlama."""
-    suits = ["Kupa", "Karo", "Maca", "Sinek"]
+    """Kartı gösterim için formatlama."""
+    suits = ["Kupa", "Karo", "Maça", "Sinek"]
     suit = random.choice(suits)
     if card == "A":
         return f"As ({suit})"
     if card == "J":
         return f"Vale ({suit})"
     if card == "Q":
-        return f"Kiz ({suit})"
+        return f"Kız ({suit})"
     if card == "K":
         return f"Papaz ({suit})"
     return f"{card} ({suit})"
@@ -635,7 +635,7 @@ def draw_card():
     return random.choice(cards)
 
 def format_hand(hand):
-    """Eli gosterim formatina cevir."""
+    """Eli gosterim formatina çevir."""
     return ", ".join([blackjack_card_display(c) for c in hand])
 
 @bot.command(name="blackjack", aliases=["bj", "21"])
@@ -645,13 +645,13 @@ async def blackjack(ctx, miktar: int = None):
 
     if user_id in blackjack_cd and blackjack_cd[user_id] > now:
         bitis = blackjack_cd[user_id]
-        return await ctx.send(f"Bekleme suresindesin: <t:{bitis}:R>")
+        return await ctx.send(f"Bekleme süresindesin: <t:{bitis}:R>")
 
     if miktar is None:
-        return await ctx.send("Kullanim: `!blackjack <miktar>`")
+        return await ctx.send("Kullanım: `!blackjack <miktar>`")
 
     if miktar <= 0:
-        return await ctx.send("Gecerli bir miktar gir.")
+        return await ctx.send("Geçerli bir miktar gir.")
 
     user = get_user(user_id)
     if user["money"] < miktar:
@@ -677,12 +677,12 @@ async def blackjack(ctx, miktar: int = None):
         update_quest_progress(user_id, "blackjack", 1)
 
         embed = discord.Embed(
-            title="BLACKJACK!",
+            title="🃏 BLACKJACK!",
             description=(
                 f"{ctx.author.mention}\n\n"
                 f"**Senin elin:** {format_hand(player_hand)} = **{player_val}**\n"
                 f"**Krupiyenin eli:** {format_hand(dealer_hand)} = **{dealer_val}**\n\n"
-                f"BLACKJACK! **+{kazanc} VisoCoin** kazandin!"
+                f"BLACKJACK! **+{kazanc} VisoCoin** kazandın!"
             ),
             color=discord.Color.gold(),
             timestamp=datetime.now(timezone.utc)
@@ -691,12 +691,12 @@ async def blackjack(ctx, miktar: int = None):
 
     # Oyun embedini olustur
     embed = discord.Embed(
-        title="Blackjack",
+        title="🃏 Blackjack",
         description=(
             f"{ctx.author.mention} | Bahis: **{miktar}** VisoCoin\n\n"
             f"**Senin elin:** {format_hand(player_hand)} = **{player_val}**\n"
-            f"**Krupiye:** {blackjack_card_display(dealer_hand[0])}, ???\n\n"
-            f"**`cek`** = Kart cek | **`dur`** = Kal"
+            f"**VisoBot:** {blackjack_card_display(dealer_hand[0])}, ???\n\n"
+            f"**`çek`** = Kart çek | **`dur`** = Kal"
         ),
         color=discord.Color.blue(),
         timestamp=datetime.now(timezone.utc)
@@ -705,7 +705,7 @@ async def blackjack(ctx, miktar: int = None):
     msg = await ctx.send(embed=embed)
 
     def check(m):
-        return m.author.id == user_id and m.channel.id == ctx.channel.id and m.content.lower() in ["cek", "dur", "hit", "stand"]
+        return m.author.id == user_id and m.channel.id == ctx.channel.id and m.content.lower() in ["çek", "dur", "hit", "stand"]
 
     # Oyuncu turu
     while player_val < 21:
@@ -717,8 +717,8 @@ async def blackjack(ctx, miktar: int = None):
             update_quest_progress(user_id, "blackjack", 1)
 
             embed = discord.Embed(
-                title="Blackjack - Zaman Asimi",
-                description=f"{ctx.author.mention}, 30 saniye icinde cevap vermedin. **{miktar} VisoCoin** kaybettin.",
+                title="🃏 Blackjack - Zaman Aşımı",
+                description=f"{ctx.author.mention}, 30 saniye içinde cevap vermedin. **{miktar} VisoCoin** kaybettin.",
                 color=discord.Color.red(),
                 timestamp=datetime.now(timezone.utc)
             )
@@ -736,8 +736,8 @@ async def blackjack(ctx, miktar: int = None):
                 description=(
                     f"{ctx.author.mention} | Bahis: **{miktar}** VisoCoin\n\n"
                     f"**Senin elin:** {format_hand(player_hand)} = **{player_val}**\n"
-                    f"**Krupiye:** {blackjack_card_display(dealer_hand[0])}, ???\n\n"
-                    f"**`cek`** = Kart cek | **`dur`** = Kal"
+                    f"**VisoBot:** {blackjack_card_display(dealer_hand[0])}, ???\n\n"
+                    f"**`çek`** = Kart çek | **`dur`** = Kal"
                 ),
                 color=discord.Color.blue(),
                 timestamp=datetime.now(timezone.utc)
@@ -752,11 +752,11 @@ async def blackjack(ctx, miktar: int = None):
     # Oyuncu bust
     if player_val > 21:
         embed = discord.Embed(
-            title="Blackjack - Kaybettin!",
+            title="🃏 Blackjack - Kaybettin!",
             description=(
                 f"{ctx.author.mention}\n\n"
                 f"**Senin elin:** {format_hand(player_hand)} = **{player_val}** (BUST!)\n"
-                f"**Krupiye:** {format_hand(dealer_hand)} = **{dealer_val}**\n\n"
+                f"**VisoBot:** {format_hand(dealer_hand)} = **{dealer_val}**\n\n"
                 f"**{miktar} VisoCoin** kaybettin."
             ),
             color=discord.Color.red(),
@@ -764,7 +764,7 @@ async def blackjack(ctx, miktar: int = None):
         )
         return await msg.edit(embed=embed)
 
-    # Krupiye turu
+    # VisoBot turu
     while dealer_val < 17:
         dealer_hand.append(draw_card())
         dealer_val = blackjack_hand_value(dealer_hand)
@@ -779,13 +779,13 @@ async def blackjack(ctx, miktar: int = None):
         update_quest_progress(user_id, "coinflip_kazan", kazanc)
 
         embed = discord.Embed(
-            title="Blackjack - Kazandin!",
+            title="🃏 Blackjack - Kazandın!",
             description=(
                 f"{ctx.author.mention}\n\n"
                 f"**Senin elin:** {format_hand(player_hand)} = **{player_val}**\n"
-                f"**Krupiye:** {format_hand(dealer_hand)} = **{dealer_val}**"
-                f"{' (BUST!)' if dealer_val > 21 else ''}\n\n"
-                f"**+{kazanc} VisoCoin** kazandin!"
+                f"**VisoBot:** {format_hand(dealer_hand)} = **{dealer_val}**"
+                f"{' (PATLADI!)' if dealer_val > 21 else ''}\n\n"
+                f"**+{kazanc} VisoCoin** kazandın!"
             ),
             color=discord.Color.green(),
             timestamp=datetime.now(timezone.utc)
@@ -795,11 +795,11 @@ async def blackjack(ctx, miktar: int = None):
         save_user(user)
 
         embed = discord.Embed(
-            title="Blackjack - Berabere!",
+            title="🃏 Blackjack - Berabere!",
             description=(
                 f"{ctx.author.mention}\n\n"
                 f"**Senin elin:** {format_hand(player_hand)} = **{player_val}**\n"
-                f"**Krupiye:** {format_hand(dealer_hand)} = **{dealer_val}**\n\n"
+                f"**VisoBot:** {format_hand(dealer_hand)} = **{dealer_val}**\n\n"
                 f"Bahsin geri verildi: **{miktar} VisoCoin**"
             ),
             color=discord.Color.orange(),
@@ -809,11 +809,11 @@ async def blackjack(ctx, miktar: int = None):
         save_user(user)
 
         embed = discord.Embed(
-            title="Blackjack - Kaybettin!",
+            title="🃏 Blackjack - Kaybettin!",
             description=(
                 f"{ctx.author.mention}\n\n"
                 f"**Senin elin:** {format_hand(player_hand)} = **{player_val}**\n"
-                f"**Krupiye:** {format_hand(dealer_hand)} = **{dealer_val}**\n\n"
+                f"**VisoBot:** {format_hand(dealer_hand)} = **{dealer_val}**\n\n"
                 f"**{miktar} VisoCoin** kaybettin."
             ),
             color=discord.Color.red(),
@@ -824,17 +824,17 @@ async def blackjack(ctx, miktar: int = None):
 
 
 # ======================================================================
-#                        SLOT MAKINESI
+#                        🎰 SLOT MAKINESI
 # ======================================================================
 
-SLOT_SYMBOLS = ["7", "BAR", "Kiraz", "Limon", "Uzum", "Elma", "Yildiz"]
+SLOT_SYMBOLS = ["7", "BAR", "Kiraz", "Limon", "Üzüm", "Elma", "Yıldız"]
 
 SLOT_PAYOUTS = {
     "7": 10,        # 3x 7 = 10x bahis
     "BAR": 7,       # 3x BAR = 7x bahis
-    "Yildiz": 5,    # 3x Yildiz = 5x bahis
+    "Yıldız": 5,    # 3x Yildiz = 5x bahis
     "Kiraz": 4,     # 3x Kiraz = 4x bahis
-    "Uzum": 3,      # 3x Uzum = 3x bahis
+    "Üzüm": 3,      # 3x Uzum = 3x bahis
     "Limon": 2,     # 3x Limon = 2x bahis
     "Elma": 2,      # 3x Elma = 2x bahis
 }
@@ -846,13 +846,13 @@ async def slot(ctx, miktar: int = None):
 
     if user_id in slot_cd and slot_cd[user_id] > now:
         bitis = slot_cd[user_id]
-        return await ctx.send(f"Bekleme suresindesin: <t:{bitis}:R>")
+        return await ctx.send(f"Bekleme süresindesin: <t:{bitis}:R>")
 
     if miktar is None:
-        return await ctx.send("Kullanim: `!slot <miktar>`")
+        return await ctx.send("Kullanım: `!slot <miktar>`")
 
     if miktar <= 0:
-        return await ctx.send("Gecerli bir miktar gir.")
+        return await ctx.send("Geçerli bir miktar gir.")
 
     user = get_user(user_id)
     if user["money"] < miktar:
@@ -866,7 +866,7 @@ async def slot(ctx, miktar: int = None):
     update_quest_progress(user_id, "harca", miktar)
 
     # Animasyon
-    msg = await ctx.send("Slot cevriliyor...")
+    msg = await ctx.send("Slot çevriliyor...")
 
     for _ in range(3):
         r1, r2, r3 = random.choice(SLOT_SYMBOLS), random.choice(SLOT_SYMBOLS), random.choice(SLOT_SYMBOLS)
@@ -888,11 +888,11 @@ async def slot(ctx, miktar: int = None):
         save_user(user)
 
         embed = discord.Embed(
-            title="SLOT - JACKPOT!",
+            title="🎰 SLOT - JACKPOT!",
             description=(
                 f"[ **{reel1}** | **{reel2}** | **{reel3}** ]\n\n"
                 f"{ctx.author.mention}, 3x **{reel1}**! ({carpan}x carpan)\n"
-                f"**+{kazanc} VisoCoin** kazandin!\n"
+                f"**+{kazanc} VisoCoin** kazandın!\n"
                 f"Bakiye: **{user['money']}** VisoCoin"
             ),
             color=discord.Color.gold(),
@@ -906,11 +906,11 @@ async def slot(ctx, miktar: int = None):
         save_user(user)
 
         embed = discord.Embed(
-            title="SLOT - Ikili Eslesme!",
+            title="🎰 SLOT - İkili Eşleşme!",
             description=(
                 f"[ **{reel1}** | **{reel2}** | **{reel3}** ]\n\n"
                 f"{ctx.author.mention}, ikili eslesme!\n"
-                f"**+{kazanc} VisoCoin** kazandin!\n"
+                f"**+{kazanc} VisoCoin** kazandın!\n"
                 f"Bakiye: **{user['money']}** VisoCoin"
             ),
             color=discord.Color.green(),
@@ -922,10 +922,10 @@ async def slot(ctx, miktar: int = None):
         save_user(user)
 
         embed = discord.Embed(
-            title="SLOT - Kaybettin!",
+            title="🎰 SLOT - Kaybettin!",
             description=(
                 f"[ **{reel1}** | **{reel2}** | **{reel3}** ]\n\n"
-                f"{ctx.author.mention}, eslesme yok.\n"
+                f"{ctx.author.mention}, eşleşme yok.\n"
                 f"**{miktar} VisoCoin** kaybettin.\n"
                 f"Bakiye: **{user['money']}** VisoCoin"
             ),
@@ -950,22 +950,22 @@ async def rulet(ctx, secim: str = None, miktar: int = None):
 
     if user_id in rulet_cd and rulet_cd[user_id] > now:
         bitis = rulet_cd[user_id]
-        return await ctx.send(f"Bekleme suresindesin: <t:{bitis}:R>")
+        return await ctx.send(f"Bekleme süresindesin <t:{bitis}:R>")
 
     if secim is None or miktar is None:
         embed = discord.Embed(
-            title="Rulet - Nasil Oynanir",
+            title="🎱 Rulet - Nasil Oynanir",
             description=(
-                "Kullanim: `!rulet <secim> <miktar>`\n\n"
+                "Kullanım: `!rulet <seçim> <miktar>`\n\n"
                 "**Renk bahisleri (2x):**\n"
-                "`!rulet kirmizi 100`\n"
+                "`!rulet kırmızı 100`\n"
                 "`!rulet siyah 100`\n"
-                "`!rulet yesil 100` (0 = 14x)\n\n"
-                "**Sayi bahisleri (36x):**\n"
+                "`!rulet yeşil 100` (0 = 14x)\n\n"
+                "**Sayı bahisleri (36x):**\n"
                 "`!rulet 17 100`\n\n"
-                "**Tek/Cift (2x):**\n"
+                "**Tek/Çift Sayı (2x):**\n"
                 "`!rulet tek 100`\n"
-                "`!rulet cift 100`"
+                "`!rulet çift 100`"
             ),
             color=discord.Color.blue(),
             timestamp=datetime.now(timezone.utc)
@@ -975,15 +975,15 @@ async def rulet(ctx, secim: str = None, miktar: int = None):
     secim = secim.lower()
 
     if miktar <= 0:
-        return await ctx.send("Gecerli bir miktar gir.")
+        return await ctx.send("Geçerli bir miktar gir.")
 
     user = get_user(user_id)
     if user["money"] < miktar:
         return await ctx.send("Yetersiz bakiye.")
 
     # Secim kontrolu
-    valid_colors = ["kirmizi", "siyah", "yesil"]
-    valid_parity = ["tek", "cift"]
+    valid_colors = ["kırmızı", "siyah", "yeşil"]
+    valid_parity = ["tek", "çift"]
     is_number = False
 
     try:
@@ -991,10 +991,10 @@ async def rulet(ctx, secim: str = None, miktar: int = None):
         if 0 <= secim_sayi <= 36:
             is_number = True
         else:
-            return await ctx.send("Sayi 0-36 arasinda olmali.")
+            return await ctx.send("Sayi 0-36 arasında olmalı.")
     except ValueError:
         if secim not in valid_colors and secim not in valid_parity:
-            return await ctx.send("Gecersiz secim! `kirmizi`, `siyah`, `yesil`, `tek`, `cift` veya `0-36` arasi sayi gir.")
+            return await ctx.send("Gecersiz secim! `kırmızı`, `siyah`, `yeşil`, `tek`, `çift` veya `0-36` arası sayı gir.")
 
     user["money"] -= miktar
     save_user(user)
@@ -1004,25 +1004,25 @@ async def rulet(ctx, secim: str = None, miktar: int = None):
     update_quest_progress(user_id, "harca", miktar)
 
     # Animasyon
-    msg = await ctx.send("Rulet cevriliyor...")
+    msg = await ctx.send("🎱 Rulet çevriliyor...")
     await asyncio.sleep(1)
-    await msg.edit(content="Top yuvarlanyor...")
+    await msg.edit(content="Top yuvarlanıyor...")
     await asyncio.sleep(1)
 
     # Sonuc
     result_number = random.randint(0, 36)
 
     if result_number in RULET_KIRMIZI:
-        result_color = "kirmizi"
-        color_emoji = "Kirmizi"
+        result_color = "kırmızı"
+        color_emoji = "Kırmızı"
     elif result_number in RULET_SIYAH:
         result_color = "siyah"
         color_emoji = "Siyah"
     else:
-        result_color = "yesil"
-        color_emoji = "Yesil"
+        result_color = "yeşil"
+        color_emoji = "Yeşil"
 
-    result_parity = "tek" if result_number % 2 == 1 else "cift"
+    result_parity = "tek" if result_number % 2 == 1 else "çift"
 
     # Kazanc hesapla
     kazanc = 0
@@ -1033,7 +1033,7 @@ async def rulet(ctx, secim: str = None, miktar: int = None):
             kazanc = miktar * 36
     elif secim in valid_colors:
         if secim == result_color:
-            if secim == "yesil":
+            if secim == "yeşil":
                 kazanc = miktar * 14
             else:
                 kazanc = miktar * 2
@@ -1046,10 +1046,10 @@ async def rulet(ctx, secim: str = None, miktar: int = None):
         save_user(user)
 
         embed = discord.Embed(
-            title="Rulet - Kazandin!",
+            title="🎱 Rulet - Kazandın!",
             description=(
                 f"Top durdu: **{result_number}** ({color_emoji})\n\n"
-                f"{ctx.author.mention}, bahsin: `{secim}` | **+{kazanc} VisoCoin** kazandin!\n"
+                f"{ctx.author.mention}, bahsin: `{secim}` | **+{kazanc} VisoCoin** kazandın!\n"
                 f"Bakiye: **{user['money']}** VisoCoin"
             ),
             color=discord.Color.green(),
@@ -1059,7 +1059,7 @@ async def rulet(ctx, secim: str = None, miktar: int = None):
         save_user(user)
 
         embed = discord.Embed(
-            title="Rulet - Kaybettin!",
+            title="🎱 Rulet - Kaybettin!",
             description=(
                 f"Top durdu: **{result_number}** ({color_emoji})\n\n"
                 f"{ctx.author.mention}, bahsin: `{secim}` | **{miktar} VisoCoin** kaybettin.\n"
@@ -1079,35 +1079,35 @@ async def rulet(ctx, secim: str = None, miktar: int = None):
 # Aktif duello davetleri {davet_edilen_id: {challenger, amount, timestamp}}
 active_duels = {}
 
-@bot.command(name="duello", aliases=["duel", "pvp"])
+@bot.command(name="düello", aliases=["duel", "duello", "vs"])
 async def duello(ctx, member: discord.Member = None, miktar: int = None):
     user_id = ctx.author.id
     now = int(time.time())
 
     if user_id in duello_cd and duello_cd[user_id] > now:
         bitis = duello_cd[user_id]
-        return await ctx.send(f"Bekleme suresindesin: <t:{bitis}:R>")
+        return await ctx.send(f"Bekleme süresindesin: <t:{bitis}:R>")
 
     if member is None or miktar is None:
-        return await ctx.send("Kullanim: `!duello @kisi <miktar>`")
+        return await ctx.send("Kullanım: `!duello @kisi <miktar>`")
 
     if member.id == user_id:
-        return await ctx.send("Kendinle duello yapamazsin.")
+        return await ctx.send("Kendinle düello yapamazsın.")
 
     if member.bot:
-        return await ctx.send("Botlarla duello yapamazsin.")
+        return await ctx.send("Botlarla düello yapamazsın.")
 
     if miktar <= 0:
-        return await ctx.send("Gecerli bir miktar gir.")
+        return await ctx.send("Geçerli bir miktar gir.")
 
     challenger = get_user(user_id)
     opponent = get_user(member.id)
 
     if challenger["money"] < miktar:
-        return await ctx.send("Yetersiz bakiyen var.")
+        return await ctx.send("Yetersiz bakiye.")
 
     if opponent["money"] < miktar:
-        return await ctx.send(f"{member.mention} bu duello icin yeterli VisoCoin'e sahip degil.")
+        return await ctx.send(f"{member.mention} bu düello icin yeterli VisoCoin'e sahip degil.")
 
     # Daveti kaydet
     active_duels[member.id] = {
@@ -1118,12 +1118,12 @@ async def duello(ctx, member: discord.Member = None, miktar: int = None):
     }
 
     embed = discord.Embed(
-        title="Duello Daveti!",
+        title="🤺 Düello Daveti!",
         description=(
-            f"{ctx.author.mention} seni **{miktar} VisoCoin** bahisli duelloya davet ediyor!\n\n"
-            f"{member.mention}, kabul etmek icin `!kabul` yaz.\n"
-            f"Reddetmek icin `!reddet` yaz.\n\n"
-            f"*30 saniye icinde cevap vermezsen davet iptal olur.*"
+            f"{ctx.author.mention} seni **{miktar} VisoCoin** bahisli düelloya davet ediyor!\n\n"
+            f"{member.mention}, kabul etmek için `!kabul` yaz.\n"
+            f"Reddetmek için `!reddet` yaz.\n\n"
+            f"*30 saniye içinde cevap vermezsen davet iptal olur.*"
         ),
         color=discord.Color.purple(),
         timestamp=datetime.now(timezone.utc)
@@ -1135,7 +1135,7 @@ async def kabul(ctx):
     user_id = ctx.author.id
 
     if user_id not in active_duels:
-        return await ctx.send("Aktif bir duello davetin yok.")
+        return await ctx.send("Aktif bir düello davetin yok.")
 
     duel = active_duels[user_id]
     now = int(time.time())
@@ -1143,10 +1143,10 @@ async def kabul(ctx):
     # Zaman asimi
     if now - duel["timestamp"] > 30:
         del active_duels[user_id]
-        return await ctx.send("Duello daveti zaman asimina ugradi.")
+        return await ctx.send("Düello daveti zamanaşımına uğradı.")
 
     if duel["channel_id"] != ctx.channel.id:
-        return await ctx.send("Duelloyu baslanan kanalda kabul etmelisin.")
+        return await ctx.send("Düelloyu başlanan kanalda kabul etmelisin.")
 
     challenger_id = duel["challenger_id"]
     miktar = duel["amount"]
@@ -1157,7 +1157,7 @@ async def kabul(ctx):
     # Para kontrolu tekrar
     if challenger["money"] < miktar:
         del active_duels[user_id]
-        return await ctx.send("Rakibinin yeterli VisoCoin'i kalmamis.")
+        return await ctx.send("Rakibinin yeterli VisoCoin'i yok.")
 
     if opponent["money"] < miktar:
         del active_duels[user_id]
@@ -1173,11 +1173,11 @@ async def kabul(ctx):
 
     # Animasyon
     challenger_member = ctx.guild.get_member(challenger_id)
-    msg = await ctx.send(f"Duello basliyor! {challenger_member.mention} vs {ctx.author.mention}")
+    msg = await ctx.send(f"Düello başlıyor! {challenger_member.mention} vs {ctx.author.mention}")
 
     frames = [
-        "Kiliclar cekildi...",
-        "Savas kizisiyor...",
+        "Kılıçlar çekildi...",
+        "Savas kızışıyor...",
         "Son darbe vuruluyor...",
     ]
 
@@ -1206,9 +1206,9 @@ async def kabul(ctx):
     update_quest_progress(user_id, "duello", 1)
 
     embed = discord.Embed(
-        title="Duello Sonucu!",
+        title="🤺 Düello Sonucu!",
         description=(
-            f"{winner_member.mention} duelloyu kazandi!\n\n"
+            f"{winner_member.mention} düelloyu kazandı!\n\n"
             f"Kazanc: **+{kazanc} VisoCoin**\n"
             f"{loser_member.mention} **{miktar} VisoCoin** kaybetti."
         ),
@@ -1222,7 +1222,7 @@ async def reddet(ctx):
     user_id = ctx.author.id
 
     if user_id not in active_duels:
-        return await ctx.send("Aktif bir duello davetin yok.")
+        return await ctx.send("Aktif bir düello davetin yok.")
 
     challenger_id = active_duels[user_id]["challenger_id"]
     del active_duels[user_id]
@@ -1230,8 +1230,8 @@ async def reddet(ctx):
     challenger_member = ctx.guild.get_member(challenger_id)
 
     embed = discord.Embed(
-        title="Duello Reddedildi",
-        description=f"{ctx.author.mention}, {challenger_member.mention} tarafindan gelen duelloyu reddetti.",
+        title="🤺 Düello Reddedildi",
+        description=f"{ctx.author.mention}, {challenger_member.mention} tarafından gelen düelloyu reddetti.",
         color=discord.Color.red(),
         timestamp=datetime.now(timezone.utc)
     )
@@ -1242,38 +1242,38 @@ async def reddet(ctx):
 #                        HIRSIZLIK
 # ======================================================================
 
-@bot.command(name="caldir", aliases=["hirsizlik", "steal", "rob"])
+@bot.command(name="rob", aliases=["çal", "hırsızlık"])
 async def caldir(ctx, member: discord.Member = None):
     user_id = ctx.author.id
     now = int(time.time())
 
     if user_id in hirsizlik_cd and hirsizlik_cd[user_id] > now:
         bitis = hirsizlik_cd[user_id]
-        return await ctx.send(f"Bekleme suresindesin: <t:{bitis}:R>")
+        return await ctx.send(f"Bekleme süresindesin: <t:{bitis}:R>")
 
     if member is None:
-        return await ctx.send("Kullanim: `!caldir @kisi`")
+        return await ctx.send("Kullanım: `!çal @kişi`")
 
     if member.id == user_id:
-        return await ctx.send("Kendinden calamazsin.")
+        return await ctx.send("Kendinden çalamazsın.")
 
     if member.bot:
-        return await ctx.send("Botlardan calamazsin.")
+        return await ctx.send("Botlardan çalamazsın.")
 
     thief = get_user(user_id)
     victim = get_user(member.id)
 
     # Minimum para kontrolu
-    if thief["money"] < 200:
-        return await ctx.send("Hirsizlik yapabilmek icin en az **200 VisoCoin**'in olmali (yakalanirsan ceza).")
+    if thief["money"] < 1000:
+        return await ctx.send("Hırsızlık yapabilmek için en az **1000 VisoCoin**'in olmali (yakalanırsan ceza).")
 
     if victim["money"] < 100:
-        return await ctx.send(f"{member.mention} calmaya deger bir seyi yok (100 VisoCoin'den az).")
+        return await ctx.send(f"{member.mention} çalmaya değer bir şeyi yok (100 VisoCoin'den az).")
 
     hirsizlik_cd[user_id] = now + HIRSIZLIK_COOLDOWN
 
-    # Basari sansi: %40
-    basari = random.random() < 0.40
+    # Basari sansi: %30
+    basari = random.random() < 0.30
 
     if basari:
         # Kurbandan %5-%15 arasi cal
@@ -1290,9 +1290,9 @@ async def caldir(ctx, member: discord.Member = None):
         save_user(victim)
 
         embed = discord.Embed(
-            title="Hirsizlik Basarili!",
+            title="🏴‍☠️ Hırsızlık Başarılı!",
             description=(
-                f"{ctx.author.mention}, {member.mention} kisisinden **{calinti} VisoCoin** caldim!\n\n"
+                f"{ctx.author.mention}, {member.mention} kişisinden **{calinti} VisoCoin** çaldın!\n\n"
                 f"Bakiyen: **{thief['money']}** VisoCoin"
             ),
             color=discord.Color.dark_green(),
@@ -1307,9 +1307,9 @@ async def caldir(ctx, member: discord.Member = None):
         save_user(thief)
 
         embed = discord.Embed(
-            title="Yakalandin!",
+            title="🏴‍☠️ Yakalandın!",
             description=(
-                f"{ctx.author.mention}, {member.mention} kisisinden calmayi denedin ama yakalandin!\n\n"
+                f"{ctx.author.mention}, {member.mention} kişisinden çalmayı denedin ama yakalandın!\n\n"
                 f"Ceza: **-{ceza} VisoCoin**\n"
                 f"Bakiyen: **{thief['money']}** VisoCoin"
             ),
@@ -1324,7 +1324,7 @@ async def caldir(ctx, member: discord.Member = None):
 #                        LEADERBOARD (SIRALAMA)
 # ======================================================================
 
-@bot.command(name="siralama", aliases=["leaderboard", "lb", "top", "zenginler"])
+@bot.command(name="sıralama", aliases=["leaderboard", "lb", "top", "zenginler"])
 async def siralama(ctx):
     # MongoDB'den en zengin 10 kullaniciyi cek
     top_users = list(users_col.find().sort("money", -1).limit(10))
@@ -1352,12 +1352,12 @@ async def siralama(ctx):
     caller_rank = next((i + 1 for i, u in enumerate(all_users) if u["user_id"] == ctx.author.id), "?")
 
     embed = discord.Embed(
-        title="VisoCoin Siralamasi",
+        title="💎 VisoCoin Sıralaması",
         description=desc,
         color=discord.Color.gold(),
         timestamp=datetime.now(timezone.utc)
     )
-    embed.set_footer(text=f"Senin siran: #{caller_rank} | {caller['money']:,} VisoCoin")
+    embed.set_footer(text=f"Senin sıran: #{caller_rank} | {caller['money']:,} VisoCoin")
     await ctx.send(embed=embed)
 
 
@@ -1386,17 +1386,17 @@ async def seviye(ctx, member: discord.Member = None):
         needed_xp = next_level_xp - current_level_xp
         pct = min(progress_xp / needed_xp, 1.0) if needed_xp > 0 else 1.0
         filled = int(pct * 20)
-        bar = "+" * filled + "-" * (20 - filled)
+        bar = "🟩" * filled + "⬛" * (20 - filled)
         xp_text = f"`[{bar}]` {progress_xp}/{needed_xp} XP"
     else:
-        xp_text = "MAX SEVIYE!"
+        xp_text = "MAKS. SEVİYE!"
 
     embed = discord.Embed(
-        title=f"{target.display_name} - Seviye Bilgisi",
+        title=f"⏫ {target.display_name} - Seviye Bilgisi",
         description=(
             f"Seviye: **{current_level}**\n"
             f"Toplam XP: **{current_xp}**\n"
-            f"Ilerleme: {xp_text}\n"
+            f"İlerleme: {xp_text}\n"
             f"VisoCoin: **{user['money']:,}**"
         ),
         color=discord.Color.blue(),
@@ -1406,29 +1406,29 @@ async def seviye(ctx, member: discord.Member = None):
 
 
 # ======================================================================
-#                        TRANSFER (PARA GONDERME)
+#                        TRANSFER (PARA gönderME)
 # ======================================================================
 
-@bot.command(name="gonder", aliases=["transfer", "pay", "ver"])
-async def gonder(ctx, member: discord.Member = None, miktar: int = None):
+@bot.command(name="gönder", aliases=["transfer", "pay", "ver"])
+async def gönder(ctx, member: discord.Member = None, miktar: int = None):
     user_id = ctx.author.id
     now = int(time.time())
 
     if user_id in transfer_cd and transfer_cd[user_id] > now:
         bitis = transfer_cd[user_id]
-        return await ctx.send(f"Bekleme suresindesin: <t:{bitis}:R>")
+        return await ctx.send(f"Bekleme süresindesin: <t:{bitis}:R>")
 
     if member is None or miktar is None:
-        return await ctx.send("Kullanim: `!gonder @kisi <miktar>`")
+        return await ctx.send("Kullanım: `!gönder @kişi <miktar>`")
 
     if member.id == user_id:
-        return await ctx.send("Kendine para gonderemezsin.")
+        return await ctx.send("Kendine para gönderemezsin.")
 
     if member.bot:
-        return await ctx.send("Botlara para gonderemezsin.")
+        return await ctx.send("Botlara para gönderemezsin.")
 
     if miktar <= 0:
-        return await ctx.send("Gecerli bir miktar gir.")
+        return await ctx.send("Geçerli bir miktar gir.")
 
     sender = get_user(user_id)
     if sender["money"] < miktar:
@@ -1448,14 +1448,14 @@ async def gonder(ctx, member: discord.Member = None, miktar: int = None):
     transfer_cd[user_id] = now + TRANSFER_COOLDOWN
 
     embed = discord.Embed(
-        title="Transfer Basarili!",
+        title="🤝 Transfer Başarılı!",
         description=(
             f"{ctx.author.mention} -> {member.mention}\n\n"
-            f"Gonderilen: **{miktar}** VisoCoin\n"
+            f"Gönderilen: **{miktar}** VisoCoin\n"
             f"Komisyon (%5): **{vergi}** VisoCoin\n"
-            f"Alici aldigi: **{net_miktar}** VisoCoin\n\n"
-            f"Gonderen bakiye: **{sender['money']:,}** VisoCoin\n"
-            f"Alici bakiye: **{receiver['money']:,}** VisoCoin"
+            f"Alıcının aldığı: **{net_miktar}** VisoCoin\n\n"
+            f"Gönderen Kişinin Bakiyesi: **{sender['money']:,}** VisoCoin\n"
+            f"Alıcının Bakiyesi: **{receiver['money']:,}** VisoCoin"
         ),
         color=discord.Color.green(),
         timestamp=datetime.now(timezone.utc)
@@ -1472,16 +1472,16 @@ async def hediye(ctx, member: discord.Member = None, miktar: int = None):
     user_id = ctx.author.id
 
     if member is None or miktar is None:
-        return await ctx.send("Kullanim: `!hediye @kisi <miktar>`")
+        return await ctx.send("Kullanım: `!hediye @kişi <miktar>`")
 
     if member.id == user_id:
-        return await ctx.send("Kendine hediye gonderemezsin.")
+        return await ctx.send("Kendine hediye gönderemezsin.")
 
     if member.bot:
-        return await ctx.send("Botlara hediye gonderemezsin.")
+        return await ctx.send("Botlara hediye gönderemezsin.")
 
     if miktar <= 0:
-        return await ctx.send("Gecerli bir miktar gir.")
+        return await ctx.send("Geçerli bir miktar gir.")
 
     sender = get_user(user_id)
     if sender["money"] < miktar:
@@ -1496,11 +1496,11 @@ async def hediye(ctx, member: discord.Member = None, miktar: int = None):
     save_user(receiver)
 
     embed = discord.Embed(
-        title="Hediye!",
+        title="🎁 Hediye!",
         description=(
-            f"{ctx.author.mention} kisisinden {member.mention} kisisine hediye!\n\n"
+            f"{ctx.author.mention} kişisinden {member.mention} kişisine hediye!\n\n"
             f"**{miktar} VisoCoin** hediye edildi!\n\n"
-            f"*Guzel bir jest! Hediye etmenin hic bir komisyonu yoktur.*"
+            f"*Güzel bir jest! Hediye etmenin hiçbir komisyonu yok.*"
         ),
         color=discord.Color.magenta(),
         timestamp=datetime.now(timezone.utc)
@@ -1510,7 +1510,7 @@ async def hediye(ctx, member: discord.Member = None, miktar: int = None):
     # Aliciya DM
     try:
         dm_embed = discord.Embed(
-            title="Hediye Aldin!",
+            title="🎁 Hediye Aldın!",
             description=(
                 f"**{ctx.author.display_name}** sana **{miktar} VisoCoin** hediye etti!\n"
                 f"Yeni bakiyen: **{receiver['money']:,}** VisoCoin"
@@ -1537,7 +1537,7 @@ async def kasa(ctx):
     if user["money"] < KASA_FIYAT:
         embed = discord.Embed(
             title="Yetersiz VisoCoin",
-            description=f"{ctx.author.mention}, kasayi acmak icin yeterli VisoCoin'in yok! ({KASA_FIYAT} gerekiyor.)",
+            description=f"{ctx.author.mention}, kasayı açmak için yeterli VisoCoin'in yok! ({KASA_FIYAT} gerekiyor.)",
             color=discord.Color.red(),
             timestamp=datetime.now(timezone.utc)
         )
@@ -1550,26 +1550,26 @@ async def kasa(ctx):
 
     roll = random.random()
     if roll < 0.60:
-        kazanc = random.randint(50, 150)
-        rarity = "Siradan"
+        kazanc = random.randint(200, 300)
+        rarity = "🟩 Sıradan"
     elif roll < 0.90:
-        kazanc = random.randint(200, 400)
-        rarity = "Ender"
+        kazanc = random.randint(300, 500)
+        rarity = "🟦 Ender"
     else:
         kazanc = random.randint(600, 900)
-        rarity = "Destansi"
+        rarity = "🟥 Destansı"
 
     user["money"] += kazanc
     save_user(user)
 
     embed = discord.Embed(
-        title="Kasa Acildi",
-        description=f"{ctx.author.mention}, kasani actin!",
+        title="Kasa Açıldı! (-400 VisoCoin)",
+        description=f"{ctx.author.mention}, kasanı açtın!",
         color=discord.Color.purple(),
         timestamp=datetime.now(timezone.utc)
     )
-    embed.add_field(name="Enderlik", value=rarity, inline=True)
-    embed.add_field(name="Kazanc", value=kazanc, inline=True)
+    embed.add_field(name="Enderlik:", value=rarity, inline=True)
+    embed.add_field(name="Kazanç:", value=kazanc, inline=True)
     await ctx.send(embed=embed)
 
 
@@ -1587,7 +1587,7 @@ async def envanter(ctx):
     if not inv:
         embed = discord.Embed(
             title="Envanter",
-            description=f"{ctx.author.mention}, envanterin bos",
+            description=f"{ctx.author.mention}, envanterin boş.",
             color=discord.Color.greyple(),
             timestamp=datetime.now(timezone.utc)
         )
@@ -1595,7 +1595,7 @@ async def envanter(ctx):
 
     embed = discord.Embed(
         title="Envanter",
-        description=f"{ctx.author.mention} su anki esyalarin:",
+        description=f"{ctx.author.mention} şu anki eşyaların:",
         color=discord.Color.blue(),
         timestamp=datetime.now(timezone.utc)
     )
@@ -1610,7 +1610,7 @@ async def envanter(ctx):
 async def market(ctx):
     embed = discord.Embed(
         title="Market",
-        description="Satin almak icin `!satinal <urun>`",
+        description="Satın almak için: `!satınal <ürün>`",
         color=discord.Color.gold(),
         timestamp=datetime.now(timezone.utc)
     )
@@ -1627,19 +1627,19 @@ async def market(ctx):
 SHOP_ITEMS = {
     "kumarbaz": {
         "price": 5000,
-        "name": "Kumarbaz Rolu",
+        "name": "🌟 Kumarbaz Rolü",
         "role_id": 1476980019262914612
     }
 }
 
-@bot.command(name="satinal", aliases=["buy"])
+@bot.command(name="satınal", aliases=["buy"])
 async def satinal(ctx, item_id: str):
     item_id = item_id.lower().strip()
 
     if item_id not in SHOP_ITEMS:
         embed = discord.Embed(
-            title="Hata",
-            description="Boyle bir urun yok!",
+            title="❌ Hata",
+            description="Böyle bir ürün yok!",
             color=discord.Color.red()
         )
         return await ctx.send(embed=embed)
@@ -1650,7 +1650,7 @@ async def satinal(ctx, item_id: str):
 
     if user["money"] < item["price"]:
         embed = discord.Embed(
-            title="Yetersiz VisoCoin",
+            title="❌ Yetersiz VisoCoin",
             description="VisoCoin'in yetmiyor!",
             color=discord.Color.red()
         )
@@ -1669,29 +1669,29 @@ async def satinal(ctx, item_id: str):
             try:
                 await ctx.author.add_roles(role)
                 embed = discord.Embed(
-                    title="Satin Alindi",
-                    description=f"{ctx.author.mention}, **{item['name']}** rolunu aldin!",
+                    title="✅ Satın Alındı!",
+                    description=f"{ctx.author.mention}, **{item['name']}** rolünü aldın!",
                     color=discord.Color.green()
                 )
                 await ctx.send(embed=embed)
             except:
                 embed = discord.Embed(
-                    title="Hata",
-                    description="Rol veremedim! Yetkini ve rol sirasini kontrol et.",
+                    title="❌ Hata",
+                    description="Rol veremedim! Yetkini ve rol sırasını kontrol et.",
                     color=discord.Color.red()
                 )
                 await ctx.send(embed=embed)
         else:
             embed = discord.Embed(
-                title="Hata",
-                description="Rol bulunamadi.",
+                title="❌ Hata",
+                description="Rol bulunamadı.",
                 color=discord.Color.red()
             )
             await ctx.send(embed=embed)
     else:
         embed = discord.Embed(
-            title="Satin Alindi",
-            description=f"{ctx.author.mention}, **{item['name']}** satin alindi!",
+            title="✅ Satın Alındı",
+            description=f"{ctx.author.mention}, **{item['name']}** satın alındı!",
             color=discord.Color.green()
         )
         await ctx.send(embed=embed)
@@ -1706,10 +1706,10 @@ async def visocoinekle(ctx, miktar: int):
     YETKILI_USER_ID = 686628029987946600
 
     if ctx.author.id != YETKILI_USER_ID:
-        return await ctx.send("Bu komutu kullanamazsin.")
+        return await ctx.send("Bu komutu kullanamazsın.")
 
     if miktar <= 0:
-        return await ctx.send("Gecerli bir miktar gir.")
+        return await ctx.send("Geçerli bir miktar gir.")
 
     user = get_user(ctx.author.id)
 
@@ -1738,20 +1738,20 @@ async def mute(ctx, member: discord.Member, sure: int, *, sebep="Sebep belirtilm
     if uyari_no >= 4:
         try:
             await member.send(
-                "**Sunucudan banlandin**\n"
-                "Sebep: 3 uyaridan sonra tekrar ceza."
+                "**Sunucudan banlandın**\n"
+                "Sebep: 3 uyarıdan sonra tekrar ceza almak."
             )
         except:
             pass
 
-        await ctx.guild.ban(member, reason="3 uyaridan sonra tekrar ceza")
+        await ctx.guild.ban(member, reason="3 uyarıdan sonra tekrar ceza")
 
         embed = discord.Embed(
-            title="BAN ATILDI",
+            title="🔨 BAN ATILDI",
             color=discord.Color.red(),
             timestamp=datetime.now(timezone.utc)
         )
-        embed.add_field(name="Kullanici", value=f"{member} ({member.id})", inline=False)
+        embed.add_field(name="Kullanıcı", value=f"{member} ({member.id})", inline=False)
         embed.add_field(name="Yetkili", value=ctx.author.mention, inline=False)
         embed.add_field(name="Sebep", value=sebep, inline=False)
 
@@ -1777,20 +1777,20 @@ async def mute(ctx, member: discord.Member, sure: int, *, sebep="Sebep belirtilm
 
     try:
         await member.send(
-            f"**{uyari_no}. Uyari Aldin**\n"
+            f"**{uyari_no}. Uyarı Aldın**\n"
             f"Sebep: {sebep}\n"
-            f"Sure: {sure} dakika"
+            f"Süre: {sure} dakika"
         )
     except:
         pass
 
     embed = discord.Embed(
-        title=f"{uyari_no}. UYARI VERILDI",
+        title=f"{uyari_no}. ❗ UYARI VERİLDİ",
         color=discord.Color.orange(),
         timestamp=datetime.now(timezone.utc)
     )
-    embed.add_field(name="Kullanici", value=f"{member.mention} ({member.id})", inline=False)
-    embed.add_field(name="Moderator", value=ctx.author.mention, inline=False)
+    embed.add_field(name="Kullanıcı", value=f"{member.mention} ({member.id})", inline=False)
+    embed.add_field(name="Moderatör", value=ctx.author.mention, inline=False)
     embed.add_field(name="Mute", value=f"{sure} dk", inline=True)
     embed.add_field(name="Sebep", value=sebep, inline=False)
 
@@ -1814,24 +1814,24 @@ async def uyarilar(ctx, member: discord.Member = None):
 
     if not uyari_list:
         embed = discord.Embed(
-            title="Uyari Yok",
-            description=f"{member.mention} tertemiz",
+            title="Uyarı Yok",
+            description=f"{member.mention} tertemiz.",
             color=discord.Color.green()
         )
         await ctx.send(embed=embed)
         return
 
     embed = discord.Embed(
-        title=f"{member.name} - Uyari Kayitlari",
+        title=f"{member.name} - Uyarı Kayıtları",
         color=discord.Color.red()
     )
 
     for u in uyari_list:
         embed.add_field(
-            name=f"{u['uyari_no']}. Uyari",
+            name=f"{u['uyari_no']}. Uyarı",
             value=(
                 f"Sebep: {u['sebep']}\n"
-                f"Sure: {u['sure']}\n"
+                f"Süre: {u['sure']}\n"
                 f"Atan: {u['atan']}\n"
                 f"Tarih: {u['tarih']}"
             ),
@@ -1845,7 +1845,7 @@ async def uyarilar(ctx, member: discord.Member = None):
 #                        GOREV KOMUTLARI
 # ======================================================================
 
-@bot.command(name="gorevler", aliases=["quests", "gorev", "missions"])
+@bot.command(name="gorevler", aliases=["quests", "gorev", "görevler"])
 async def gorevler(ctx):
     doc = get_user_quests(ctx.author.id)
     now = datetime.now(timezone.utc)
@@ -1860,7 +1860,7 @@ async def gorevler(ctx):
 
     embed = discord.Embed(
         title="-- GOREV PANELI --",
-        description=f"{ctx.author.mention}, aktif gorevlerin asagida.",
+        description=f"{ctx.author.mention}, aktif görevlerin aşağıda:",
         color=discord.Color.blue(),
         timestamp=now
     )
@@ -1885,15 +1885,15 @@ async def gorevler(ctx):
 
         daily_text += (
             f"**{qdef['name']}** - {qdef['desc']}\n"
-            f"`[{bar}]` {status} | Odul: **{qdef['reward']}** VisoCoin\n\n"
+            f"`[{bar}]` {status} | Ödül: **{qdef['reward']}** VisoCoin\n\n"
         )
 
     if not daily_text:
-        daily_text = "Gorev yok."
+        daily_text = "Görev yok."
 
     daily_reset_ts = int((daily_reset + timedelta(seconds=86400)).timestamp())
     embed.add_field(
-        name=f"-- Gunluk Gorevler -- (Yenilenme: <t:{daily_reset_ts}:R>)",
+        name=f"-- Günlük Görevler -- (Yenilenme: <t:{daily_reset_ts}:R>)",
         value=daily_text,
         inline=False
     )
@@ -1918,24 +1918,24 @@ async def gorevler(ctx):
 
         weekly_text += (
             f"**{qdef['name']}** - {qdef['desc']}\n"
-            f"`[{bar}]` {status} | Odul: **{qdef['reward']}** VisoCoin\n\n"
+            f"`[{bar}]` {status} | Ödül: **{qdef['reward']}** VisoCoin\n\n"
         )
 
     if not weekly_text:
-        weekly_text = "Gorev yok."
+        weekly_text = "Görev yok."
 
     weekly_reset_ts = int((weekly_reset + timedelta(seconds=604800)).timestamp())
     embed.add_field(
-        name=f"-- Haftalik Gorevler -- (Yenilenme: <t:{weekly_reset_ts}:R>)",
+        name=f"-- Haftalık Görevler -- (Yenilenme: <t:{weekly_reset_ts}:R>)",
         value=weekly_text,
         inline=False
     )
 
-    embed.set_footer(text="Tamamlanan gorevleri toplamak icin: !gorevtopla")
+    embed.set_footer(text="Tamamlanan görevleri toplamak için: !görevtopla")
     await ctx.send(embed=embed)
 
 
-@bot.command(name="gorevtopla", aliases=["questclaim", "claimquest", "gt"])
+@bot.command(name="gorevtopla", aliases=["questclaim", "görevtopla", "gt"])
 async def gorevtopla(ctx):
     doc = get_user_quests(ctx.author.id)
     user = get_user(ctx.author.id)
@@ -1957,8 +1957,8 @@ async def gorevtopla(ctx):
 
     if not toplanan:
         embed = discord.Embed(
-            title="-- Gorev Toplama --",
-            description=f"{ctx.author.mention}, toplanacak tamamlanmis gorev yok!\n`!gorevler` ile gorevlerini kontrol et.",
+            title="-- Görev Toplama --",
+            description=f"{ctx.author.mention}, toplanacak tamamlanmış görev yok!\n`!görevler` ile görevlerini kontrol et.",
             color=discord.Color.orange(),
             timestamp=datetime.now(timezone.utc)
         )
@@ -1971,11 +1971,11 @@ async def gorevtopla(ctx):
     gorev_listesi = "\n".join([f"  {q['name']} (+{q['reward']} VisoCoin)" for q in toplanan])
 
     embed = discord.Embed(
-        title="-- Gorev Odulleri Toplandi! --",
+        title="-- ✅ Görev Ödülleri Toplandı! --",
         description=(
             f"{ctx.author.mention}, tebrikler!\n\n"
-            f"**Toplanan gorevler:**\n{gorev_listesi}\n\n"
-            f"**Toplam odul:** +{toplam_odul} VisoCoin\n"
+            f"**Toplanan görevler:**\n{gorev_listesi}\n\n"
+            f"**Toplam ödül:** +{toplam_odul} VisoCoin\n"
             f"**Yeni bakiye:** {user['money']} VisoCoin"
         ),
         color=discord.Color.gold(),
@@ -1988,11 +1988,11 @@ async def gorevtopla(ctx):
 #                        YARDIM KOMUTU
 # ======================================================================
 
-@bot.command(name="yardim", aliases=["help", "komutlar", "commands"])
+@bot.command(name="yardim", aliases=["help", "komutlar", "yardım"])
 async def yardim(ctx):
     embed = discord.Embed(
         title="VisoBot - Komut Listesi",
-        description="Tum komutlar asagida listelenmistr.",
+        description="Tum komutlar aşağıda listelenmiştir.",
         color=discord.Color.blue(),
         timestamp=datetime.now(timezone.utc)
     )
@@ -2000,12 +2000,12 @@ async def yardim(ctx):
     embed.add_field(
         name="-- Ekonomi --",
         value=(
-            "`!bakiye` - Bakiyeni gor\n"
-            "`!daily` - Gunluk odulunu topla\n"
-            "`!kasa` - Kasa ac (400 VisoCoin)\n"
-            "`!market` - Marketi gor\n"
-            "`!satinal <urun>` - Urun satin al\n"
-            "`!envanter` - Envanterini gor\n"
+            "`!bakiye` - Bakiyeni gör\n"
+            "`!daily` - Günlük ödülünü topla\n"
+            "`!kasa` - Kasa aç (400 VisoCoin)\n"
+            "`!market` - Marketi gör\n"
+            "`!satinal <urun>` - Ürün satın al\n"
+            "`!envanter` - Envanterini gör\n"
             "`!siralama` - En zenginler listesi\n"
             "`!seviye` - Seviye ve XP bilgisi\n"
         ),
@@ -2015,10 +2015,10 @@ async def yardim(ctx):
     embed.add_field(
         name="-- Kumar --",
         value=(
-            "`!coinflip <yazi/tura> <miktar>` - Yazi tura\n"
+            "`!coinflip <yazı/tura> <miktar>` - Yazı Tura oyna\n"
             "`!blackjack <miktar>` - Blackjack oyna\n"
-            "`!slot <miktar>` - Slot makinesi\n"
-            "`!rulet <secim> <miktar>` - Rulet oyna\n"
+            "`!slot <miktar>` - Slot makinesi oyna\n"
+            "`!rulet <seçim> <miktar>` - 🎱 Rulet oyna\n"
         ),
         inline=False
     )
@@ -2026,21 +2026,21 @@ async def yardim(ctx):
     embed.add_field(
         name="-- Sosyal --",
         value=(
-            "`!duello @kisi <miktar>` - Duello davet et\n"
+            "`!düello @kisi <miktar>` - Duello davet et\n"
             "`!kabul` - Duelloyu kabul et\n"
             "`!reddet` - Duelloyu reddet\n"
-            "`!gonder @kisi <miktar>` - Para gonder (%5 komisyon)\n"
-            "`!hediye @kisi <miktar>` - Hediye gonder (komisyonsuz)\n"
-            "`!caldir @kisi` - Hirsizlik (%40 basari)\n"
+            "`!gönder @kişi <miktar>` - Para gönder (%5 komisyon)\n"
+            "`!hediye @kişi <miktar>` - Hediye gönder (komisyonsuz)\n"
+            "`!çal @kişi` - Hırsızlık (Düşük başarı oranı)\n"
         ),
         inline=False
     )
 
     embed.add_field(
-        name="-- Gorevler --",
+        name="-- Görevler --",
         value=(
-            "`!gorevler` - Aktif gorevlerini gor\n"
-            "`!gorevtopla` - Tamamlanan gorevleri topla\n"
+            "`!görevler` - Aktif görevlerini gör\n"
+            "`!görevtopla` - Tamamlanan görevleri topla\n"
         ),
         inline=False
     )
@@ -2048,8 +2048,8 @@ async def yardim(ctx):
     embed.add_field(
         name="-- Moderasyon --",
         value=(
-            "`!mute @kisi <dakika> [sebep]` - Kullaniciyi sustur\n"
-            "`!uyarilar [@kisi]` - Uyari kayitlarini gor\n"
+            "`!mute @kişi <dakika> [sebep]` - Kullanıcıyı sustur\n"
+            "`!uyarilar [@kisi]` - Uyarı kayıtlarını gör\n"
         ),
         inline=False
     )
@@ -2060,5 +2060,6 @@ async def yardim(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
