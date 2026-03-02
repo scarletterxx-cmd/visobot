@@ -2024,7 +2024,7 @@ async def gorevler(ctx):
         if quest["claimed"]:
             status = "[TOPLANDI]"
         elif prog >= goal:
-            status = "[HAZIR!]"
+            status = "[✅ HAZIR!]"
         else:
             status = f"{prog}/{goal}"
 
@@ -2055,7 +2055,7 @@ async def gorevler(ctx):
         bar = "🟩" * filled + "⬛" * (10 - filled)
 
         if quest["claimed"]:
-            status = "[✅ TOPLANDI]"
+            status = "[TOPLANDI]"
         elif prog >= goal:
             status = "[✅ HAZIR!]"
         else:
@@ -2205,6 +2205,7 @@ async def yardim(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
