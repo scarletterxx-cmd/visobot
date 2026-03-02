@@ -1859,7 +1859,7 @@ async def gorevler(ctx):
     weekly_remaining = max(weekly_remaining, 0)
 
     embed = discord.Embed(
-        title="-- GOREV PANELI --",
+        title="-- 🔥 GÖREV PANELİ --",
         description=f"{ctx.author.mention}, aktif görevlerin aşağıda:",
         color=discord.Color.blue(),
         timestamp=now
@@ -1874,7 +1874,7 @@ async def gorevler(ctx):
         goal = qdef["goal"]
         pct = min(prog / goal, 1.0)
         filled = int(pct * 10)
-        bar = "+" * filled + "-" * (10 - filled)
+        bar = "🟩" * filled + "⬛" * (10 - filled)
 
         if quest["claimed"]:
             status = "[TOPLANDI]"
@@ -1907,12 +1907,12 @@ async def gorevler(ctx):
         goal = qdef["goal"]
         pct = min(prog / goal, 1.0)
         filled = int(pct * 10)
-        bar = "+" * filled + "-" * (10 - filled)
+        bar = "🟩" * filled + "⬛" * (10 - filled)
 
         if quest["claimed"]:
-            status = "[TOPLANDI]"
+            status = "[✅ TOPLANDI]"
         elif prog >= goal:
-            status = "[HAZIR!]"
+            status = "[✅ HAZIR!]"
         else:
             status = f"{prog}/{goal}"
 
@@ -2060,6 +2060,7 @@ async def yardim(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
