@@ -750,13 +750,13 @@ class BlackjackView(discord.ui.View):
         blackjack_cd[self.user_id] = now + BLACKJACK_COOLDOWN
         update_quest_progress(self.user_id, "blackjack", 1)
 
-        p_val = hand_value(self.player_hand)
+        p_val, _ = hand_value(self.player_hand)
 
         # Krupiye 17'ye kadar cekmeli
-        while hand_value(self.dealer_hand) < 17:
+        d_val, _ = hand_value(self.dealer_hand)
+        while d_val < 17:
             self.dealer_hand.append(draw_card())
-
-        d_val = hand_value(self.dealer_hand)
+            d_val, _ = hand_value(self.dealer_hand)
 
         # Butonlari kapat
         for item in self.children:
@@ -792,7 +792,7 @@ class BlackjackView(discord.ui.View):
     async def cek_button(self, interaction: discord.Interaction, button: discord.ui.Button):
         """Kart çek butonu"""
         self.player_hand.append(draw_card())
-        p_val = hand_value(self.player_hand)
+        p_val, _ = hand_value(self.player_hand)
 
         if p_val > 21:
             # Bust - oyuncu patladi
@@ -839,7 +839,7 @@ class BlackjackView(discord.ui.View):
 
         # 1 kart cek
         self.player_hand.append(draw_card())
-        p_val = hand_value(self.player_hand)
+        p_val, _ = hand_value(self.player_hand)
 
         if p_val > 21:
             # Bust
@@ -886,7 +886,7 @@ async def blackjack(ctx, miktar: int = None):
     player_hand = [draw_card(), draw_card()]
     dealer_hand = [draw_card(), draw_card()]
 
-    p_val = hand_value(player_hand)
+    p_val, _ = hand_value(player_hand)
 
     # Blackjack kontrolu (ilk dagitimda 21)
     if p_val == 21:
@@ -2206,6 +2206,7 @@ async def yardim(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
