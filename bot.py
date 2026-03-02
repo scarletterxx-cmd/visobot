@@ -600,13 +600,20 @@ def draw_card():
     return random.choice(cards)
 
 def hand_value(hand):
-    """Eldeki kartların toplam değerini hesapla (11 için akıllı hesaplama)."""
+    """Toplam değeri ve soft olup olmadığını döndür."""
     total = sum(hand)
     aces = hand.count(11)
+    soft = False
+
+    # Eğer As 11 olarak kalabiliyorsa soft'tur
+    if aces > 0 and total <= 21:
+        soft = True
+
     while total > 21 and aces > 0:
         total -= 10
         aces -= 1
-    return total
+
+    return total, soft
 
 def format_hand(hand):
     """Eli gösterim formatına çevir."""
@@ -614,18 +621,20 @@ def format_hand(hand):
 
 def bj_embed(author, miktar, player_hand, dealer_hand, durum="oyun", sonuc_text=""):
     """Blackjack embed oluştur."""
-    p_val = hand_value(player_hand)
-    d_val = hand_value(dealer_hand)
+    p_val, p_soft = hand_value(player_hand)
+    d_val, d_soft = hand_value(dealer_hand)
 
     # Ust bar
     bar = f"Bahis: **{miktar:,}** VisoCoin"
+    p_text = f"{p_val} (*)" if p_soft else f"{p_val}"
+    d_text = f"{d_val} (*)" if d_soft else f"{d_val}"
 
     if durum == "oyun":
         # Oyun devam ediyor - krupiyenin 2. karti gizli
         desc = (
             f"{bar}\n"
             f"{'━' * 25}\n\n"
-            f"**Senin Elin:** ({p_val})\n"
+            f"**Senin Elin:** ({p_text})\n"
             f"{format_hand(player_hand)}\n\n"
             f"**VisoBot:** (?)\n"
             f"`{dealer_hand[0]}` | `?`\n\n"
@@ -639,9 +648,9 @@ def bj_embed(author, miktar, player_hand, dealer_hand, durum="oyun", sonuc_text=
         desc = (
             f"{bar}\n"
             f"{'━' * 25}\n\n"
-            f"**Senin Elin:** ({p_val})\n"
+            f"**Senin Elin:** ({p_text})\n"
             f"{format_hand(player_hand)}\n\n"
-            f"**VisoBot** ({d_val})\n"
+            f"**VisoBot** ({d_text})\n"
             f"{format_hand(dealer_hand)}\n\n"
             f"{'━' * 25}\n"
             f"{sonuc_text}"
@@ -653,9 +662,9 @@ def bj_embed(author, miktar, player_hand, dealer_hand, durum="oyun", sonuc_text=
         desc = (
             f"{bar}\n"
             f"{'━' * 25}\n\n"
-            f"**Senin Elin:** ({p_val})\n"
+            f"**Senin Elin:** ({p_text})\n"
             f"{format_hand(player_hand)}\n\n"
-            f"**VisoBot:** ({d_val})\n"
+            f"**VisoBot:** ({d_text})\n"
             f"{format_hand(dealer_hand)}\n\n"
             f"{'━' * 25}\n"
             f"{sonuc_text}"
@@ -667,9 +676,9 @@ def bj_embed(author, miktar, player_hand, dealer_hand, durum="oyun", sonuc_text=
         desc = (
             f"{bar}\n"
             f"{'━' * 25}\n\n"
-            f"**Senin Elin:** ({p_val})\n"
+            f"**Senin Elin:** ({p_text})\n"
             f"{format_hand(player_hand)}\n\n"
-            f"**VisoBot:** ({d_val})\n"
+            f"**VisoBot:** ({d_text})\n"
             f"{format_hand(dealer_hand)}\n\n"
             f"{'━' * 25}\n"
             f"{sonuc_text}"
@@ -681,9 +690,9 @@ def bj_embed(author, miktar, player_hand, dealer_hand, durum="oyun", sonuc_text=
         desc = (
             f"{bar}\n"
             f"{'━' * 25}\n\n"
-            f"**Senin Elin:** ({p_val})\n"
+            f"**Senin Elin:** ({p_text})\n"
             f"{format_hand(player_hand)}\n\n"
-            f"**VisoBot:** ({d_val})\n"
+            f"**VisoBot:** ({d_text})\n"
             f"{format_hand(dealer_hand)}\n\n"
             f"{'━' * 25}\n"
             f"{sonuc_text}"
@@ -2197,6 +2206,7 @@ async def yardim(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
