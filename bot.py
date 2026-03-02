@@ -1626,7 +1626,7 @@ async def market(ctx):
 
 SHOP_ITEMS = {
     "kumarbaz": {
-        "price": 5000,
+        "price": 25000,
         "name": "🌟 Kumarbaz Rolü",
         "role_id": 1476980019262914612
     }
@@ -2060,6 +2060,7 @@ async def yardim(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
