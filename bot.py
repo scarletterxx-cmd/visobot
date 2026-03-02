@@ -596,7 +596,7 @@ async def coinflip(ctx, choice: str = None, miktar: int = None):
 
 def draw_card():
     """Rastgele bir kart çek (sadece sayılar)."""
-    cards = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11]
+    cards = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
     return random.choice(cards)
 
 def hand_value(hand):
@@ -2197,6 +2197,7 @@ async def yardim(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
