@@ -780,7 +780,7 @@ class BlackjackView(discord.ui.View):
             user["money"] += self.miktar
             save_user(user)
             embed = bj_embed(self.ctx.author, self.miktar, self.player_hand, self.dealer_hand,
-                             durum="berabere", sonuc_text=f"Bahsin geri verildi: **{self.miktar:,} VisoCoin**")
+                             durum="berabere", sonuc_text=f"Bahsin geri verildi.")
         else:
             save_user(user)
             embed = bj_embed(self.ctx.author, self.miktar, self.player_hand, self.dealer_hand,
@@ -2206,6 +2206,7 @@ async def yardim(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
