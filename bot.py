@@ -3888,7 +3888,7 @@ async def zsaldır(ctx):
     if dungeon["can"] <= 0:
         # Ölüm
         dungeon["toplam_ölüm"] += 1
-        dungeon["mevcut_kat"] = max(0, dungeon["mevcut_kat"] - 3)
+        dungeon["mevcut_kat"] = max(0, dungeon["mevcut_kat"] - 4)
         dungeon["can"] = statlar["can"]  # Canı yenile
         dungeon["aktif_savaş"] = None
         save_dungeon(dungeon)
@@ -4058,7 +4058,7 @@ async def kaç(ctx):
         return await ctx.send(embed=embed)
 
     savaş = dungeon["aktif_savaş"]
-    dungeon["mevcut_kat"] = max(0, dungeon["mevcut_kat"] - 1)
+    dungeon["mevcut_kat"] = max(0, dungeon["mevcut_kat"] - 2)
     dungeon["aktif_savaş"] = None
     save_dungeon(dungeon)
 
@@ -5902,6 +5902,7 @@ async def korsansıralama(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
