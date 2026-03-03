@@ -5807,7 +5807,7 @@ async def yağmala(ctx, hedef: discord.Member = None):
     await ctx.send(embed=embed)
 
 
-@bot.command(name="eşyasat", aliases=["sellitem", "eşyasatış"])
+@bot.command(name="korsaneşyasat", aliases=["piratesellitem"])
 async def korsaneşyasat(ctx, eşya_id: str = None):
     """Nadir eşya sat."""
     user_id = ctx.author.id
@@ -5901,6 +5901,7 @@ async def korsansıralama(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
