@@ -2386,27 +2386,27 @@ TOHUMLAR = {
         "isim": "Buğday",
         "emoji": "🌾",
         "fiyat": 50,
-        "süre": 300,          # 5 dakika (saniye)
-        "satış_min": 80,
-        "satış_max": 150,
+        "süre": 60,          # 1 dakika (saniye)
+        "satış_min": 75,
+        "satış_max": 100,
         "xp": 5,
     },
     "domates": {
         "isim": "Domates",
         "emoji": "🍅",
         "fiyat": 120,
-        "süre": 600,          # 10 dakika
-        "satış_min": 200,
-        "satış_max": 350,
+        "süre": 180,          # 3 dakika
+        "satış_min": 180,
+        "satış_max": 240,
         "xp": 10,
     },
     "mısır": {
         "isim": "Mısır",
         "emoji": "🌽",
         "fiyat": 200,
-        "süre": 900,          # 15 dakika
-        "satış_min": 350,
-        "satış_max": 550,
+        "süre": 300,          # 5 dakika
+        "satış_min": 300,
+        "satış_max": 400,
         "xp": 15,
     },
     "havuç": {
@@ -2414,8 +2414,8 @@ TOHUMLAR = {
         "emoji": "🥕",
         "fiyat": 80,
         "süre": 420,          # 7 dakika
-        "satış_min": 130,
-        "satış_max": 220,
+        "satış_min": 120,
+        "satış_max": 160,
         "xp": 7,
     },
     "patates": {
@@ -2423,26 +2423,26 @@ TOHUMLAR = {
         "emoji": "🥔",
         "fiyat": 100,
         "süre": 480,          # 8 dakika
-        "satış_min": 170,
-        "satış_max": 280,
+        "satış_min": 150,
+        "satış_max": 200,
         "xp": 8,
     },
     "çilek": {
         "isim": "Çilek",
         "emoji": "🍓",
         "fiyat": 300,
-        "süre": 1200,         # 20 dakika
-        "satış_min": 500,
-        "satış_max": 800,
+        "süre": 600,         # 10 dakika
+        "satış_min": 450,
+        "satış_max": 600,
         "xp": 20,
     },
     "karpuz": {
         "isim": "Karpuz",
         "emoji": "🍉",
         "fiyat": 500,
-        "süre": 1800,         # 30 dakika
-        "satış_min": 850,
-        "satış_max": 1400,
+        "süre": 1200,         # 20 dakika
+        "satış_min": 750,
+        "satış_max": 1000,
         "xp": 30,
     },
     "altın_elma": {
@@ -2450,31 +2450,40 @@ TOHUMLAR = {
         "emoji": "🍎",
         "fiyat": 1000,
         "süre": 3600,         # 1 saat
-        "satış_min": 1800,
-        "satış_max": 3000,
+        "satış_min": 1500,
+        "satış_max": 2000,
         "xp": 50,
+    },
+    "ananas": {
+        "isim": "Krem Renk Ananas",
+        "emoji": "🍍",
+        "fiyat": 2500,
+        "süre": 7200,         # 2 saat
+        "satış_min": 3000,
+        "satış_max": 4500,
+        "xp": 75,
     },
 }
 
-# Tarla seviye sistemi - her seviyede yeni slot açılır
+# Tarla seviye sistemi - her seviyede yeni slot açılır (XP'ye göre)
 TARLA_SEVİYELERİ = {
     1: {"slot": 2, "bonus": 0},
-    2: {"slot": 3, "bonus": 0},       # 50 hasat
-    3: {"slot": 4, "bonus": 0},       # 150 hasat
-    4: {"slot": 5, "bonus": 5},       # 300 hasat  (%5 bonus satış)
-    5: {"slot": 6, "bonus": 10},      # 500 hasat  (%10 bonus satış)
+    2: {"slot": 4, "bonus": 0},       # 100 XP
+    3: {"slot": 6, "bonus": 0},       # 350 XP
+    4: {"slot": 8, "bonus": 5},       # 750 XP   (%5 bonus satış)
+    5: {"slot": 10, "bonus": 10},      # 1500 XP  (%10 bonus satış)
 }
 
 TARLA_SEVİYE_GEREKSİNİMLERİ = {
-    2: 50,
-    3: 150,
-    4: 300,
-    5: 500,
+    2: 100,
+    3: 350,
+    4: 750,
+    5: 1500,
 }
 
 # Gübre (opsiyonel hızlandırıcı)
 GÜBRE_FİYAT = 150
-GÜBRE_HIZLANDIRMA = 0.5  # Süreyi %50 azaltır
+GÜBRE_HIZLANDIRMA = 0.25  # Süreyi %50 azaltır
 
 
 # ================= TARLA VERİTABANI =================
@@ -2487,6 +2496,7 @@ def get_farm(user_id):
             "user_id": user_id,
             "seviye": 1,
             "toplam_hasat": 0,
+            "toplam_xp": 0,
             "slotlar": [],       # [{"tohum": "buğday", "ekim_zamanı": timestamp, "gübreli": False}, ...]
             "ambar": {},         # {"buğday": 5, "domates": 3, ...}
             "gübre": 0,          # Gübre miktarı
@@ -2497,6 +2507,8 @@ def get_farm(user_id):
         farm["gübre"] = 0
     if "toplam_hasat" not in farm:
         farm["toplam_hasat"] = 0
+    if "toplam_xp" not in farm:
+        farm["toplam_xp"] = 0
     return farm
 
 
@@ -2505,11 +2517,11 @@ def save_farm(farm):
     farms_col.update_one({"user_id": farm["user_id"]}, {"$set": farm}, upsert=True)
 
 
-def get_farm_level(toplam_hasat):
-    """Toplam hasata göre tarla seviyesini hesapla."""
+def get_farm_level(toplam_xp):
+    """Toplam XP'ye göre tarla seviyesini hesapla."""
     seviye = 1
     for lvl, gereksinim in sorted(TARLA_SEVİYE_GEREKSİNİMLERİ.items()):
-        if toplam_hasat >= gereksinim:
+        if toplam_xp >= gereksinim:
             seviye = lvl
         else:
             break
@@ -2532,7 +2544,7 @@ def get_satış_bonus(seviye):
 async def tarla(ctx):
     """Tarla durumunu göster."""
     farm = get_farm(ctx.author.id)
-    seviye = get_farm_level(farm["toplam_hasat"])
+    seviye = get_farm_level(farm["toplam_xp"])
     farm["seviye"] = seviye
     save_farm(farm)
 
@@ -2579,13 +2591,13 @@ async def tarla(ctx):
     if not ambar_text:
         ambar_text = "Ambar boş."
 
-    # Seviye ilerleme
+    # Seviye ilerleme (XP'ye göre)
     if sonraki_gereksinim:
-        ilerleme = farm["toplam_hasat"]
+        ilerleme = farm["toplam_xp"]
         pct = min(ilerleme / sonraki_gereksinim, 1.0)
         filled = int(pct * 15)
         bar = "🟩" * filled + "⬛" * (15 - filled)
-        seviye_text = f"Seviye **{seviye}** `[{bar}]` {ilerleme}/{sonraki_gereksinim}"
+        seviye_text = f"Seviye **{seviye}** `[{bar}]` {ilerleme}/{sonraki_gereksinim} XP"
     else:
         seviye_text = f"Seviye **{seviye}** (MAKSİMUM!)"
 
@@ -2675,7 +2687,7 @@ async def ek(ctx, tohum_id: str = None, adet: int = 1):
 
     tohum = TOHUMLAR[tohum_id]
     farm = get_farm(user_id)
-    seviye = get_farm_level(farm["toplam_hasat"])
+    seviye = get_farm_level(farm["toplam_xp"])
     farm["seviye"] = seviye
     max_slot = get_max_slot(seviye)
 
@@ -2784,10 +2796,11 @@ async def hasat(ctx):
     farm["ambar"] = ambar
     farm["slotlar"] = kalan_slotlar
     farm["toplam_hasat"] = farm.get("toplam_hasat", 0) + len(hazır_ürünler)
+    farm["toplam_xp"] = farm.get("toplam_xp", 0) + toplam_xp
 
-    # Seviye kontrolü
+    # Seviye kontrolü (XP'ye göre)
     eski_seviye = farm.get("seviye", 1)
-    yeni_seviye = get_farm_level(farm["toplam_hasat"])
+    yeni_seviye = get_farm_level(farm["toplam_xp"])
     farm["seviye"] = yeni_seviye
     save_farm(farm)
 
@@ -2811,7 +2824,7 @@ async def hasat(ctx):
             f"**Toplanan ürünler:**\n"
             f"{detay_text}\n"
             f"**+{toplam_xp} XP** kazandın!\n"
-            f"Toplam hasat: **{farm['toplam_hasat']}**"
+            f"Toplam XP: **{farm['toplam_xp']}**"
         ),
         color=discord.Color.gold(),
         timestamp=datetime.now(timezone.utc)
@@ -2858,7 +2871,7 @@ async def sat(ctx, ürün_id: str = None, adet: int = None):
     ürün_id = ürün_id.lower().strip()
     farm = get_farm(user_id)
     user = get_user(user_id)
-    seviye = get_farm_level(farm["toplam_hasat"])
+    seviye = get_farm_level(farm["toplam_xp"])
     bonus_pct = get_satış_bonus(seviye)
     ambar = farm.get("ambar", {})
 
@@ -3082,7 +3095,6 @@ async def gübresat(ctx, adet: int = 1):
         timestamp=datetime.now(timezone.utc)
     )
     await ctx.send(embed=embed)
-
 
 # ================= SINIF TANIMLARI =================
 
@@ -4406,6 +4418,7 @@ async def prestij_yap(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
