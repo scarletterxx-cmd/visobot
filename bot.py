@@ -31,6 +31,7 @@ warnings_col = db["warnings"]
 daily_col = db["daily"]
 quests_col = db["quests"]
 daily_messages_col = db["daily_messages"]
+farms_col = db["farms"]
 
 app = Flask("")
 
@@ -97,6 +98,9 @@ HIRSIZLIK_COOLDOWN = 300  # 5 dakika
 
 transfer_cd = {}
 TRANSFER_COOLDOWN = 10
+
+tarla_cd = {}
+TARLA_COOLDOWN = 5
 
 # ================= SOHBET PARA ODULU =================
 CHAT_REWARD_CHANNEL_ID = 1389166576242266175
@@ -175,6 +179,8 @@ DAILY_QUESTS = [
     {"id": "slot_5", "name": "Slot Avcısı", "desc": "5 slot çevir", "type": "slot", "goal": 5, "reward": 300},
     {"id": "rulet_3", "name": "Rulet Ustası", "desc": "3 rulet oyna", "type": "rulet", "goal": 3, "reward": 250},
     {"id": "duello_2", "name": "Düellocu", "desc": "2 düello yap", "type": "duello", "goal": 2, "reward": 350},
+    {"id": "hasat_3", "name": "Çiftçi", "desc": "3 hasat yap", "type": "hasat", "goal": 3, "reward": 250},
+    {"id": "ek_5", "name": "Tohum Ustası", "desc": "5 tohum ek", "type": "tohum_ek", "goal": 5, "reward": 200},
 ]
 
 WEEKLY_QUESTS = [
@@ -186,6 +192,7 @@ WEEKLY_QUESTS = [
     {"id": "w_harca_5000", "name": "Para Yakıcı", "desc": "Toplam 5000 VisoCoin harca", "type": "harca", "goal": 5000, "reward": 2000},
     {"id": "w_blackjack_15", "name": "Kart Baronu", "desc": "15 blackjack oyna", "type": "blackjack", "goal": 15, "reward": 1500},
     {"id": "w_slot_20", "name": "Slot Imparatoru", "desc": "20 slot çevir", "type": "slot", "goal": 20, "reward": 1800},
+    {"id": "w_hasat_20", "name": "Haftalık Çiftçi", "desc": "20 hasat yap", "type": "hasat", "goal": 20, "reward": 1500},
 ]
 
 DAILY_QUEST_COUNT = 3
@@ -478,7 +485,7 @@ async def on_message(message):
                     color=discord.Color.green(),
                     timestamp=datetime.now(timezone.utc)
                 )
-                embed.set_footer(text="Sohbet et, sansini dene!")
+                embed.set_footer(text="Sohbet et, şansını dene!")
                 await message.channel.send(embed=embed)
 
     await bot.process_commands(message)
@@ -2316,8 +2323,726 @@ async def yardim(ctx):
         inline=False
     )
 
+    embed.add_field(
+        name="-- Tarla / Çiftlik --",
+        value=(
+            "`!tarla` - Tarla durumunu gör\n"
+            "`!tohumlar` - Tohum listesini gör\n"
+            "`!ek <tohum> [adet]` - Tohum ek\n"
+            "`!hasat` - Hazır ürünleri topla\n"
+            "`!sat <ürün> [adet]` - Ürün sat\n"
+            "`!sat hepsi` - Tüm ürünleri sat\n"
+            "`!gübresat [adet]` - Gübre satın al (150 VisoCoin)\n"
+            "`!gübrele <slot>` - Slota gübre at\n"
+        ),
+        inline=False
+    )
+
     await ctx.send(embed=embed)
 
+# ================= TOHUM & ÜRÜN TANIMLARI =================
+
+TOHUMLAR = {
+    "buğday": {
+        "isim": "Buğday",
+        "emoji": "🌾",
+        "fiyat": 50,
+        "süre": 300,          # 5 dakika (saniye)
+        "satış_min": 80,
+        "satış_max": 150,
+        "xp": 5,
+    },
+    "domates": {
+        "isim": "Domates",
+        "emoji": "🍅",
+        "fiyat": 120,
+        "süre": 600,          # 10 dakika
+        "satış_min": 200,
+        "satış_max": 350,
+        "xp": 10,
+    },
+    "mısır": {
+        "isim": "Mısır",
+        "emoji": "🌽",
+        "fiyat": 200,
+        "süre": 900,          # 15 dakika
+        "satış_min": 350,
+        "satış_max": 550,
+        "xp": 15,
+    },
+    "havuç": {
+        "isim": "Havuç",
+        "emoji": "🥕",
+        "fiyat": 80,
+        "süre": 420,          # 7 dakika
+        "satış_min": 130,
+        "satış_max": 220,
+        "xp": 7,
+    },
+    "patates": {
+        "isim": "Patates",
+        "emoji": "🥔",
+        "fiyat": 100,
+        "süre": 480,          # 8 dakika
+        "satış_min": 170,
+        "satış_max": 280,
+        "xp": 8,
+    },
+    "çilek": {
+        "isim": "Çilek",
+        "emoji": "🍓",
+        "fiyat": 300,
+        "süre": 1200,         # 20 dakika
+        "satış_min": 500,
+        "satış_max": 800,
+        "xp": 20,
+    },
+    "karpuz": {
+        "isim": "Karpuz",
+        "emoji": "🍉",
+        "fiyat": 500,
+        "süre": 1800,         # 30 dakika
+        "satış_min": 850,
+        "satış_max": 1400,
+        "xp": 30,
+    },
+    "altın_elma": {
+        "isim": "Altın Elma",
+        "emoji": "🍎",
+        "fiyat": 1000,
+        "süre": 3600,         # 1 saat
+        "satış_min": 1800,
+        "satış_max": 3000,
+        "xp": 50,
+    },
+}
+
+# Tarla seviye sistemi - her seviyede yeni slot açılır
+TARLA_SEVİYELERİ = {
+    1: {"slot": 2, "bonus": 0},
+    2: {"slot": 3, "bonus": 0},       # 50 hasat
+    3: {"slot": 4, "bonus": 0},       # 150 hasat
+    4: {"slot": 5, "bonus": 5},       # 300 hasat  (%5 bonus satış)
+    5: {"slot": 6, "bonus": 10},      # 500 hasat  (%10 bonus satış)
+}
+
+TARLA_SEVİYE_GEREKSİNİMLERİ = {
+    2: 50,
+    3: 150,
+    4: 300,
+    5: 500,
+}
+
+# Gübre (opsiyonel hızlandırıcı)
+GÜBRE_FİYAT = 150
+GÜBRE_HIZLANDIRMA = 0.5  # Süreyi %50 azaltır
+
+
+# ================= TARLA VERİTABANI =================
+
+def get_farm(user_id):
+    """Kullanıcının tarla verisini getir veya oluştur."""
+    farm = farms_col.find_one({"user_id": user_id})
+    if not farm:
+        farm = {
+            "user_id": user_id,
+            "seviye": 1,
+            "toplam_hasat": 0,
+            "slotlar": [],       # [{"tohum": "buğday", "ekim_zamanı": timestamp, "gübreli": False}, ...]
+            "ambar": {},         # {"buğday": 5, "domates": 3, ...}
+            "gübre": 0,          # Gübre miktarı
+        }
+        farms_col.insert_one(farm)
+    # Eski veriler için alan kontrolü
+    if "gübre" not in farm:
+        farm["gübre"] = 0
+    if "toplam_hasat" not in farm:
+        farm["toplam_hasat"] = 0
+    return farm
+
+
+def save_farm(farm):
+    """Tarla verisini kaydet."""
+    farms_col.update_one({"user_id": farm["user_id"]}, {"$set": farm}, upsert=True)
+
+
+def get_farm_level(toplam_hasat):
+    """Toplam hasata göre tarla seviyesini hesapla."""
+    seviye = 1
+    for lvl, gereksinim in sorted(TARLA_SEVİYE_GEREKSİNİMLERİ.items()):
+        if toplam_hasat >= gereksinim:
+            seviye = lvl
+        else:
+            break
+    return seviye
+
+
+def get_max_slot(seviye):
+    """Tarla seviyesine göre maksimum slot sayısını getir."""
+    return TARLA_SEVİYELERİ.get(seviye, TARLA_SEVİYELERİ[1])["slot"]
+
+
+def get_satış_bonus(seviye):
+    """Tarla seviyesine göre satış bonus yüzdesi."""
+    return TARLA_SEVİYELERİ.get(seviye, TARLA_SEVİYELERİ[1])["bonus"]
+
+
+# ================= TARLA KOMUTLARI =================
+
+@bot.command(name="tarla", aliases=["farm", "çiftlik", "bahçe"])
+async def tarla(ctx):
+    """Tarla durumunu göster."""
+    farm = get_farm(ctx.author.id)
+    seviye = get_farm_level(farm["toplam_hasat"])
+    farm["seviye"] = seviye
+    save_farm(farm)
+
+    max_slot = get_max_slot(seviye)
+    bonus = get_satış_bonus(seviye)
+    sonraki_seviye = seviye + 1
+    sonraki_gereksinim = TARLA_SEVİYE_GEREKSİNİMLERİ.get(sonraki_seviye)
+
+    now = time.time()
+
+    # Tarla durumu
+    slot_text = ""
+    for i, slot in enumerate(farm["slotlar"], 1):
+        tohum = TOHUMLAR[slot["tohum"]]
+        süre = tohum["süre"]
+        if slot.get("gübreli"):
+            süre = int(süre * GÜBRE_HIZLANDIRMA)
+        geçen = now - slot["ekim_zamanı"]
+
+        if geçen >= süre:
+            slot_text += f"**{i}.** {tohum['emoji']} {tohum['isim']} — Hasat için hazır!\n"
+        else:
+            kalan = int(süre - geçen)
+            dk = kalan // 60
+            sn = kalan % 60
+            gübre_text = " (Gübreli)" if slot.get("gübreli") else ""
+            slot_text += f"**{i}.** {tohum['emoji']} {tohum['isim']} — {dk}dk {sn}sn kaldı{gübre_text}\n"
+
+    boş_slot = max_slot - len(farm["slotlar"])
+    for i in range(len(farm["slotlar"]) + 1, max_slot + 1):
+        slot_text += f"**{i}.** Boş slot\n"
+
+    if not slot_text:
+        slot_text = "Tarlan boş! `!ek <tohum>` ile ekim yap."
+
+    # Ambar durumu
+    ambar_text = ""
+    for ürün_id, miktar in farm.get("ambar", {}).items():
+        if miktar > 0:
+            tohum = TOHUMLAR.get(ürün_id)
+            if tohum:
+                ambar_text += f"{tohum['emoji']} {tohum['isim']}: **{miktar}** adet\n"
+
+    if not ambar_text:
+        ambar_text = "Ambar boş."
+
+    # Seviye ilerleme
+    if sonraki_gereksinim:
+        ilerleme = farm["toplam_hasat"]
+        pct = min(ilerleme / sonraki_gereksinim, 1.0)
+        filled = int(pct * 15)
+        bar = "🟩" * filled + "⬛" * (15 - filled)
+        seviye_text = f"Seviye **{seviye}** `[{bar}]` {ilerleme}/{sonraki_gereksinim}"
+    else:
+        seviye_text = f"Seviye **{seviye}** (MAKSİMUM!)"
+
+    embed = discord.Embed(
+        title=f"🌾 {ctx.author.display_name} - Tarla",
+        description=(
+            f"{seviye_text}\n"
+            f"{'━' * 30}\n\n"
+            f"**Tarlalar ({len(farm['slotlar'])}/{max_slot}):**\n"
+            f"{slot_text}\n"
+            f"**Ambar:**\n"
+            f"{ambar_text}\n"
+            f"**Gübre:** {farm.get('gübre', 0)} adet"
+        ),
+        color=discord.Color.green(),
+        timestamp=datetime.now(timezone.utc)
+    )
+
+    if bonus > 0:
+        embed.set_footer(text=f"Satış bonusu: +%{bonus} | Gübre: {farm.get('gübre', 0)} adet")
+    else:
+        embed.set_footer(text=f"{ctx.author.display_name}", icon_url=ctx.author.display_avatar.url)
+
+    await ctx.send(embed=embed)
+
+
+@bot.command(name="tohumlar", aliases=["seeds", "tohumlistesi"])
+async def tohumlar(ctx):
+    """Mevcut tohumları listele."""
+    embed = discord.Embed(
+        title="🌱 Tohum Listesi",
+        description="Tohum ekmek için: `!ek <tohum>`",
+        color=discord.Color.green(),
+        timestamp=datetime.now(timezone.utc)
+    )
+
+    for tohum_id, tohum in TOHUMLAR.items():
+        dk = tohum["süre"] // 60
+        embed.add_field(
+            name=f"{tohum['emoji']} {tohum['isim']} (`{tohum_id}`)",
+            value=(
+                f"Fiyat: **{tohum['fiyat']}** VisoCoin\n"
+                f"Büyüme: **{dk}** dakika\n"
+                f"Satış: **{tohum['satış_min']}-{tohum['satış_max']}** VisoCoin\n"
+                f"XP: **+{tohum['xp']}**"
+            ),
+            inline=True
+        )
+
+    embed.set_footer(text="Gübreli ekimde süre %50 azalır!")
+    await ctx.send(embed=embed)
+
+
+@bot.command(name="ek", aliases=["plant", "tohum"])
+async def ek(ctx, tohum_id: str = None, adet: int = 1):
+    """Tohum ek."""
+    user_id = ctx.author.id
+
+    if tohum_id is None:
+        embed = discord.Embed(
+            title="🌱 Tohum Ekme",
+            description=(
+                "Kullanım: `!ek <tohum> [adet]`\n\n"
+                "Örnek: `!ek buğday` veya `!ek domates 3`\n\n"
+                "Tohumları görmek için: `!tohumlar`"
+            ),
+            color=discord.Color.blue(),
+            timestamp=datetime.now(timezone.utc)
+        )
+        return await ctx.send(embed=embed)
+
+    tohum_id = tohum_id.lower().strip()
+
+    if tohum_id not in TOHUMLAR:
+        embed = discord.Embed(
+            description="Böyle bir tohum yok! `!tohumlar` ile mevcut tohumları gör.",
+            color=discord.Color.red()
+        )
+        return await ctx.send(embed=embed)
+
+    if adet <= 0:
+        embed = discord.Embed(
+            description="Geçerli bir adet gir.",
+            color=discord.Color.red()
+        )
+        return await ctx.send(embed=embed)
+
+    tohum = TOHUMLAR[tohum_id]
+    farm = get_farm(user_id)
+    seviye = get_farm_level(farm["toplam_hasat"])
+    farm["seviye"] = seviye
+    max_slot = get_max_slot(seviye)
+
+    boş_slot = max_slot - len(farm["slotlar"])
+
+    if boş_slot <= 0:
+        embed = discord.Embed(
+            description=f"Tarlanda boş slot yok! Önce hasat yap (`!hasat`) veya seviye atla.\nMevcut: {len(farm['slotlar'])}/{max_slot}",
+            color=discord.Color.red()
+        )
+        return await ctx.send(embed=embed)
+
+    # Eklenebilecek miktarı sınırla
+    adet = min(adet, boş_slot)
+    toplam_fiyat = tohum["fiyat"] * adet
+
+    user = get_user(user_id)
+    if user["money"] < toplam_fiyat:
+        embed = discord.Embed(
+            description=f"Yetersiz bakiye! {adet}x {tohum['isim']} için **{toplam_fiyat}** VisoCoin gerekiyor.\nBakiyen: **{user['money']}** VisoCoin",
+            color=discord.Color.red()
+        )
+        return await ctx.send(embed=embed)
+
+    # Parayı düşür
+    user["money"] -= toplam_fiyat
+    save_user(user)
+
+    # Tohumları ek
+    now = time.time()
+    for _ in range(adet):
+        farm["slotlar"].append({
+            "tohum": tohum_id,
+            "ekim_zamanı": now,
+            "gübreli": False,
+        })
+
+    save_farm(farm)
+
+    # Görev ilerlemesi
+    update_quest_progress(user_id, "tohum_ek", adet)
+    update_quest_progress(user_id, "harca", toplam_fiyat)
+
+    embed = discord.Embed(
+        title="🌱 Tohum Ekildi!",
+        description=(
+            f"{ctx.author.mention}, **{adet}x {tohum['emoji']} {tohum['isim']}** ekildi!\n\n"
+            f"Maliyet: **{toplam_fiyat}** VisoCoin\n"
+            f"Büyüme süresi: **{tohum['süre'] // 60}** dakika\n"
+            f"Tarla: {len(farm['slotlar'])}/{max_slot} slot dolu\n\n"
+            f"Hasat için: `!hasat`"
+        ),
+        color=discord.Color.green(),
+        timestamp=datetime.now(timezone.utc)
+    )
+    embed.set_footer(text=f"{ctx.author.display_name}", icon_url=ctx.author.display_avatar.url)
+    await ctx.send(embed=embed)
+
+
+@bot.command(name="hasat", aliases=["harvest", "topla"])
+async def hasat(ctx):
+    """Hazır olan ürünleri hasat et."""
+    user_id = ctx.author.id
+    farm = get_farm(user_id)
+    user = get_user(user_id)
+    now = time.time()
+
+    hazır_ürünler = []
+    kalan_slotlar = []
+
+    for slot in farm["slotlar"]:
+        tohum = TOHUMLAR[slot["tohum"]]
+        süre = tohum["süre"]
+        if slot.get("gübreli"):
+            süre = int(süre * GÜBRE_HIZLANDIRMA)
+
+        geçen = now - slot["ekim_zamanı"]
+
+        if geçen >= süre:
+            # Hasat hazır
+            hazır_ürünler.append(slot["tohum"])
+        else:
+            # Henüz hazır değil
+            kalan_slotlar.append(slot)
+
+    if not hazır_ürünler:
+        embed = discord.Embed(
+            title="🌾 Hasat",
+            description=f"{ctx.author.mention}, hasat edilecek hazır ürün yok!\n`!tarla` ile durumu kontrol et.",
+            color=discord.Color.orange(),
+            timestamp=datetime.now(timezone.utc)
+        )
+        return await ctx.send(embed=embed)
+
+    # Ürünleri ambara ekle
+    ambar = farm.get("ambar", {})
+    hasat_detay = {}
+    toplam_xp = 0
+
+    for ürün_id in hazır_ürünler:
+        tohum = TOHUMLAR[ürün_id]
+        ambar[ürün_id] = ambar.get(ürün_id, 0) + 1
+        hasat_detay[ürün_id] = hasat_detay.get(ürün_id, 0) + 1
+        toplam_xp += tohum["xp"]
+
+    farm["ambar"] = ambar
+    farm["slotlar"] = kalan_slotlar
+    farm["toplam_hasat"] = farm.get("toplam_hasat", 0) + len(hazır_ürünler)
+
+    # Seviye kontrolü
+    eski_seviye = farm.get("seviye", 1)
+    yeni_seviye = get_farm_level(farm["toplam_hasat"])
+    farm["seviye"] = yeni_seviye
+    save_farm(farm)
+
+    # XP ekle
+    user["xp"] = user.get("xp", 0) + toplam_xp
+    save_user(user)
+
+    # Görev ilerlemesi
+    update_quest_progress(user_id, "hasat", len(hazır_ürünler))
+
+    # Hasat detayları
+    detay_text = ""
+    for ürün_id, adet in hasat_detay.items():
+        tohum = TOHUMLAR[ürün_id]
+        detay_text += f"{tohum['emoji']} {tohum['isim']}: **{adet}** adet\n"
+
+    embed = discord.Embed(
+        title="🌾 Hasat Tamamlandı!",
+        description=(
+            f"{ctx.author.mention}, hasat başarılı!\n\n"
+            f"**Toplanan ürünler:**\n"
+            f"{detay_text}\n"
+            f"**+{toplam_xp} XP** kazandın!\n"
+            f"Toplam hasat: **{farm['toplam_hasat']}**"
+        ),
+        color=discord.Color.gold(),
+        timestamp=datetime.now(timezone.utc)
+    )
+    embed.set_footer(text=f"{ctx.author.display_name}", icon_url=ctx.author.display_avatar.url)
+    await ctx.send(embed=embed)
+
+    # Seviye atladı mı?
+    if yeni_seviye > eski_seviye:
+        yeni_slot = get_max_slot(yeni_seviye)
+        yeni_bonus = get_satış_bonus(yeni_seviye)
+        level_embed = discord.Embed(
+            title="🎉 Tarla Seviye Atladı!",
+            description=(
+                f"{ctx.author.mention}, tarla seviyen **{yeni_seviye}** oldu!\n\n"
+                f"Yeni slot sayısı: **{yeni_slot}**\n"
+                f"Satış bonusu: **+%{yeni_bonus}**"
+            ),
+            color=discord.Color.gold(),
+            timestamp=datetime.now(timezone.utc)
+        )
+        await ctx.send(embed=level_embed)
+
+
+@bot.command(name="sat", aliases=["sell", "ürünsat"])
+async def sat(ctx, ürün_id: str = None, adet: int = None):
+    """Ambardaki ürünleri sat."""
+    user_id = ctx.author.id
+
+    if ürün_id is None:
+        embed = discord.Embed(
+            title="💰 Ürün Satışı",
+            description=(
+                "Kullanım: `!sat <ürün> [adet]` veya `!sat hepsi`\n\n"
+                "Örnek: `!sat buğday 5` veya `!sat domates`\n"
+                "Tüm ürünleri satmak için: `!sat hepsi`\n\n"
+                "Ambarını görmek için: `!tarla`"
+            ),
+            color=discord.Color.blue(),
+            timestamp=datetime.now(timezone.utc)
+        )
+        return await ctx.send(embed=embed)
+
+    ürün_id = ürün_id.lower().strip()
+    farm = get_farm(user_id)
+    user = get_user(user_id)
+    seviye = get_farm_level(farm["toplam_hasat"])
+    bonus_pct = get_satış_bonus(seviye)
+    ambar = farm.get("ambar", {})
+
+    # Hepsini sat
+    if ürün_id == "hepsi":
+        toplam_kazanç = 0
+        satış_detay = {}
+
+        for uid, miktar in list(ambar.items()):
+            if miktar <= 0:
+                continue
+            tohum = TOHUMLAR.get(uid)
+            if not tohum:
+                continue
+
+            for _ in range(miktar):
+                fiyat = random.randint(tohum["satış_min"], tohum["satış_max"])
+                if bonus_pct > 0:
+                    fiyat = int(fiyat * (1 + bonus_pct / 100))
+                toplam_kazanç += fiyat
+
+            satış_detay[uid] = miktar
+            ambar[uid] = 0
+
+        if toplam_kazanç == 0:
+            embed = discord.Embed(
+                description="Ambarında satılacak ürün yok!",
+                color=discord.Color.red()
+            )
+            return await ctx.send(embed=embed)
+
+        user["money"] += toplam_kazanç
+        farm["ambar"] = ambar
+        save_user(user)
+        save_farm(farm)
+
+        detay_text = ""
+        for uid, miktar in satış_detay.items():
+            tohum = TOHUMLAR[uid]
+            detay_text += f"{tohum['emoji']} {tohum['isim']}: **{miktar}** adet\n"
+
+        embed = discord.Embed(
+            title="💰 Toplu Satış!",
+            description=(
+                f"{ctx.author.mention}, tüm ürünler satıldı!\n\n"
+                f"**Satılan ürünler:**\n"
+                f"{detay_text}\n"
+                f"Toplam kazanç: **+{toplam_kazanç:,}** VisoCoin"
+                f"{f' (Bonus: +%{bonus_pct})' if bonus_pct > 0 else ''}\n"
+                f"Bakiye: **{user['money']:,}** VisoCoin"
+            ),
+            color=discord.Color.gold(),
+            timestamp=datetime.now(timezone.utc)
+        )
+        embed.set_footer(text=f"{ctx.author.display_name}", icon_url=ctx.author.display_avatar.url)
+        return await ctx.send(embed=embed)
+
+    # Tek ürün sat
+    if ürün_id not in TOHUMLAR:
+        embed = discord.Embed(
+            description="Böyle bir ürün yok!",
+            color=discord.Color.red()
+        )
+        return await ctx.send(embed=embed)
+
+    mevcut = ambar.get(ürün_id, 0)
+    if mevcut <= 0:
+        embed = discord.Embed(
+            description=f"Ambarında **{TOHUMLAR[ürün_id]['isim']}** yok!",
+            color=discord.Color.red()
+        )
+        return await ctx.send(embed=embed)
+
+    if adet is None:
+        adet = mevcut  # Belirtilmezse hepsini sat
+
+    adet = min(adet, mevcut)
+    if adet <= 0:
+        embed = discord.Embed(
+            description="Geçerli bir adet gir.",
+            color=discord.Color.red()
+        )
+        return await ctx.send(embed=embed)
+
+    tohum = TOHUMLAR[ürün_id]
+    toplam_kazanç = 0
+
+    for _ in range(adet):
+        fiyat = random.randint(tohum["satış_min"], tohum["satış_max"])
+        if bonus_pct > 0:
+            fiyat = int(fiyat * (1 + bonus_pct / 100))
+        toplam_kazanç += fiyat
+
+    ambar[ürün_id] = mevcut - adet
+    farm["ambar"] = ambar
+    user["money"] += toplam_kazanç
+    save_user(user)
+    save_farm(farm)
+
+    embed = discord.Embed(
+        title="💰 Ürün Satıldı!",
+        description=(
+            f"{ctx.author.mention}, **{adet}x {tohum['emoji']} {tohum['isim']}** satıldı!\n\n"
+            f"Kazanç: **+{toplam_kazanç:,}** VisoCoin"
+            f"{f' (Bonus: +%{bonus_pct})' if bonus_pct > 0 else ''}\n"
+            f"Bakiye: **{user['money']:,}** VisoCoin\n"
+            f"Ambarda kalan: **{ambar.get(ürün_id, 0)}** adet"
+        ),
+        color=discord.Color.green(),
+        timestamp=datetime.now(timezone.utc)
+    )
+    embed.set_footer(text=f"{ctx.author.display_name}", icon_url=ctx.author.display_avatar.url)
+    await ctx.send(embed=embed)
+
+
+@bot.command(name="gübrele", aliases=["fertilize", "gübre"])
+async def gübrele(ctx, slot_no: int = None):
+    """Belirli bir slota gübre at (büyüme süresini %50 azaltır)."""
+    user_id = ctx.author.id
+    farm = get_farm(user_id)
+
+    if farm.get("gübre", 0) <= 0:
+        embed = discord.Embed(
+            description="Gübren yok! `!gübresat` ile gübre satın al.",
+            color=discord.Color.red()
+        )
+        return await ctx.send(embed=embed)
+
+    if slot_no is None:
+        embed = discord.Embed(
+            title="🧪 Gübre Kullanımı",
+            description=(
+                "Kullanım: `!gübrele <slot_no>`\n\n"
+                "Örnek: `!gübrele 1`\n"
+                "Gübre büyüme süresini **%50** azaltır.\n\n"
+                "Tarlanı görmek için: `!tarla`"
+            ),
+            color=discord.Color.blue(),
+            timestamp=datetime.now(timezone.utc)
+        )
+        return await ctx.send(embed=embed)
+
+    if slot_no < 1 or slot_no > len(farm["slotlar"]):
+        embed = discord.Embed(
+            description=f"Geçersiz slot numarası! 1-{len(farm['slotlar'])} arası gir.",
+            color=discord.Color.red()
+        )
+        return await ctx.send(embed=embed)
+
+    slot = farm["slotlar"][slot_no - 1]
+
+    if slot.get("gübreli"):
+        embed = discord.Embed(
+            description="Bu slot zaten gübreli!",
+            color=discord.Color.orange()
+        )
+        return await ctx.send(embed=embed)
+
+    # Gübre kullan
+    farm["gübre"] -= 1
+    farm["slotlar"][slot_no - 1]["gübreli"] = True
+    save_farm(farm)
+
+    tohum = TOHUMLAR[slot["tohum"]]
+    yeni_süre = int(tohum["süre"] * GÜBRE_HIZLANDIRMA)
+
+    embed = discord.Embed(
+        title="🧪 Gübre Kullanıldı!",
+        description=(
+            f"{ctx.author.mention}, **{slot_no}. slot** gübrendi!\n\n"
+            f"{tohum['emoji']} {tohum['isim']} büyüme süresi: **{yeni_süre // 60}** dakikaya düştü!\n"
+            f"Kalan gübre: **{farm['gübre']}**"
+        ),
+        color=discord.Color.green(),
+        timestamp=datetime.now(timezone.utc)
+    )
+    await ctx.send(embed=embed)
+
+
+@bot.command(name="gübresat", aliases=["buyfertilizer", "gübresal"])
+async def gübresat(ctx, adet: int = 1):
+    """Gübre satın al."""
+    user_id = ctx.author.id
+
+    if adet <= 0:
+        embed = discord.Embed(
+            description="Geçerli bir adet gir.",
+            color=discord.Color.red()
+        )
+        return await ctx.send(embed=embed)
+
+    toplam_fiyat = GÜBRE_FİYAT * adet
+    user = get_user(user_id)
+
+    if user["money"] < toplam_fiyat:
+        embed = discord.Embed(
+            description=f"Yetersiz bakiye! {adet}x gübre için **{toplam_fiyat}** VisoCoin gerekiyor.",
+            color=discord.Color.red()
+        )
+        return await ctx.send(embed=embed)
+
+    user["money"] -= toplam_fiyat
+    save_user(user)
+
+    farm = get_farm(user_id)
+    farm["gübre"] = farm.get("gübre", 0) + adet
+    save_farm(farm)
+
+    update_quest_progress(user_id, "harca", toplam_fiyat)
+
+    embed = discord.Embed(
+        title="🧪 Gübre Satın Alındı!",
+        description=(
+            f"{ctx.author.mention}, **{adet}x gübre** satın aldın!\n\n"
+            f"Maliyet: **{toplam_fiyat}** VisoCoin\n"
+            f"Toplam gübre: **{farm['gübre']}**\n"
+            f"Bakiye: **{user['money']:,}** VisoCoin\n\n"
+            f"Kullanmak için: `!gübrele <slot_no>`"
+        ),
+        color=discord.Color.green(),
+        timestamp=datetime.now(timezone.utc)
+    )
+    await ctx.send(embed=embed)
 
 # ================== RUN ==================
 
