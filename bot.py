@@ -4129,7 +4129,7 @@ async def iksir_satın_al(ctx, adet: int = 1):
     await ctx.send(embed=embed)
 
 
-@bot.command(name="envanter", aliases=["inventory", "çanta", "eşyalar"])
+@bot.command(name="zindanenvanteri", aliases=["zenv", "ze", "ekipman"])
 async def envanter(ctx):
     """Ekipman envanterini göster."""
     user_id = ctx.author.id
@@ -4406,6 +4406,7 @@ async def prestij_yap(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
