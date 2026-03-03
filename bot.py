@@ -3756,7 +3756,7 @@ async def zindan_gir(ctx):
 
 
 @bot.command(name="saldır", aliases=["attack", "vuruş", "saldiri"])
-async def saldır(ctx):
+async def zsaldır(ctx):
     """Aktif canavara saldır."""
     user_id = ctx.author.id
     dungeon = get_dungeon(user_id)
@@ -5670,7 +5670,7 @@ async def mürettebatçıkar(ctx, index: int = None):
     await ctx.send(embed=embed)
 
 
-@bot.command(name="yağmala", aliases=["raid", "saldır"])
+@bot.command(name="yağmala", aliases=["raid"])
 async def yağmala(ctx, hedef: discord.Member = None):
     """Başka bir oyuncunun gemisine saldır (PvP)."""
     user_id = ctx.author.id
@@ -5901,6 +5901,7 @@ async def korsansıralama(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
