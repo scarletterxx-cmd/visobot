@@ -33,6 +33,7 @@ quests_col = db["quests"]
 daily_messages_col = db["daily_messages"]
 farms_col = db["farms"]
 dungeons_col = db["dungeons"]
+pirates_col = db["pirates"]
 
 app = Flask("")
 
@@ -5901,6 +5902,7 @@ async def korsansıralama(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
