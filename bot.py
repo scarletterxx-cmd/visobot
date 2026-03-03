@@ -4415,9 +4415,1493 @@ async def prestij_yap(ctx):
     await ctx.send(embed=embed)
 
 
+
+# ================= GEMİ TİPLERİ =================
+
+GEMİLER = {
+    "sandal": {
+        "isim": "Sandal",
+        "emoji": "🚣",
+        "fiyat": 0,            # Başlangıç gemisi (ücretsiz)
+        "hp": 50,
+        "saldırı": 5,
+        "zırh": 2,
+        "hız": 3,
+        "kargo": 10,           # Maksimum kargo kapasitesi
+        "mürettebat_max": 2,
+        "seviye_gereksinim": 1,
+    },
+    "yelkenli": {
+        "isim": "Yelkenli",
+        "emoji": "⛵",
+        "fiyat": 5000,
+        "hp": 120,
+        "saldırı": 12,
+        "zırh": 8,
+        "hız": 5,
+        "kargo": 25,
+        "mürettebat_max": 5,
+        "seviye_gereksinim": 3,
+    },
+    "brik": {
+        "isim": "Brik",
+        "emoji": "🚢",
+        "fiyat": 20000,
+        "hp": 250,
+        "saldırı": 25,
+        "zırh": 18,
+        "hız": 7,
+        "kargo": 50,
+        "mürettebat_max": 10,
+        "seviye_gereksinim": 6,
+    },
+    "kalyon": {
+        "isim": "Kalyon",
+        "emoji": "🏴‍☠️",
+        "fiyat": 75000,
+        "hp": 500,
+        "saldırı": 50,
+        "zırh": 35,
+        "hız": 6,
+        "kargo": 100,
+        "mürettebat_max": 20,
+        "seviye_gereksinim": 10,
+    },
+    "hayalet_gemi": {
+        "isim": "Hayalet Gemi",
+        "emoji": "👻",
+        "fiyat": 200000,
+        "hp": 800,
+        "saldırı": 80,
+        "zırh": 50,
+        "hız": 10,
+        "kargo": 150,
+        "mürettebat_max": 30,
+        "seviye_gereksinim": 15,
+    },
+}
+
+
+# ================= MÜRETTEBAT TİPLERİ =================
+
+MÜRETTEBAT = {
+    "tayfa": {
+        "isim": "Tayfa",
+        "emoji": "👤",
+        "fiyat": 200,
+        "saldırı_bonus": 1,
+        "savunma_bonus": 1,
+        "özel": None,
+    },
+    "topçu": {
+        "isim": "Topçu",
+        "emoji": "💣",
+        "fiyat": 500,
+        "saldırı_bonus": 4,
+        "savunma_bonus": 0,
+        "özel": "Kritik vuruş şansı +%10",
+    },
+    "doktor": {
+        "isim": "Doktor",
+        "emoji": "🩺",
+        "fiyat": 600,
+        "saldırı_bonus": 0,
+        "savunma_bonus": 2,
+        "özel": "Savaş sonrası HP onarımı +%15",
+    },
+    "kaptan_yardımcısı": {
+        "isim": "Kaptan Yardımcısı",
+        "emoji": "🧭",
+        "fiyat": 1000,
+        "saldırı_bonus": 2,
+        "savunma_bonus": 3,
+        "özel": "Keşif XP +%20",
+    },
+    "silahçı": {
+        "isim": "Silahçı",
+        "emoji": "⚔️",
+        "fiyat": 800,
+        "saldırı_bonus": 6,
+        "savunma_bonus": 1,
+        "özel": "Yağma miktarı +%15",
+    },
+}
+
+
+# ================= ADALAR / BÖLGELER =================
+
+BÖLGELER = {
+    "kıyı_suları": {
+        "isim": "Kıyı Suları",
+        "emoji": "🏖️",
+        "seviye_min": 1,
+        "sefer_süresi": 300,       # 5 dakika
+        "tehlike": 10,             # %10 saldırı riski
+        "hazine_min": 100,
+        "hazine_max": 500,
+        "xp_min": 10,
+        "xp_max": 25,
+        "nadir_eşya_şansı": 5,    # %5
+        "olaylar": [
+            {"isim": "Balıkçı teknesi buldun!", "tip": "hazine", "miktar_min": 50, "miktar_max": 150},
+            {"isim": "Sahilde sandık keşfettin!", "tip": "hazine", "miktar_min": 100, "miktar_max": 300},
+            {"isim": "Deniz sakin, huzurlu bir yolculuk.", "tip": "xp", "miktar_min": 5, "miktar_max": 15},
+            {"isim": "Korsanlar seni gördü!", "tip": "savaş", "düşman_güç": 15},
+        ],
+    },
+    "açık_deniz": {
+        "isim": "Açık Deniz",
+        "emoji": "🌊",
+        "seviye_min": 3,
+        "sefer_süresi": 600,       # 10 dakika
+        "tehlike": 25,
+        "hazine_min": 300,
+        "hazine_max": 1200,
+        "xp_min": 20,
+        "xp_max": 50,
+        "nadir_eşya_şansı": 10,
+        "olaylar": [
+            {"isim": "Batık gemi enkazı buldun!", "tip": "hazine", "miktar_min": 200, "miktar_max": 800},
+            {"isim": "Tüccar gemisi ile karşılaştın, ticaret yaptın.", "tip": "hazine", "miktar_min": 300, "miktar_max": 600},
+            {"isim": "Fırtına çıktı! Gemi hasar aldı.", "tip": "hasar", "miktar_min": 10, "miktar_max": 30},
+            {"isim": "Korsan filosu saldırıyor!", "tip": "savaş", "düşman_güç": 35},
+            {"isim": "Gizemli bir ada keşfettin!", "tip": "xp", "miktar_min": 30, "miktar_max": 60},
+        ],
+    },
+    "şeytan_üçgeni": {
+        "isim": "Şeytan Üçgeni",
+        "emoji": "🔺",
+        "seviye_min": 6,
+        "sefer_süresi": 1200,      # 20 dakika
+        "tehlike": 40,
+        "hazine_min": 800,
+        "hazine_max": 3500,
+        "xp_min": 50,
+        "xp_max": 120,
+        "nadir_eşya_şansı": 20,
+        "olaylar": [
+            {"isim": "Lanetli hazine sandığı buldun!", "tip": "hazine", "miktar_min": 500, "miktar_max": 2000},
+            {"isim": "Dev deniz canavarı saldırdı!", "tip": "savaş", "düşman_güç": 70},
+            {"isim": "Gizemli bir sis... Kayıp ada ortaya çıktı!", "tip": "xp", "miktar_min": 80, "miktar_max": 150},
+            {"isim": "Hayalet gemi ile karşılaştın!", "tip": "savaş", "düşman_güç": 90},
+            {"isim": "Antik bir tapınak keşfettin!", "tip": "hazine", "miktar_min": 1000, "miktar_max": 3000},
+        ],
+    },
+    "kraken_yuvası": {
+        "isim": "Kraken'in Yuvası",
+        "emoji": "🐙",
+        "seviye_min": 10,
+        "sefer_süresi": 1800,      # 30 dakika
+        "tehlike": 55,
+        "hazine_min": 2000,
+        "hazine_max": 8000,
+        "xp_min": 100,
+        "xp_max": 250,
+        "nadir_eşya_şansı": 30,
+        "olaylar": [
+            {"isim": "Kraken tentakülleri gemiyi sardı!", "tip": "savaş", "düşman_güç": 150},
+            {"isim": "Denizin dibinde altın şehir buldun!", "tip": "hazine", "miktar_min": 3000, "miktar_max": 7000},
+            {"isim": "Poseidon'un mızrağını keşfettin!", "tip": "nadir_eşya"},
+            {"isim": "Devasa girdap! Gemi sürükleniyor!", "tip": "hasar", "miktar_min": 30, "miktar_max": 60},
+            {"isim": "Kayıp korsan kaptanın hazinesi!", "tip": "hazine", "miktar_min": 5000, "miktar_max": 10000},
+        ],
+    },
+    "cehennem_boğazı": {
+        "isim": "Cehennem Boğazı",
+        "emoji": "🔥",
+        "seviye_min": 15,
+        "sefer_süresi": 2700,      # 45 dakika
+        "tehlike": 70,
+        "hazine_min": 5000,
+        "hazine_max": 20000,
+        "xp_min": 200,
+        "xp_max": 500,
+        "nadir_eşya_şansı": 40,
+        "olaylar": [
+            {"isim": "Ateş denizi! Gemi yanıyor!", "tip": "hasar", "miktar_min": 40, "miktar_max": 80},
+            {"isim": "Cehennem Kaptanı ile yüz yüzesin!", "tip": "savaş", "düşman_güç": 250},
+            {"isim": "Efsanevi hazine odasını buldun!", "tip": "hazine", "miktar_min": 10000, "miktar_max": 20000},
+            {"isim": "Şeytan'ın pusulasını keşfettin!", "tip": "nadir_eşya"},
+            {"isim": "Volkanik ada patladı! Kaç!", "tip": "hasar", "miktar_min": 50, "miktar_max": 100},
+            {"isim": "Atlantis'in kapısını buldun!", "tip": "xp", "miktar_min": 300, "miktar_max": 600},
+        ],
+    },
+}
+
+
+# ================= NADİR EŞYALAR =================
+
+NADİR_EŞYALAR = {
+    "poseidon_mızrağı": {
+        "isim": "Poseidon'un Mızrağı",
+        "emoji": "🔱",
+        "tip": "silah",
+        "bonus": {"saldırı": 20},
+        "açıklama": "Denizlerin tanrısının silahı. Saldırı +20.",
+        "satış_fiyat": 15000,
+    },
+    "hayalet_pusula": {
+        "isim": "Hayalet Pusulası",
+        "emoji": "🧭",
+        "tip": "navigasyon",
+        "bonus": {"xp_bonus": 25},
+        "açıklama": "Gizli adalara yol gösterir. XP kazancı +%25.",
+        "satış_fiyat": 12000,
+    },
+    "kraken_kalbi": {
+        "isim": "Kraken'in Kalbi",
+        "emoji": "💜",
+        "tip": "zırh",
+        "bonus": {"zırh": 25, "hp": 100},
+        "açıklama": "Kraken'in taşlaşmış kalbi. Zırh +25, HP +100.",
+        "satış_fiyat": 25000,
+    },
+    "şeytan_pusulası": {
+        "isim": "Şeytan'ın Pusulası",
+        "emoji": "🧿",
+        "tip": "navigasyon",
+        "bonus": {"hazine_bonus": 30},
+        "açıklama": "Her zaman hazineyi gösterir. Hazine kazancı +%30.",
+        "satış_fiyat": 20000,
+    },
+    "deniz_kızı_gözyaşı": {
+        "isim": "Deniz Kızı Gözyaşı",
+        "emoji": "💧",
+        "tip": "iyileştirme",
+        "bonus": {"onarım_bonus": 50},
+        "açıklama": "Gemiyi anında iyileştirir. Onarım hızı +%50.",
+        "satış_fiyat": 10000,
+    },
+    "altın_çapa": {
+        "isim": "Altın Çapa",
+        "emoji": "⚓",
+        "tip": "zırh",
+        "bonus": {"zırh": 15, "kargo": 20},
+        "açıklama": "Efsanevi çapa. Zırh +15, kargo +20.",
+        "satış_fiyat": 18000,
+    },
+    "lanetli_kılıç": {
+        "isim": "Lanetli Kılıç",
+        "emoji": "🗡️",
+        "tip": "silah",
+        "bonus": {"saldırı": 35, "hp": -50},
+        "açıklama": "Muazzam güç, ama HP -50 lanetli. Saldırı +35.",
+        "satış_fiyat": 22000,
+    },
+    "fırtına_şişesi": {
+        "isim": "Fırtına Şişesi",
+        "emoji": "🌪️",
+        "tip": "savaş",
+        "bonus": {"saldırı": 15, "hız": 5},
+        "açıklama": "Şişedeki fırtına. Saldırı +15, Hız +5.",
+        "satış_fiyat": 16000,
+    },
+}
+
+
+# ================= GEMİ YÜKSELTMELERİ =================
+
+GEMİ_YÜKSELTMELERİ = {
+    "top": {
+        "isim": "Top Yükseltmesi",
+        "emoji": "💣",
+        "fiyat_baz": 1000,         # Her seviye x2
+        "max_seviye": 5,
+        "bonus_per_level": {"saldırı": 5},
+    },
+    "zırh_plaka": {
+        "isim": "Zırh Plakası",
+        "emoji": "🛡️",
+        "fiyat_baz": 1200,
+        "max_seviye": 5,
+        "bonus_per_level": {"zırh": 4, "hp": 20},
+    },
+    "yelken": {
+        "isim": "Yelken İyileştirmesi",
+        "emoji": "🏳️",
+        "fiyat_baz": 800,
+        "max_seviye": 5,
+        "bonus_per_level": {"hız": 2},
+    },
+    "kargo_genişletme": {
+        "isim": "Kargo Genişletmesi",
+        "emoji": "📦",
+        "fiyat_baz": 600,
+        "max_seviye": 5,
+        "bonus_per_level": {"kargo": 10},
+    },
+}
+
+
+# ================= SEVİYE SİSTEMİ =================
+
+KORSAN_SEVİYE_GEREKSİNİMLERİ = {
+    2: 50,
+    3: 150,
+    4: 350,
+    5: 700,
+    6: 1200,
+    7: 2000,
+    8: 3200,
+    9: 5000,
+    10: 7500,
+    11: 11000,
+    12: 15500,
+    13: 21000,
+    14: 28000,
+    15: 37000,
+    16: 48000,
+    17: 62000,
+    18: 80000,
+    19: 100000,
+    20: 130000,
+}
+
+KORSAN_RÜTBELER = {
+    1: "Acemi Denizci",
+    3: "Tayfa",
+    5: "Dümenci",
+    7: "Çavuş",
+    10: "Kaptan",
+    13: "Amiral",
+    15: "Korsan Lordu",
+    18: "Denizlerin Hakimi",
+    20: "Efsanevi Korsan",
+}
+
+
+# ================= VERİTABANI =================
+
+def get_pirate(user_id):
+    """Kullanıcının korsan verisini getir veya oluştur."""
+    pirate = pirates_col.find_one({"user_id": user_id})
+    if not pirate:
+        pirate = {
+            "user_id": user_id,
+            "seviye": 1,
+            "xp": 0,
+            "gemi": "sandal",
+            "gemi_hp": GEMİLER["sandal"]["hp"],
+            "mürettebat": [],           # [{"tip": "tayfa", "isim": "Ali"}, ...]
+            "yükseltmeler": {},          # {"top": 2, "zırh_plaka": 1, ...}
+            "envanter": [],              # ["poseidon_mızrağı", "hayalet_pusula", ...]
+            "sefer": None,               # {"bölge": "açık_deniz", "başlangıç": timestamp, "bitiş": timestamp}
+            "toplam_sefer": 0,
+            "toplam_yağma": 0,
+            "toplam_batırılan": 0,
+            "pvp_galibiyet": 0,
+            "pvp_mağlubiyet": 0,
+            "koruma_süresi": 0,          # PvP koruma bitiş zamanı (timestamp)
+        }
+        pirates_col.insert_one(pirate)
+
+    # Eski veriler için alan kontrolü
+    if "yükseltmeler" not in pirate:
+        pirate["yükseltmeler"] = {}
+    if "envanter" not in pirate:
+        pirate["envanter"] = []
+    if "koruma_süresi" not in pirate:
+        pirate["koruma_süresi"] = 0
+    if "pvp_galibiyet" not in pirate:
+        pirate["pvp_galibiyet"] = 0
+    if "pvp_mağlubiyet" not in pirate:
+        pirate["pvp_mağlubiyet"] = 0
+    return pirate
+
+
+def save_pirate(pirate):
+    """Korsan verisini kaydet."""
+    pirates_col.update_one({"user_id": pirate["user_id"]}, {"$set": pirate}, upsert=True)
+
+
+def get_pirate_level(xp):
+    """XP'ye göre korsan seviyesini hesapla."""
+    seviye = 1
+    for lvl, gereksinim in sorted(KORSAN_SEVİYE_GEREKSİNİMLERİ.items()):
+        if xp >= gereksinim:
+            seviye = lvl
+        else:
+            break
+    return seviye
+
+
+def get_rütbe(seviye):
+    """Seviyeye göre rütbe ismi."""
+    rütbe = "Acemi Denizci"
+    for lvl, isim in sorted(KORSAN_RÜTBELER.items()):
+        if seviye >= lvl:
+            rütbe = isim
+        else:
+            break
+    return rütbe
+
+
+def hesapla_gemi_statları(pirate):
+    """Gemi statlarını yükseltmeler ve eşyalar dahil hesapla."""
+    gemi = GEMİLER[pirate["gemi"]]
+    statlar = {
+        "hp": gemi["hp"],
+        "saldırı": gemi["saldırı"],
+        "zırh": gemi["zırh"],
+        "hız": gemi["hız"],
+        "kargo": gemi["kargo"],
+        "mürettebat_max": gemi["mürettebat_max"],
+    }
+
+    # Yükseltme bonusları
+    for yükseltme_id, seviye in pirate.get("yükseltmeler", {}).items():
+        yükseltme = GEMİ_YÜKSELTMELERİ.get(yükseltme_id)
+        if yükseltme:
+            for stat, bonus in yükseltme["bonus_per_level"].items():
+                if stat in statlar:
+                    statlar[stat] += bonus * seviye
+
+    # Mürettebat bonusları
+    for üye in pirate.get("mürettebat", []):
+        mürettebat = MÜRETTEBAT.get(üye["tip"])
+        if mürettebat:
+            statlar["saldırı"] += mürettebat["saldırı_bonus"]
+            statlar["zırh"] += mürettebat["savunma_bonus"]
+
+    # Nadir eşya bonusları
+    for eşya_id in pirate.get("envanter", []):
+        eşya = NADİR_EŞYALAR.get(eşya_id)
+        if eşya:
+            for stat, bonus in eşya["bonus"].items():
+                if stat in statlar:
+                    statlar[stat] += bonus
+
+    return statlar
+
+
+def hesapla_xp_bonus(pirate):
+    """Eşyalardan gelen XP bonus yüzdesi."""
+    bonus = 0
+    for eşya_id in pirate.get("envanter", []):
+        eşya = NADİR_EŞYALAR.get(eşya_id)
+        if eşya:
+            bonus += eşya["bonus"].get("xp_bonus", 0)
+    # Kaptan yardımcısı bonusu
+    for üye in pirate.get("mürettebat", []):
+        if üye["tip"] == "kaptan_yardımcısı":
+            bonus += 20
+    return bonus
+
+
+def hesapla_hazine_bonus(pirate):
+    """Eşyalardan gelen hazine bonus yüzdesi."""
+    bonus = 0
+    for eşya_id in pirate.get("envanter", []):
+        eşya = NADİR_EŞYALAR.get(eşya_id)
+        if eşya:
+            bonus += eşya["bonus"].get("hazine_bonus", 0)
+    # Silahçı bonusu
+    for üye in pirate.get("mürettebat", []):
+        if üye["tip"] == "silahçı":
+            bonus += 15
+    return bonus
+
+
+# ================= KOMUTLAR =================
+
+@bot.command(name="gemi", aliases=["ship", "korsan"])
+async def gemi(ctx):
+    """Gemi durumunu ve korsan profilini göster."""
+    pirate = get_pirate(ctx.author.id)
+    seviye = get_pirate_level(pirate["xp"])
+    pirate["seviye"] = seviye
+    save_pirate(pirate)
+
+    gemi_bilgi = GEMİLER[pirate["gemi"]]
+    statlar = hesapla_gemi_statları(pirate)
+    rütbe = get_rütbe(seviye)
+    now = time.time()
+
+    # Seviye ilerleme
+    sonraki_seviye = seviye + 1
+    sonraki_gereksinim = KORSAN_SEVİYE_GEREKSİNİMLERİ.get(sonraki_seviye)
+
+    if sonraki_gereksinim:
+        önceki_gereksinim = KORSAN_SEVİYE_GEREKSİNİMLERİ.get(seviye, 0)
+        ilerleme = pirate["xp"] - önceki_gereksinim
+        gerekli = sonraki_gereksinim - önceki_gereksinim
+        pct = min(ilerleme / gerekli, 1.0) if gerekli > 0 else 1.0
+        filled = int(pct * 15)
+        bar = "🟦" * filled + "⬛" * (15 - filled)
+        seviye_text = f"Seviye **{seviye}** `[{bar}]` {pirate['xp']}/{sonraki_gereksinim} XP"
+    else:
+        seviye_text = f"Seviye **{seviye}** (MAKSİMUM!)"
+
+    # Gemi HP durumu
+    hp_pct = pirate["gemi_hp"] / statlar["hp"]
+    if hp_pct > 0.7:
+        hp_emoji = "🟢"
+    elif hp_pct > 0.3:
+        hp_emoji = "🟡"
+    else:
+        hp_emoji = "🔴"
+
+    # Mürettebat listesi
+    mürettebat_text = ""
+    if pirate["mürettebat"]:
+        mürettebat_sayı = {}
+        for üye in pirate["mürettebat"]:
+            tip = üye["tip"]
+            mürettebat_sayı[tip] = mürettebat_sayı.get(tip, 0) + 1
+        for tip, sayı in mürettebat_sayı.items():
+            m = MÜRETTEBAT[tip]
+            mürettebat_text += f"{m['emoji']} {m['isim']}: **{sayı}**\n"
+    else:
+        mürettebat_text = "Kimse yok, yalnızsın!"
+
+    # Envanter
+    envanter_text = ""
+    if pirate["envanter"]:
+        for eşya_id in pirate["envanter"]:
+            eşya = NADİR_EŞYALAR.get(eşya_id)
+            if eşya:
+                envanter_text += f"{eşya['emoji']} {eşya['isim']}\n"
+    else:
+        envanter_text = "Boş."
+
+    # Sefer durumu
+    sefer_text = ""
+    if pirate.get("sefer"):
+        sefer = pirate["sefer"]
+        kalan = sefer["bitiş"] - now
+        if kalan > 0:
+            dk = int(kalan) // 60
+            sn = int(kalan) % 60
+            bölge = BÖLGELER[sefer["bölge"]]
+            sefer_text = f"\n{bölge['emoji']} **Seferde:** {bölge['isim']} -- {dk}dk {sn}sn kaldı"
+        else:
+            sefer_text = "\nSefer tamamlandı! `!dön` ile geri dön."
+
+    # Yükseltme bilgisi
+    yükseltme_text = ""
+    for yük_id, yük in GEMİ_YÜKSELTMELERİ.items():
+        mevcut = pirate.get("yükseltmeler", {}).get(yük_id, 0)
+        yükseltme_text += f"{yük['emoji']} {yük['isim']}: **Lv.{mevcut}/{yük['max_seviye']}**\n"
+
+    embed = discord.Embed(
+        title=f"{gemi_bilgi['emoji']} {ctx.author.display_name} -- {rütbe}",
+        description=(
+            f"{seviye_text}\n"
+            f"{'━' * 30}\n\n"
+            f"**Gemi: {gemi_bilgi['emoji']} {gemi_bilgi['isim']}**\n"
+            f"{hp_emoji} HP: **{pirate['gemi_hp']}/{statlar['hp']}**\n"
+            f"Saldırı: **{statlar['saldırı']}** | Zırh: **{statlar['zırh']}** | Hız: **{statlar['hız']}**\n"
+            f"Kargo: **{statlar['kargo']}** | Mürettebat: **{len(pirate['mürettebat'])}/{statlar['mürettebat_max']}**\n"
+            f"{sefer_text}\n\n"
+            f"**Yükseltmeler:**\n{yükseltme_text}\n"
+            f"**Mürettebat:**\n{mürettebat_text}\n"
+            f"**Nadir Eşyalar:**\n{envanter_text}"
+        ),
+        color=discord.Color.dark_blue(),
+        timestamp=datetime.now(timezone.utc)
+    )
+    embed.add_field(
+        name="İstatistikler",
+        value=(
+            f"Toplam sefer: **{pirate.get('toplam_sefer', 0)}**\n"
+            f"Toplam yağma: **{pirate.get('toplam_yağma', 0):,}** VisoCoin\n"
+            f"Batırılan gemi: **{pirate.get('toplam_batırılan', 0)}**\n"
+            f"PvP: **{pirate.get('pvp_galibiyet', 0)}G** / **{pirate.get('pvp_mağlubiyet', 0)}M**"
+        ),
+        inline=False
+    )
+    embed.set_footer(text=f"{ctx.author.display_name}", icon_url=ctx.author.display_avatar.url)
+    await ctx.send(embed=embed)
+
+
+@bot.command(name="gemiler", aliases=["ships", "gemilistesi"])
+async def gemiler(ctx):
+    """Satın alınabilecek gemileri listele."""
+    pirate = get_pirate(ctx.author.id)
+    seviye = get_pirate_level(pirate["xp"])
+
+    embed = discord.Embed(
+        title="Gemi Mağazası",
+        description="Gemi satın almak için: `!gemial <gemi>`",
+        color=discord.Color.dark_blue(),
+        timestamp=datetime.now(timezone.utc)
+    )
+
+    for gemi_id, gemi in GEMİLER.items():
+        durum = "MEVCUT GEMİN" if pirate["gemi"] == gemi_id else (
+            "Satın alabilirsin" if seviye >= gemi["seviye_gereksinim"] else
+            f"Seviye {gemi['seviye_gereksinim']} gerekli"
+        )
+        fiyat_text = "Ücretsiz" if gemi["fiyat"] == 0 else f"{gemi['fiyat']:,} VisoCoin"
+
+        embed.add_field(
+            name=f"{gemi['emoji']} {gemi['isim']} (`{gemi_id}`)",
+            value=(
+                f"Fiyat: **{fiyat_text}**\n"
+                f"HP: **{gemi['hp']}** | Saldırı: **{gemi['saldırı']}** | Zırh: **{gemi['zırh']}**\n"
+                f"Hız: **{gemi['hız']}** | Kargo: **{gemi['kargo']}** | Mürettebat: **{gemi['mürettebat_max']}**\n"
+                f"Gereksinim: Seviye **{gemi['seviye_gereksinim']}** | {durum}"
+            ),
+            inline=False
+        )
+
+    await ctx.send(embed=embed)
+
+
+@bot.command(name="gemial", aliases=["buyship", "gemisatınal"])
+async def gemial(ctx, gemi_id: str = None):
+    """Yeni gemi satın al."""
+    user_id = ctx.author.id
+
+    if gemi_id is None:
+        embed = discord.Embed(
+            description="Kullanım: `!gemial <gemi>`\nGemileri görmek için: `!gemiler`",
+            color=discord.Color.blue()
+        )
+        return await ctx.send(embed=embed)
+
+    gemi_id = gemi_id.lower().strip()
+
+    if gemi_id not in GEMİLER:
+        embed = discord.Embed(description="Böyle bir gemi yok! `!gemiler` ile listeye bak.", color=discord.Color.red())
+        return await ctx.send(embed=embed)
+
+    pirate = get_pirate(user_id)
+    seviye = get_pirate_level(pirate["xp"])
+    gemi = GEMİLER[gemi_id]
+
+    if pirate["gemi"] == gemi_id:
+        embed = discord.Embed(description="Zaten bu gemiye sahipsin!", color=discord.Color.orange())
+        return await ctx.send(embed=embed)
+
+    if seviye < gemi["seviye_gereksinim"]:
+        embed = discord.Embed(
+            description=f"Bu gemi için seviye **{gemi['seviye_gereksinim']}** gerekli! Seviyen: **{seviye}**",
+            color=discord.Color.red()
+        )
+        return await ctx.send(embed=embed)
+
+    if pirate.get("sefer"):
+        now = time.time()
+        if pirate["sefer"]["bitiş"] > now:
+            embed = discord.Embed(description="Seferdeyken gemi alamazsın! Önce `!dön` ile geri dön.", color=discord.Color.red())
+            return await ctx.send(embed=embed)
+
+    user = get_user(user_id)
+    if user["money"] < gemi["fiyat"]:
+        embed = discord.Embed(
+            description=f"Yetersiz bakiye! {gemi['isim']} için **{gemi['fiyat']:,}** VisoCoin gerekiyor.\nBakiyen: **{user['money']:,}** VisoCoin",
+            color=discord.Color.red()
+        )
+        return await ctx.send(embed=embed)
+
+    # Eski gemiyi sat (yarı fiyatına)
+    eski_gemi = GEMİLER[pirate["gemi"]]
+    iade = eski_gemi["fiyat"] // 2
+
+    user["money"] -= gemi["fiyat"]
+    user["money"] += iade
+    save_user(user)
+
+    pirate["gemi"] = gemi_id
+    pirate["gemi_hp"] = gemi["hp"]
+    # Mürettebat fazlasını düşür
+    if len(pirate["mürettebat"]) > gemi["mürettebat_max"]:
+        pirate["mürettebat"] = pirate["mürettebat"][:gemi["mürettebat_max"]]
+    save_pirate(pirate)
+
+    embed = discord.Embed(
+        title=f"{gemi['emoji']} Yeni Gemi Alındı!",
+        description=(
+            f"{ctx.author.mention}, **{gemi['isim']}** satın aldın!\n\n"
+            f"Eski gemi ({eski_gemi['isim']}) iade: **+{iade:,}** VisoCoin\n"
+            f"Maliyet: **{gemi['fiyat']:,}** VisoCoin\n"
+            f"Bakiye: **{user['money']:,}** VisoCoin\n\n"
+            f"HP: **{gemi['hp']}** | Saldırı: **{gemi['saldırı']}** | Zırh: **{gemi['zırh']}**"
+        ),
+        color=discord.Color.dark_gold(),
+        timestamp=datetime.now(timezone.utc)
+    )
+    await ctx.send(embed=embed)
+
+
+@bot.command(name="bölgeler", aliases=["regions", "denizler", "harita"])
+async def bölgeler(ctx):
+    """Sefere çıkılabilecek bölgeleri listele."""
+    pirate = get_pirate(ctx.author.id)
+    seviye = get_pirate_level(pirate["xp"])
+
+    embed = discord.Embed(
+        title="Deniz Haritası",
+        description="Sefere çıkmak için: `!sefer <bölge>`",
+        color=discord.Color.dark_teal(),
+        timestamp=datetime.now(timezone.utc)
+    )
+
+    for bölge_id, bölge in BÖLGELER.items():
+        kilit = seviye < bölge["seviye_min"]
+        dk = bölge["sefer_süresi"] // 60
+
+        if kilit:
+            durum = f"Seviye {bölge['seviye_min']} gerekli"
+        else:
+            durum = "Keşfedilebilir"
+
+        embed.add_field(
+            name=f"{bölge['emoji']} {bölge['isim']} (`{bölge_id}`)",
+            value=(
+                f"Süre: **{dk}** dakika | Tehlike: **%{bölge['tehlike']}**\n"
+                f"Hazine: **{bölge['hazine_min']:,}-{bölge['hazine_max']:,}** VisoCoin\n"
+                f"XP: **{bölge['xp_min']}-{bölge['xp_max']}** | Nadir eşya: **%{bölge['nadir_eşya_şansı']}**\n"
+                f"Durum: {durum}"
+            ),
+            inline=False
+        )
+
+    await ctx.send(embed=embed)
+
+
+@bot.command(name="sefer", aliases=["sail", "yolculuk", "keşif"])
+async def sefer(ctx, bölge_id: str = None):
+    """Sefere çık."""
+    user_id = ctx.author.id
+
+    if bölge_id is None:
+        embed = discord.Embed(
+            description="Kullanım: `!sefer <bölge>`\nBölgeleri görmek için: `!bölgeler`",
+            color=discord.Color.blue()
+        )
+        return await ctx.send(embed=embed)
+
+    bölge_id = bölge_id.lower().strip()
+
+    if bölge_id not in BÖLGELER:
+        embed = discord.Embed(description="Böyle bir bölge yok! `!bölgeler` ile haritaya bak.", color=discord.Color.red())
+        return await ctx.send(embed=embed)
+
+    pirate = get_pirate(user_id)
+    seviye = get_pirate_level(pirate["xp"])
+    bölge = BÖLGELER[bölge_id]
+    now = time.time()
+
+    # Zaten seferde mi?
+    if pirate.get("sefer"):
+        if pirate["sefer"]["bitiş"] > now:
+            kalan = int(pirate["sefer"]["bitiş"] - now)
+            dk = kalan // 60
+            sn = kalan % 60
+            embed = discord.Embed(
+                description=f"Zaten seferdesin! Kalan: **{dk}dk {sn}sn**\nGeri dönmek için: `!dön`",
+                color=discord.Color.orange()
+            )
+            return await ctx.send(embed=embed)
+
+    # Seviye kontrolü
+    if seviye < bölge["seviye_min"]:
+        embed = discord.Embed(
+            description=f"Bu bölge için seviye **{bölge['seviye_min']}** gerekli! Seviyen: **{seviye}**",
+            color=discord.Color.red()
+        )
+        return await ctx.send(embed=embed)
+
+    # Gemi HP kontrolü
+    if pirate["gemi_hp"] <= 0:
+        embed = discord.Embed(
+            description="Gemin hasarlı! Önce `!onar` ile tamir et.",
+            color=discord.Color.red()
+        )
+        return await ctx.send(embed=embed)
+
+    # Hız bonusu ile süre hesapla
+    statlar = hesapla_gemi_statları(pirate)
+    hız_çarpan = max(0.5, 1 - (statlar["hız"] - 3) * 0.05)  # Her hız puanı %5 azaltır, min %50
+    gerçek_süre = int(bölge["sefer_süresi"] * hız_çarpan)
+
+    # Seferi başlat
+    pirate["sefer"] = {
+        "bölge": bölge_id,
+        "başlangıç": now,
+        "bitiş": now + gerçek_süre,
+    }
+    save_pirate(pirate)
+
+    dk = gerçek_süre // 60
+    sn = gerçek_süre % 60
+
+    embed = discord.Embed(
+        title=f"{bölge['emoji']} Sefere Çıkıldı!",
+        description=(
+            f"{ctx.author.mention}, **{bölge['isim']}** bölgesine doğru yola çıktın!\n\n"
+            f"Tahmini süre: **{dk}dk {sn}sn**\n"
+            f"Tehlike seviyesi: **%{bölge['tehlike']}**\n"
+            f"Nadir eşya şansı: **%{bölge['nadir_eşya_şansı']}**\n\n"
+            f"Sefer bitince `!dön` ile sonuçları gör!"
+        ),
+        color=discord.Color.dark_teal(),
+        timestamp=datetime.now(timezone.utc)
+    )
+    embed.set_footer(text=f"{ctx.author.display_name}", icon_url=ctx.author.display_avatar.url)
+    await ctx.send(embed=embed)
+
+
+@bot.command(name="dön", aliases=["return", "geri", "dönüş"])
+async def dön(ctx):
+    """Seferden geri dön ve sonuçları gör."""
+    user_id = ctx.author.id
+    pirate = get_pirate(user_id)
+    user = get_user(user_id)
+    now = time.time()
+
+    if not pirate.get("sefer"):
+        embed = discord.Embed(
+            description="Seferde değilsin! `!sefer <bölge>` ile yola çık.",
+            color=discord.Color.orange()
+        )
+        return await ctx.send(embed=embed)
+
+    sefer = pirate["sefer"]
+    kalan = sefer["bitiş"] - now
+
+    if kalan > 0:
+        dk = int(kalan) // 60
+        sn = int(kalan) % 60
+        embed = discord.Embed(
+            description=f"Sefer henüz bitmedi! Kalan: **{dk}dk {sn}sn**",
+            color=discord.Color.orange()
+        )
+        return await ctx.send(embed=embed)
+
+    # Sefer tamamlandı -- sonuçları hesapla
+    bölge = BÖLGELER[sefer["bölge"]]
+    statlar = hesapla_gemi_statları(pirate)
+    xp_bonus = hesapla_xp_bonus(pirate)
+    hazine_bonus = hesapla_hazine_bonus(pirate)
+
+    olaylar_text = ""
+    toplam_hazine = 0
+    toplam_xp = 0
+    toplam_hasar = 0
+    bulunan_eşyalar = []
+
+    # 2-4 rastgele olay
+    olay_sayısı = random.randint(2, min(4, len(bölge["olaylar"])))
+    seçilen_olaylar = random.sample(bölge["olaylar"], olay_sayısı)
+
+    for olay in seçilen_olaylar:
+        if olay["tip"] == "hazine":
+            miktar = random.randint(olay["miktar_min"], olay["miktar_max"])
+            if hazine_bonus > 0:
+                miktar = int(miktar * (1 + hazine_bonus / 100))
+            toplam_hazine += miktar
+            olaylar_text += f"  {olay['isim']} **+{miktar:,}** VisoCoin\n"
+
+        elif olay["tip"] == "xp":
+            miktar = random.randint(olay["miktar_min"], olay["miktar_max"])
+            if xp_bonus > 0:
+                miktar = int(miktar * (1 + xp_bonus / 100))
+            toplam_xp += miktar
+            olaylar_text += f"  {olay['isim']} **+{miktar} XP**\n"
+
+        elif olay["tip"] == "hasar":
+            hasar = random.randint(olay["miktar_min"], olay["miktar_max"])
+            # Zırh hasar azaltır
+            hasar = max(1, hasar - statlar["zırh"] // 3)
+            toplam_hasar += hasar
+            olaylar_text += f"  {olay['isim']} **-{hasar} HP**\n"
+
+        elif olay["tip"] == "savaş":
+            düşman_güç = olay["düşman_güç"]
+            savaş_gücü = statlar["saldırı"] + statlar["zırh"] // 2 + random.randint(-10, 10)
+
+            if savaş_gücü >= düşman_güç:
+                # Kazandık
+                yağma = random.randint(bölge["hazine_min"], bölge["hazine_max"])
+                if hazine_bonus > 0:
+                    yağma = int(yağma * (1 + hazine_bonus / 100))
+                toplam_hazine += yağma
+                toplam_xp += random.randint(bölge["xp_min"], bölge["xp_max"])
+                pirate["toplam_batırılan"] = pirate.get("toplam_batırılan", 0) + 1
+
+                # Doktor varsa HP iyileştirme
+                doktor_var = any(ü["tip"] == "doktor" for ü in pirate.get("mürettebat", []))
+                iyileşme = 0
+                if doktor_var:
+                    iyileşme = int(statlar["hp"] * 0.15)
+
+                olaylar_text += (
+                    f"  {olay['isim']}\n"
+                    f"    Savaş KAZANILDI! Yağma: **+{yağma:,}** VisoCoin"
+                    f"{f', İyileşme: +{iyileşme} HP' if iyileşme > 0 else ''}\n"
+                )
+                if iyileşme > 0:
+                    toplam_hasar -= iyileşme  # Negatif hasar = iyileşme
+            else:
+                # Kaybettik
+                hasar = random.randint(20, 50)
+                toplam_hasar += hasar
+                olaylar_text += f"  {olay['isim']}\n    Savaş KAYBEDİLDİ! **-{hasar} HP**\n"
+
+        elif olay["tip"] == "nadir_eşya":
+            if random.randint(1, 100) <= bölge["nadir_eşya_şansı"]:
+                mevcut_eşyalar = [e for e in NADİR_EŞYALAR if e not in pirate.get("envanter", [])]
+                if mevcut_eşyalar:
+                    yeni_eşya = random.choice(mevcut_eşyalar)
+                    bulunan_eşyalar.append(yeni_eşya)
+                    eşya = NADİR_EŞYALAR[yeni_eşya]
+                    olaylar_text += f"  {olay['isim']}\n    NADİR EŞYA BULUNDU: {eşya['emoji']} **{eşya['isim']}**!\n"
+                else:
+                    olaylar_text += f"  {olay['isim']}\n    Ama zaten tüm eşyalara sahipsin.\n"
+            else:
+                # Eşya düşmedi ama XP versin
+                xp_kazanç = random.randint(bölge["xp_min"], bölge["xp_max"])
+                toplam_xp += xp_kazanç
+                olaylar_text += f"  {olay['isim']}\n    Nadir eşya bulunamadı ama **+{xp_kazanç} XP** kazandın.\n"
+
+    # Temel sefer ödülleri
+    baz_hazine = random.randint(bölge["hazine_min"], bölge["hazine_max"])
+    baz_xp = random.randint(bölge["xp_min"], bölge["xp_max"])
+    if hazine_bonus > 0:
+        baz_hazine = int(baz_hazine * (1 + hazine_bonus / 100))
+    if xp_bonus > 0:
+        baz_xp = int(baz_xp * (1 + xp_bonus / 100))
+    toplam_hazine += baz_hazine
+    toplam_xp += baz_xp
+
+    # Sonuçları uygula
+    user["money"] += toplam_hazine
+    save_user(user)
+
+    pirate["xp"] += toplam_xp
+    pirate["gemi_hp"] = max(0, min(pirate["gemi_hp"] - toplam_hasar, statlar["hp"]))
+    pirate["toplam_sefer"] = pirate.get("toplam_sefer", 0) + 1
+    pirate["toplam_yağma"] = pirate.get("toplam_yağma", 0) + toplam_hazine
+    pirate["sefer"] = None
+
+    for eşya_id in bulunan_eşyalar:
+        if eşya_id not in pirate["envanter"]:
+            pirate["envanter"].append(eşya_id)
+
+    eski_seviye = pirate.get("seviye", 1)
+    yeni_seviye = get_pirate_level(pirate["xp"])
+    pirate["seviye"] = yeni_seviye
+    save_pirate(pirate)
+
+    # Embed oluştur
+    embed = discord.Embed(
+        title=f"{bölge['emoji']} Sefer Tamamlandı -- {bölge['isim']}",
+        description=(
+            f"{ctx.author.mention}, seferden döndün!\n\n"
+            f"**Olaylar:**\n{olaylar_text}\n"
+            f"{'━' * 30}\n"
+            f"**Sefer Özeti:**\n"
+            f"Hazine: **+{toplam_hazine:,}** VisoCoin\n"
+            f"XP: **+{toplam_xp}**\n"
+            f"Gemi HP: **{pirate['gemi_hp']}/{statlar['hp']}**"
+            f"{' (HASARLI!)' if pirate['gemi_hp'] < statlar['hp'] * 0.3 else ''}\n"
+        ),
+        color=discord.Color.dark_gold(),
+        timestamp=datetime.now(timezone.utc)
+    )
+    embed.set_footer(text=f"{ctx.author.display_name}", icon_url=ctx.author.display_avatar.url)
+    await ctx.send(embed=embed)
+
+    # Seviye atlama
+    if yeni_seviye > eski_seviye:
+        yeni_rütbe = get_rütbe(yeni_seviye)
+        level_embed = discord.Embed(
+            title="Korsan Seviye Atladı!",
+            description=(
+                f"{ctx.author.mention}, seviyen **{yeni_seviye}** oldu!\n"
+                f"Rütben: **{yeni_rütbe}**\n\n"
+                f"Yeni gemiler ve bölgeler açılmış olabilir!"
+            ),
+            color=discord.Color.gold(),
+            timestamp=datetime.now(timezone.utc)
+        )
+        await ctx.send(embed=level_embed)
+
+
+@bot.command(name="onar", aliases=["repair", "tamir"])
+async def onar(ctx):
+    """Gemiyi onar."""
+    user_id = ctx.author.id
+    pirate = get_pirate(user_id)
+    statlar = hesapla_gemi_statları(pirate)
+
+    if pirate["gemi_hp"] >= statlar["hp"]:
+        embed = discord.Embed(description="Gemin zaten tam HP'de!", color=discord.Color.green())
+        return await ctx.send(embed=embed)
+
+    # Seferdeyken onarılamaz
+    now = time.time()
+    if pirate.get("sefer") and pirate["sefer"]["bitiş"] > now:
+        embed = discord.Embed(description="Seferdeyken onarım yapamazsın!", color=discord.Color.red())
+        return await ctx.send(embed=embed)
+
+    eksik_hp = statlar["hp"] - pirate["gemi_hp"]
+    onarım_maliyeti = eksik_hp * 3  # HP başına 3 VisoCoin
+
+    # Onarım bonus kontrolü (deniz kızı gözyaşı)
+    onarım_bonus = 0
+    for eşya_id in pirate.get("envanter", []):
+        eşya = NADİR_EŞYALAR.get(eşya_id)
+        if eşya:
+            onarım_bonus += eşya["bonus"].get("onarım_bonus", 0)
+    if onarım_bonus > 0:
+        onarım_maliyeti = int(onarım_maliyeti * (1 - onarım_bonus / 100))
+
+    user = get_user(user_id)
+
+    if user["money"] < onarım_maliyeti:
+        embed = discord.Embed(
+            description=f"Yetersiz bakiye! Onarım maliyeti: **{onarım_maliyeti:,}** VisoCoin\nBakiyen: **{user['money']:,}** VisoCoin",
+            color=discord.Color.red()
+        )
+        return await ctx.send(embed=embed)
+
+    user["money"] -= onarım_maliyeti
+    save_user(user)
+
+    pirate["gemi_hp"] = statlar["hp"]
+    save_pirate(pirate)
+
+    embed = discord.Embed(
+        title="Gemi Onarıldı!",
+        description=(
+            f"{ctx.author.mention}, gemin tamamen onarıldı!\n\n"
+            f"Onarım maliyeti: **{onarım_maliyeti:,}** VisoCoin"
+            f"{f' (İndirim: %{onarım_bonus})' if onarım_bonus > 0 else ''}\n"
+            f"HP: **{pirate['gemi_hp']}/{statlar['hp']}**\n"
+            f"Bakiye: **{user['money']:,}** VisoCoin"
+        ),
+        color=discord.Color.green(),
+        timestamp=datetime.now(timezone.utc)
+    )
+    await ctx.send(embed=embed)
+
+
+@bot.command(name="yükselt", aliases=["upgrade", "geliştir"])
+async def yükselt(ctx, yükseltme_id: str = None):
+    """Gemi yükseltmesi yap."""
+    user_id = ctx.author.id
+
+    if yükseltme_id is None:
+        embed = discord.Embed(
+            title="Gemi Yükseltmeleri",
+            description="Kullanım: `!yükselt <yükseltme>`\n\n",
+            color=discord.Color.dark_blue(),
+            timestamp=datetime.now(timezone.utc)
+        )
+        pirate = get_pirate(user_id)
+        for yük_id, yük in GEMİ_YÜKSELTMELERİ.items():
+            mevcut = pirate.get("yükseltmeler", {}).get(yük_id, 0)
+            if mevcut >= yük["max_seviye"]:
+                fiyat_text = "MAKSİMUM"
+            else:
+                fiyat = yük["fiyat_baz"] * (2 ** mevcut)
+                fiyat_text = f"{fiyat:,} VisoCoin"
+
+            bonus_text = ", ".join([f"{stat}: +{val}" for stat, val in yük["bonus_per_level"].items()])
+
+            embed.add_field(
+                name=f"{yük['emoji']} {yük['isim']} (`{yük_id}`) -- Lv.{mevcut}/{yük['max_seviye']}",
+                value=f"Fiyat: **{fiyat_text}**\nSeviye başına: {bonus_text}",
+                inline=False
+            )
+        return await ctx.send(embed=embed)
+
+    yükseltme_id = yükseltme_id.lower().strip()
+
+    if yükseltme_id not in GEMİ_YÜKSELTMELERİ:
+        embed = discord.Embed(description="Böyle bir yükseltme yok! `!yükselt` ile listeye bak.", color=discord.Color.red())
+        return await ctx.send(embed=embed)
+
+    pirate = get_pirate(user_id)
+    yükseltme = GEMİ_YÜKSELTMELERİ[yükseltme_id]
+    mevcut = pirate.get("yükseltmeler", {}).get(yükseltme_id, 0)
+
+    if mevcut >= yükseltme["max_seviye"]:
+        embed = discord.Embed(description=f"{yükseltme['isim']} zaten maksimum seviyede!", color=discord.Color.orange())
+        return await ctx.send(embed=embed)
+
+    fiyat = yükseltme["fiyat_baz"] * (2 ** mevcut)
+    user = get_user(user_id)
+
+    if user["money"] < fiyat:
+        embed = discord.Embed(
+            description=f"Yetersiz bakiye! Yükseltme maliyeti: **{fiyat:,}** VisoCoin",
+            color=discord.Color.red()
+        )
+        return await ctx.send(embed=embed)
+
+    user["money"] -= fiyat
+    save_user(user)
+
+    pirate["yükseltmeler"][yükseltme_id] = mevcut + 1
+    save_pirate(pirate)
+
+    yeni_seviye = mevcut + 1
+    bonus_text = ", ".join([f"{stat}: +{val * yeni_seviye}" for stat, val in yükseltme["bonus_per_level"].items()])
+
+    embed = discord.Embed(
+        title=f"{yükseltme['emoji']} Yükseltme Tamamlandı!",
+        description=(
+            f"{ctx.author.mention}, **{yükseltme['isim']}** Lv.**{yeni_seviye}** oldu!\n\n"
+            f"Maliyet: **{fiyat:,}** VisoCoin\n"
+            f"Toplam bonus: {bonus_text}\n"
+            f"Bakiye: **{user['money']:,}** VisoCoin"
+        ),
+        color=discord.Color.dark_gold(),
+        timestamp=datetime.now(timezone.utc)
+    )
+    await ctx.send(embed=embed)
+
+
+@bot.command(name="mürettebatal", aliases=["hirecrew", "tayfaal"])
+async def mürettebatal(ctx, mürettebat_id: str = None):
+    """Mürettebat kirala."""
+    user_id = ctx.author.id
+
+    if mürettebat_id is None:
+        embed = discord.Embed(
+            title="Mürettebat Kiralama",
+            description="Kullanım: `!mürettebatal <tip>`\n\n",
+            color=discord.Color.dark_blue(),
+            timestamp=datetime.now(timezone.utc)
+        )
+        for m_id, m in MÜRETTEBAT.items():
+            embed.add_field(
+                name=f"{m['emoji']} {m['isim']} (`{m_id}`)",
+                value=(
+                    f"Fiyat: **{m['fiyat']:,}** VisoCoin\n"
+                    f"Saldırı: **+{m['saldırı_bonus']}** | Savunma: **+{m['savunma_bonus']}**\n"
+                    f"Özel: {m['özel'] or 'Yok'}"
+                ),
+                inline=True
+            )
+        return await ctx.send(embed=embed)
+
+    mürettebat_id = mürettebat_id.lower().strip()
+
+    if mürettebat_id not in MÜRETTEBAT:
+        embed = discord.Embed(description="Böyle bir mürettebat tipi yok! `!mürettebatal` ile listeye bak.", color=discord.Color.red())
+        return await ctx.send(embed=embed)
+
+    pirate = get_pirate(user_id)
+    statlar = hesapla_gemi_statları(pirate)
+    mürettebat = MÜRETTEBAT[mürettebat_id]
+
+    if len(pirate["mürettebat"]) >= statlar["mürettebat_max"]:
+        embed = discord.Embed(
+            description=f"Mürettebat kapasiten dolu! ({len(pirate['mürettebat'])}/{statlar['mürettebat_max']})\nDaha büyük gemi al veya `!mürettebatçıkar` ile birisini çıkar.",
+            color=discord.Color.red()
+        )
+        return await ctx.send(embed=embed)
+
+    user = get_user(user_id)
+    if user["money"] < mürettebat["fiyat"]:
+        embed = discord.Embed(
+            description=f"Yetersiz bakiye! Maliyet: **{mürettebat['fiyat']:,}** VisoCoin",
+            color=discord.Color.red()
+        )
+        return await ctx.send(embed=embed)
+
+    user["money"] -= mürettebat["fiyat"]
+    save_user(user)
+
+    # Rastgele isim
+    isimler = ["Ali", "Veli", "Hasan", "Mehmet", "Yusuf", "Ahmet", "Kara", "Fırtına", "Demir", "Bulut",
+               "Rüzgar", "Deniz", "Dalga", "Yıldız", "Gökhan", "Bora", "Ozan", "Atlas", "Reis", "Kurt"]
+    isim = random.choice(isimler)
+
+    pirate["mürettebat"].append({"tip": mürettebat_id, "isim": isim})
+    save_pirate(pirate)
+
+    embed = discord.Embed(
+        title=f"{mürettebat['emoji']} Yeni Mürettebat!",
+        description=(
+            f"{ctx.author.mention}, **{isim}** ({mürettebat['isim']}) gemiye katıldı!\n\n"
+            f"Maliyet: **{mürettebat['fiyat']:,}** VisoCoin\n"
+            f"Mürettebat: **{len(pirate['mürettebat'])}/{statlar['mürettebat_max']}**\n"
+            f"Bakiye: **{user['money']:,}** VisoCoin"
+        ),
+        color=discord.Color.dark_blue(),
+        timestamp=datetime.now(timezone.utc)
+    )
+    await ctx.send(embed=embed)
+
+
+@bot.command(name="mürettebatçıkar", aliases=["firecrew", "tayfaçıkar"])
+async def mürettebatçıkar(ctx, index: int = None):
+    """Mürettebattan birini çıkar."""
+    user_id = ctx.author.id
+    pirate = get_pirate(user_id)
+
+    if not pirate["mürettebat"]:
+        embed = discord.Embed(description="Mürettebatın boş!", color=discord.Color.orange())
+        return await ctx.send(embed=embed)
+
+    if index is None:
+        text = ""
+        for i, üye in enumerate(pirate["mürettebat"], 1):
+            m = MÜRETTEBAT[üye["tip"]]
+            text += f"**{i}.** {m['emoji']} {üye['isim']} ({m['isim']})\n"
+        embed = discord.Embed(
+            title="Mürettebat Çıkarma",
+            description=f"Kullanım: `!mürettebatçıkar <numara>`\n\n{text}",
+            color=discord.Color.dark_blue()
+        )
+        return await ctx.send(embed=embed)
+
+    if index < 1 or index > len(pirate["mürettebat"]):
+        embed = discord.Embed(description=f"Geçersiz numara! 1-{len(pirate['mürettebat'])} arası gir.", color=discord.Color.red())
+        return await ctx.send(embed=embed)
+
+    çıkarılan = pirate["mürettebat"].pop(index - 1)
+    save_pirate(pirate)
+
+    m = MÜRETTEBAT[çıkarılan["tip"]]
+    embed = discord.Embed(
+        title="Mürettebat Çıkarıldı",
+        description=f"**{çıkarılan['isim']}** ({m['isim']}) gemiden ayrıldı.",
+        color=discord.Color.orange(),
+        timestamp=datetime.now(timezone.utc)
+    )
+    await ctx.send(embed=embed)
+
+
+@bot.command(name="yağmala", aliases=["raid", "saldır", "pvp"])
+async def yağmala(ctx, hedef: discord.Member = None):
+    """Başka bir oyuncunun gemisine saldır (PvP)."""
+    user_id = ctx.author.id
+
+    if hedef is None:
+        embed = discord.Embed(
+            description="Kullanım: `!yağmala @kullanıcı`\nBaşka bir korsanın gemisine saldır!",
+            color=discord.Color.blue()
+        )
+        return await ctx.send(embed=embed)
+
+    if hedef.id == user_id:
+        embed = discord.Embed(description="Kendi gemini yağmalayamazsın!", color=discord.Color.red())
+        return await ctx.send(embed=embed)
+
+    if hedef.bot:
+        embed = discord.Embed(description="Botlara saldıramazsın!", color=discord.Color.red())
+        return await ctx.send(embed=embed)
+
+    saldıran = get_pirate(user_id)
+    savunan = get_pirate(hedef.id)
+    now = time.time()
+
+    # Seferde mi kontrol
+    if saldıran.get("sefer") and saldıran["sefer"]["bitiş"] > now:
+        embed = discord.Embed(description="Seferdeyken saldıramazsın!", color=discord.Color.red())
+        return await ctx.send(embed=embed)
+
+    if savunan.get("sefer") and savunan["sefer"]["bitiş"] > now:
+        embed = discord.Embed(description="Hedef seferde, saldıramazsın!", color=discord.Color.red())
+        return await ctx.send(embed=embed)
+
+    # HP kontrol
+    if saldıran["gemi_hp"] <= 0:
+        embed = discord.Embed(description="Gemin hasarlı! Önce `!onar` ile tamir et.", color=discord.Color.red())
+        return await ctx.send(embed=embed)
+
+    # PvP koruma kontrolü
+    if savunan.get("koruma_süresi", 0) > now:
+        kalan = int(savunan["koruma_süresi"] - now)
+        dk = kalan // 60
+        embed = discord.Embed(
+            description=f"Hedef koruma altında! Kalan: **{dk}** dakika",
+            color=discord.Color.orange()
+        )
+        return await ctx.send(embed=embed)
+
+    # Savaş hesaplaması
+    s_statlar = hesapla_gemi_statları(saldıran)
+    d_statlar = hesapla_gemi_statları(savunan)
+
+    # Topçu kritik vuruş
+    topçu_var = any(ü["tip"] == "topçu" for ü in saldıran.get("mürettebat", []))
+    kritik = topçu_var and random.randint(1, 100) <= 10
+
+    s_güç = s_statlar["saldırı"] + s_statlar["hız"] * 2 + random.randint(-15, 15)
+    d_güç = d_statlar["saldırı"] + d_statlar["zırh"] * 2 + random.randint(-15, 15)
+
+    if kritik:
+        s_güç = int(s_güç * 1.5)
+
+    saldıran_user = get_user(user_id)
+    savunan_user = get_user(hedef.id)
+
+    if s_güç > d_güç:
+        # Saldıran kazandı
+        yağma_oran = random.uniform(0.05, 0.15)
+        yağma = int(savunan_user["money"] * yağma_oran)
+        yağma = max(yağma, 100)  # Min 100
+
+        saldıran_user["money"] += yağma
+        savunan_user["money"] = max(0, savunan_user["money"] - yağma)
+        save_user(saldıran_user)
+        save_user(savunan_user)
+
+        s_hasar = random.randint(10, 25)
+        d_hasar = random.randint(25, 50)
+        saldıran["gemi_hp"] = max(0, saldıran["gemi_hp"] - s_hasar)
+        savunan["gemi_hp"] = max(0, savunan["gemi_hp"] - d_hasar)
+        saldıran["pvp_galibiyet"] = saldıran.get("pvp_galibiyet", 0) + 1
+        savunan["pvp_mağlubiyet"] = savunan.get("pvp_mağlubiyet", 0) + 1
+        saldıran["toplam_yağma"] = saldıran.get("toplam_yağma", 0) + yağma
+
+        xp_kazanç = random.randint(30, 80)
+        saldıran["xp"] += xp_kazanç
+
+        # Kaybedene 10 dk koruma
+        savunan["koruma_süresi"] = now + 600
+
+        save_pirate(saldıran)
+        save_pirate(savunan)
+
+        embed = discord.Embed(
+            title="Yağma Başarılı!",
+            description=(
+                f"{ctx.author.mention} vs {hedef.mention}\n\n"
+                f"{'KRİTİK VURUŞ! ' if kritik else ''}"
+                f"**{ctx.author.display_name}** savaşı kazandı!\n\n"
+                f"Yağma: **+{yağma:,}** VisoCoin\n"
+                f"XP: **+{xp_kazanç}**\n"
+                f"Gemin aldığı hasar: **-{s_hasar} HP**\n"
+                f"Düşman gemisi hasarı: **-{d_hasar} HP**"
+            ),
+            color=discord.Color.dark_gold(),
+            timestamp=datetime.now(timezone.utc)
+        )
+    else:
+        # Savunan kazandı
+        s_hasar = random.randint(25, 50)
+        d_hasar = random.randint(5, 15)
+        saldıran["gemi_hp"] = max(0, saldıran["gemi_hp"] - s_hasar)
+        savunan["gemi_hp"] = max(0, savunan["gemi_hp"] - d_hasar)
+        saldıran["pvp_mağlubiyet"] = saldıran.get("pvp_mağlubiyet", 0) + 1
+        savunan["pvp_galibiyet"] = savunan.get("pvp_galibiyet", 0) + 1
+
+        # Saldırana 5 dk koruma
+        saldıran["koruma_süresi"] = now + 300
+
+        save_pirate(saldıran)
+        save_pirate(savunan)
+
+        embed = discord.Embed(
+            title="Yağma Başarısız!",
+            description=(
+                f"{ctx.author.mention} vs {hedef.mention}\n\n"
+                f"**{hedef.display_name}** savaşı kazandı!\n\n"
+                f"Gemin aldığı hasar: **-{s_hasar} HP**\n"
+                f"Saldırı geri püskürtüldü!"
+            ),
+            color=discord.Color.dark_red(),
+            timestamp=datetime.now(timezone.utc)
+        )
+
+    await ctx.send(embed=embed)
+
+
+@bot.command(name="eşyasat", aliases=["sellitem", "eşyasatış"])
+async def eşyasat(ctx, eşya_id: str = None):
+    """Nadir eşya sat."""
+    user_id = ctx.author.id
+
+    if eşya_id is None:
+        pirate = get_pirate(user_id)
+        if not pirate["envanter"]:
+            embed = discord.Embed(description="Envanterin boş!", color=discord.Color.orange())
+            return await ctx.send(embed=embed)
+
+        text = ""
+        for e_id in pirate["envanter"]:
+            eşya = NADİR_EŞYALAR.get(e_id)
+            if eşya:
+                text += f"{eşya['emoji']} **{eşya['isim']}** (`{e_id}`) -- {eşya['satış_fiyat']:,} VisoCoin\n"
+
+        embed = discord.Embed(
+            title="Eşya Satışı",
+            description=f"Kullanım: `!eşyasat <eşya_id>`\n\n{text}",
+            color=discord.Color.dark_blue()
+        )
+        return await ctx.send(embed=embed)
+
+    eşya_id = eşya_id.lower().strip()
+    pirate = get_pirate(user_id)
+
+    if eşya_id not in pirate["envanter"]:
+        embed = discord.Embed(description="Bu eşya envaterinde yok!", color=discord.Color.red())
+        return await ctx.send(embed=embed)
+
+    eşya = NADİR_EŞYALAR[eşya_id]
+    pirate["envanter"].remove(eşya_id)
+    save_pirate(pirate)
+
+    user = get_user(user_id)
+    user["money"] += eşya["satış_fiyat"]
+    save_user(user)
+
+    embed = discord.Embed(
+        title="Eşya Satıldı!",
+        description=(
+            f"{ctx.author.mention}, {eşya['emoji']} **{eşya['isim']}** satıldı!\n\n"
+            f"Kazanç: **+{eşya['satış_fiyat']:,}** VisoCoin\n"
+            f"Bakiye: **{user['money']:,}** VisoCoin"
+        ),
+        color=discord.Color.dark_gold(),
+        timestamp=datetime.now(timezone.utc)
+    )
+    await ctx.send(embed=embed)
+
+
+@bot.command(name="korsansıralama", aliases=["pirateleaderboard", "korsantop"])
+async def korsansıralama(ctx):
+    """Korsan liderlik tablosu."""
+    tüm_korsanlar = list(pirates_col.find().sort("xp", -1).limit(10))
+
+    if not tüm_korsanlar:
+        embed = discord.Embed(description="Henüz korsan yok!", color=discord.Color.dark_blue())
+        return await ctx.send(embed=embed)
+
+    sıralama_text = ""
+    medals = ["🥇", "🥈", "🥉"]
+
+    for i, p in enumerate(tüm_korsanlar):
+        try:
+            user = await bot.fetch_user(p["user_id"])
+            isim = user.display_name
+        except Exception:
+            isim = f"Korsan #{p['user_id']}"
+
+        seviye = get_pirate_level(p.get("xp", 0))
+        rütbe = get_rütbe(seviye)
+        medal = medals[i] if i < 3 else f"**{i+1}.**"
+        gemi_emoji = GEMİLER.get(p.get("gemi", "sandal"), GEMİLER["sandal"])["emoji"]
+
+        sıralama_text += (
+            f"{medal} {gemi_emoji} **{isim}** -- Lv.{seviye} {rütbe}\n"
+            f"   XP: {p.get('xp', 0):,} | Yağma: {p.get('toplam_yağma', 0):,} | "
+            f"PvP: {p.get('pvp_galibiyet', 0)}G/{p.get('pvp_mağlubiyet', 0)}M\n\n"
+        )
+
+    embed = discord.Embed(
+        title="Korsan Sıralaması",
+        description=sıralama_text,
+        color=discord.Color.dark_gold(),
+        timestamp=datetime.now(timezone.utc)
+    )
+    await ctx.send(embed=embed)
+
+
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
