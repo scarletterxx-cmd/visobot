@@ -2380,88 +2380,86 @@ async def yardim(ctx):
 # ======================================================================
 
 
-# ================= TOHUM & ÜRÜN TANIMLARI =================
-
 TOHUMLAR = {
-    "buğday": {
-        "isim": "Buğday",
+    "bugday": {
+        "isim": "Bugday",
         "emoji": "🌾",
         "fiyat": 50,
-        "süre": 60,          # 1 dakika (saniye)
-        "satış_min": 75,
-        "satış_max": 100,
+        "sure": 300,          # 5 dakika
+        "satis_min": 75,
+        "satis_max": 100,
         "xp": 5,
     },
     "domates": {
         "isim": "Domates",
         "emoji": "🍅",
         "fiyat": 120,
-        "süre": 180,          # 3 dakika
-        "satış_min": 180,
-        "satış_max": 240,
+        "sure": 600,          # 10 dakika
+        "satis_min": 180,
+        "satis_max": 240,
         "xp": 10,
     },
-    "mısır": {
-        "isim": "Mısır",
+    "misir": {
+        "isim": "Misir",
         "emoji": "🌽",
         "fiyat": 200,
-        "süre": 300,          # 5 dakika
-        "satış_min": 300,
-        "satış_max": 400,
+        "sure": 600,          # 10 dakika
+        "satis_min": 300,
+        "satis_max": 400,
         "xp": 15,
     },
-    "havuç": {
-        "isim": "Havuç",
+    "havuc": {
+        "isim": "Havuc",
         "emoji": "🥕",
         "fiyat": 80,
-        "süre": 420,          # 7 dakika
-        "satış_min": 120,
-        "satış_max": 160,
+        "sure": 600,          # 10 dakika
+        "satis_min": 120,
+        "satis_max": 160,
         "xp": 7,
     },
     "patates": {
         "isim": "Patates",
         "emoji": "🥔",
         "fiyat": 100,
-        "süre": 480,          # 8 dakika
-        "satış_min": 150,
-        "satış_max": 200,
+        "sure": 1800,         # 30 dakika
+        "satis_min": 150,
+        "satis_max": 200,
         "xp": 8,
     },
-    "çilek": {
-        "isim": "Çilek",
+    "cilek": {
+        "isim": "Cilek",
         "emoji": "🍓",
         "fiyat": 300,
-        "süre": 600,         # 10 dakika
-        "satış_min": 450,
-        "satış_max": 600,
+        "sure": 3600,         # 1 saat
+        "satis_min": 450,
+        "satis_max": 600,
         "xp": 20,
     },
     "karpuz": {
         "isim": "Karpuz",
         "emoji": "🍉",
         "fiyat": 500,
-        "süre": 1200,         # 20 dakika
-        "satış_min": 750,
-        "satış_max": 1000,
+        "sure": 10800,        # 3 saat
+        "satis_min": 750,
+        "satis_max": 1000,
         "xp": 30,
     },
-    "altın_elma": {
-        "isim": "Altın Elma",
+    "altin_elma": {
+        "isim": "Altin Elma",
         "emoji": "🍎",
         "fiyat": 1000,
-        "süre": 3600,         # 1 saat
-        "satış_min": 1500,
-        "satış_max": 2000,
+        "sure": 43200,        # 12 saat
+        "satis_min": 1500,
+        "satis_max": 2000,
         "xp": 50,
     },
     "ananas": {
-        "isim": "Krem Renk Ananas",
+        "isim": "Ananas",
         "emoji": "🍍",
         "fiyat": 2500,
-        "süre": 7200,         # 2 saat
-        "satış_min": 3000,
-        "satış_max": 4500,
+        "sure": 86400,        # 24 saat
+        "satis_min": 3000,
+        "satis_max": 4500,
         "xp": 75,
     },
 }
@@ -2482,9 +2480,27 @@ TARLA_SEVİYE_GEREKSİNİMLERİ = {
     5: 1500,
 }
 
-# Gübre (opsiyonel hızlandırıcı)
-GÜBRE_FİYAT = 150
-GÜBRE_HIZLANDIRMA = 0.25  # Süreyi %50 azaltır
+# Gübre türleri
+GÜBRELER = {
+    "normal": {
+        "isim": "Normal Gübre",
+        "emoji": "🧪",
+        "fiyat": 150,
+        "azaltma": 0.10,   # Kalan süreyi %10 azaltır
+    },
+    "altin": {
+        "isim": "Altın Gübre",
+        "emoji": "🧫",
+        "fiyat": 500,
+        "azaltma": 0.25,   # Kalan süreyi %25 azaltır
+    },
+    "elmas": {
+        "isim": "Elmas Gübre",
+        "emoji": "💎",
+        "fiyat": 1000,
+        "azaltma": 0.40,   # Kalan süreyi %40 azaltır
+    },
+}
 
 
 # ================= TARLA VERİTABANI =================
@@ -2500,12 +2516,17 @@ def get_farm(user_id):
             "toplam_xp": 0,
             "slotlar": [],       # [{"tohum": "buğday", "ekim_zamanı": timestamp, "gübreli": False}, ...]
             "ambar": {},         # {"buğday": 5, "domates": 3, ...}
-            "gübre": 0,          # Gübre miktarı
+            "gübreler": {"normal": 0, "altin": 0, "elmas": 0},
         }
         farms_col.insert_one(farm)
-    # Eski veriler için alan kontrolü
-    if "gübre" not in farm:
-        farm["gübre"] = 0
+    # Eski veriler için alan kontrolü (gübre -> gübreler migrasyonu)
+    if "gübreler" not in farm:
+        eski_gübre = farm.get("gübre", 0)
+        farm["gübreler"] = {"normal": eski_gübre, "altin": 0, "elmas": 0}
+    # Eksik gübre türleri kontrolü
+    for gubre_id in GÜBRELER:
+        if gubre_id not in farm["gübreler"]:
+            farm["gübreler"][gubre_id] = 0
     if "toplam_hasat" not in farm:
         farm["toplam_hasat"] = 0
     if "toplam_xp" not in farm:
@@ -2561,18 +2582,20 @@ async def tarla(ctx):
     for i, slot in enumerate(farm["slotlar"], 1):
         tohum = TOHUMLAR[slot["tohum"]]
         süre = tohum["süre"]
-        if slot.get("gübreli"):
-            süre = int(süre * GÜBRE_HIZLANDIRMA)
         geçen = now - slot["ekim_zamanı"]
 
         if geçen >= süre:
-            slot_text += f"**{i}.** {tohum['emoji']} {tohum['isim']} — Hasat için hazır!\n"
+            slot_text += f"**{i}.** {tohum['emoji']} {tohum['isim']} -- Hasat icin hazir!\n"
         else:
             kalan = int(süre - geçen)
             dk = kalan // 60
             sn = kalan % 60
-            gübre_text = " (Gübreli)" if slot.get("gübreli") else ""
-            slot_text += f"**{i}.** {tohum['emoji']} {tohum['isim']} — {dk}dk {sn}sn kaldı{gübre_text}\n"
+            gübre_tip = slot.get("gübre_tip")
+            if gübre_tip and gübre_tip in GÜBRELER:
+                gübre_text = f" ({GÜBRELER[gübre_tip]['emoji']} {GÜBRELER[gübre_tip]['isim']})"
+            else:
+                gübre_text = ""
+            slot_text += f"**{i}.** {tohum['emoji']} {tohum['isim']} -- {dk}dk {sn}sn kaldi{gübre_text}\n"
 
     boş_slot = max_slot - len(farm["slotlar"])
     for i in range(len(farm["slotlar"]) + 1, max_slot + 1):
@@ -2602,6 +2625,13 @@ async def tarla(ctx):
     else:
         seviye_text = f"Seviye **{seviye}** (MAKSİMUM!)"
 
+    # Gübre bilgisi
+    gübreler = farm.get("gübreler", {"normal": 0, "altin": 0, "elmas": 0})
+    gübre_text = ""
+    for gubre_id, gubre in GÜBRELER.items():
+        miktar = gübreler.get(gubre_id, 0)
+        gübre_text += f"{gubre['emoji']} {gubre['isim']}: **{miktar}**  "
+
     embed = discord.Embed(
         title=f"🌾 {ctx.author.display_name} - Tarla",
         description=(
@@ -2611,14 +2641,14 @@ async def tarla(ctx):
             f"{slot_text}\n"
             f"**Ambar:**\n"
             f"{ambar_text}\n"
-            f"**Gübre:** {farm.get('gübre', 0)} adet"
+            f"**Gübreler:**\n{gübre_text}"
         ),
         color=discord.Color.green(),
         timestamp=datetime.now(timezone.utc)
     )
 
     if bonus > 0:
-        embed.set_footer(text=f"Satış bonusu: +%{bonus} | Gübre: {farm.get('gübre', 0)} adet")
+        embed.set_footer(text=f"Satis bonusu: +%{bonus}")
     else:
         embed.set_footer(text=f"{ctx.author.display_name}", icon_url=ctx.author.display_avatar.url)
 
@@ -2648,7 +2678,7 @@ async def tohumlar(ctx):
             inline=True
         )
 
-    embed.set_footer(text="Gübreli ekimde süre %50 azalır!")
+    embed.set_footer(text="Gübre türleri: Normal (%10), Altin (%25), Elmas (%40)")
     await ctx.send(embed=embed)
 
 
@@ -2762,8 +2792,6 @@ async def hasat(ctx):
     for slot in farm["slotlar"]:
         tohum = TOHUMLAR[slot["tohum"]]
         süre = tohum["süre"]
-        if slot.get("gübreli"):
-            süre = int(süre * GÜBRE_HIZLANDIRMA)
 
         geçen = now - slot["ekim_zamanı"]
 
@@ -2989,35 +3017,54 @@ async def sat(ctx, ürün_id: str = None, adet: int = None):
 
 
 @bot.command(name="gübrele", aliases=["fertilize", "gübre"])
-async def gübrele(ctx, slot_no: int = None):
-    """Belirli bir slota gübre at (büyüme süresini %50 azaltır)."""
+async def gübrele(ctx, slot_no: int = None, gübre_türü: str = "normal"):
+    """Belirli bir slota gübre at. Türler: normal, altin, elmas"""
     user_id = ctx.author.id
     farm = get_farm(user_id)
 
-    if farm.get("gübre", 0) <= 0:
-        embed = discord.Embed(
-            description="Gübren yok! `!gübresat` ile gübre satın al.",
-            color=discord.Color.red()
-        )
-        return await ctx.send(embed=embed)
-
     if slot_no is None:
+        # Gübre türlerini listele
+        gübre_list = ""
+        for gubre_id, gubre in GÜBRELER.items():
+            miktar = farm.get("gübreler", {}).get(gubre_id, 0)
+            gübre_list += f"{gubre['emoji']} **{gubre['isim']}** (`{gubre_id}`) - %{int(gubre['azaltma'] * 100)} hizlandirma - Elinde: **{miktar}**\n"
+
         embed = discord.Embed(
-            title="🧪 Gübre Kullanımı",
+            title="Gübre Kullanimi",
             description=(
-                "Kullanım: `!gübrele <slot_no>`\n\n"
-                "Örnek: `!gübrele 1`\n"
-                "Gübre büyüme süresini **%50** azaltır.\n\n"
-                "Tarlanı görmek için: `!tarla`"
+                f"Kullanim: `!gübrele <slot_no> [tür]`\n\n"
+                f"**Gübre Türleri:**\n{gübre_list}\n"
+                f"Ornek: `!gübrele 1 normal` veya `!gübrele 2 elmas`\n"
+                f"Tür belirtilmezse **normal** gübre kullanilir.\n\n"
+                f"Satin almak icin: `!gübresat <tür> [adet]`"
             ),
             color=discord.Color.blue(),
             timestamp=datetime.now(timezone.utc)
         )
         return await ctx.send(embed=embed)
 
+    gübre_türü = gübre_türü.lower().strip()
+
+    if gübre_türü not in GÜBRELER:
+        embed = discord.Embed(
+            description=f"Geçersiz gübre türü! Mevcut türler: `normal`, `altin`, `elmas`",
+            color=discord.Color.red()
+        )
+        return await ctx.send(embed=embed)
+
+    gübreler = farm.get("gübreler", {"normal": 0, "altin": 0, "elmas": 0})
+
+    if gübreler.get(gübre_türü, 0) <= 0:
+        gubre = GÜBRELER[gübre_türü]
+        embed = discord.Embed(
+            description=f"{gubre['emoji']} **{gubre['isim']}** yok! `!gübresat {gübre_türü}` ile satin al.",
+            color=discord.Color.red()
+        )
+        return await ctx.send(embed=embed)
+
     if slot_no < 1 or slot_no > len(farm["slotlar"]):
         embed = discord.Embed(
-            description=f"Geçersiz slot numarası! 1-{len(farm['slotlar'])} arası gir.",
+            description=f"Geçersiz slot numarasi! 1-{len(farm['slotlar'])} arasi gir.",
             color=discord.Color.red()
         )
         return await ctx.send(embed=embed)
@@ -3031,20 +3078,31 @@ async def gübrele(ctx, slot_no: int = None):
         )
         return await ctx.send(embed=embed)
 
-    # Gübre kullan
-    farm["gübre"] -= 1
+    # Gübre kullan - kalan süreyi azalt (ekim zamanini ileriye kaydir)
+    gubre = GÜBRELER[gübre_türü]
+    gübreler[gübre_türü] -= 1
+    farm["gübreler"] = gübreler
     farm["slotlar"][slot_no - 1]["gübreli"] = True
-    save_farm(farm)
+    farm["slotlar"][slot_no - 1]["gübre_tip"] = gübre_türü
 
     tohum = TOHUMLAR[slot["tohum"]]
-    yeni_süre = int(tohum["süre"] * GÜBRE_HIZLANDIRMA)
+    now = time.time()
+    geçen = now - slot["ekim_zamanı"]
+    kalan = max(tohum["süre"] - geçen, 0)
+    yeni_kalan = kalan * (1 - gubre["azaltma"])
+    # ekim_zamanini ileriye kaydir
+    farm["slotlar"][slot_no - 1]["ekim_zamanı"] = now - (tohum["süre"] - yeni_kalan)
+    save_farm(farm)
+
+    kalan_dk = int(yeni_kalan) // 60
+    kalan_sn = int(yeni_kalan) % 60
 
     embed = discord.Embed(
-        title="🧪 Gübre Kullanıldı!",
+        title=f"{gubre['emoji']} {gubre['isim']} Kullanildi!",
         description=(
-            f"{ctx.author.mention}, **{slot_no}. slot** gübrendi!\n\n"
-            f"{tohum['emoji']} {tohum['isim']} büyüme süresi: **{yeni_süre // 60}** dakikaya düştü!\n"
-            f"Kalan gübre: **{farm['gübre']}**"
+            f"{ctx.author.mention}, **{slot_no}. slot**'a **{gubre['isim']}** atildi!\n\n"
+            f"{tohum['emoji']} {tohum['isim']} kalan süre: **{kalan_dk}dk {kalan_sn}sn**'ye düstü! (-%{int(gubre['azaltma'] * 100)})\n"
+            f"Kalan {gubre['isim']}: **{gübreler[gübre_türü]}**"
         ),
         color=discord.Color.green(),
         timestamp=datetime.now(timezone.utc)
@@ -3052,10 +3110,40 @@ async def gübrele(ctx, slot_no: int = None):
     await ctx.send(embed=embed)
 
 
-@bot.command(name="gübresat", aliases=["buyfertilizer", "gübresal"])
-async def gübresat(ctx, adet: int = 1):
-    """Gübre satın al."""
+@bot.command(name="gübresat", aliases=["buyfertilizer", "gübresal", "gübredükkanı"])
+async def gübresat(ctx, gübre_türü: str = None, adet: int = 1):
+    """Gübre satin al. Türler: normal, altin, elmas"""
     user_id = ctx.author.id
+
+    if gübre_türü is None:
+        # Gübre dükkanini goster
+        gübre_list = ""
+        for gubre_id, gubre in GÜBRELER.items():
+            gübre_list += (
+                f"{gubre['emoji']} **{gubre['isim']}** (`{gubre_id}`)\n"
+                f"   Fiyat: **{gubre['fiyat']}** VisoCoin | Hizlandirma: **%{int(gubre['azaltma'] * 100)}**\n\n"
+            )
+
+        embed = discord.Embed(
+            title="Gübre Dükkani",
+            description=(
+                f"Kullanim: `!gübresat <tür> [adet]`\n\n"
+                f"{gübre_list}"
+                f"Ornek: `!gübresat normal 5` veya `!gübresat elmas`"
+            ),
+            color=discord.Color.blue(),
+            timestamp=datetime.now(timezone.utc)
+        )
+        return await ctx.send(embed=embed)
+
+    gübre_türü = gübre_türü.lower().strip()
+
+    if gübre_türü not in GÜBRELER:
+        embed = discord.Embed(
+            description=f"Geçersiz gübre türü! Mevcut türler: `normal`, `altin`, `elmas`",
+            color=discord.Color.red()
+        )
+        return await ctx.send(embed=embed)
 
     if adet <= 0:
         embed = discord.Embed(
@@ -3064,12 +3152,13 @@ async def gübresat(ctx, adet: int = 1):
         )
         return await ctx.send(embed=embed)
 
-    toplam_fiyat = GÜBRE_FİYAT * adet
+    gubre = GÜBRELER[gübre_türü]
+    toplam_fiyat = gubre["fiyat"] * adet
     user = get_user(user_id)
 
     if user["money"] < toplam_fiyat:
         embed = discord.Embed(
-            description=f"Yetersiz bakiye! {adet}x gübre için **{toplam_fiyat}** VisoCoin gerekiyor.",
+            description=f"Yetersiz bakiye! {adet}x {gubre['isim']} icin **{toplam_fiyat}** VisoCoin gerekiyor.",
             color=discord.Color.red()
         )
         return await ctx.send(embed=embed)
@@ -3078,24 +3167,27 @@ async def gübresat(ctx, adet: int = 1):
     save_user(user)
 
     farm = get_farm(user_id)
-    farm["gübre"] = farm.get("gübre", 0) + adet
+    gübreler = farm.get("gübreler", {"normal": 0, "altin": 0, "elmas": 0})
+    gübreler[gübre_türü] = gübreler.get(gübre_türü, 0) + adet
+    farm["gübreler"] = gübreler
     save_farm(farm)
 
     update_quest_progress(user_id, "harca", toplam_fiyat)
 
     embed = discord.Embed(
-        title="🧪 Gübre Satın Alındı!",
+        title=f"{gubre['emoji']} {gubre['isim']} Satin Alindi!",
         description=(
-            f"{ctx.author.mention}, **{adet}x gübre** satın aldın!\n\n"
+            f"{ctx.author.mention}, **{adet}x {gubre['emoji']} {gubre['isim']}** satin aldin!\n\n"
             f"Maliyet: **{toplam_fiyat}** VisoCoin\n"
-            f"Toplam gübre: **{farm['gübre']}**\n"
+            f"Toplam {gubre['isim']}: **{gübreler[gübre_türü]}**\n"
             f"Bakiye: **{user['money']:,}** VisoCoin\n\n"
-            f"Kullanmak için: `!gübrele <slot_no>`"
+            f"Kullanmak icin: `!gübrele <slot_no> {gübre_türü}`"
         ),
         color=discord.Color.green(),
         timestamp=datetime.now(timezone.utc)
     )
     await ctx.send(embed=embed)
+
 
 # ================= SINIF TANIMLARI =================
 
@@ -5902,6 +5994,7 @@ async def korsansıralama(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
