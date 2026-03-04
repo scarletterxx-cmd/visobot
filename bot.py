@@ -10,6 +10,7 @@ import time
 import asyncio
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
+import uuid
 
 load_dotenv()
 
@@ -3262,9 +3263,9 @@ EKİPMANLAR = {
     "şimşek_kılıcı": {"isim": "Şimşek Kılıcı", "emoji": "⚡", "tür": "silah", "saldırı": 32, "savunma": 0, "can": 0, "nadirlik": "Epik", "fiyat": 6500},
     "zehir_kılıcı": {"isim": "Zehir Kılıcı", "emoji": "☠️", "tür": "silah", "saldırı": 22, "savunma": 0, "can": 0, "nadirlik": "Nadir", "fiyat": 2500},
     "ruh_kesici": {"isim": "Ruh Kesici", "emoji": "💀", "tür": "silah", "saldırı": 45, "savunma": 8, "can": 15, "nadirlik": "Efsanevi", "fiyat": 18000},
-    "kaos_kılıcı": {"isim": "Kaos Kılıcı", "emoji": "🌀", "tür": "silah", "saldırı": 55, "savunma": 10, "can": 25, "nadirlik": "Tanrısal", "fiyat": 50000},
-    "güneş_kılıcı": {"isim": "Güneş Kılıcı", "emoji": "☀️", "tür": "silah", "saldırı": 60, "savunma": 15, "can": 30, "nadirlik": "Tanrısal", "fiyat": 60000},
-    "kader_kılıcı": {"isim": "Kader Kılıcı", "emoji": "🌟", "tür": "silah", "saldırı": 70, "savunma": 20, "can": 50, "nadirlik": "Tanrısal", "fiyat": 100000},
+    "kaos_kılıcı": {"isim": "Kaos Kılıcı", "emoji": "🌀", "tür": "silah", "saldırı": 55, "savunma": 10, "can": 25, "nadirlik": "Tanrısal", "fiyat": 20000},
+    "güneş_kılıcı": {"isim": "Güneş Kılıcı", "emoji": "☀️", "tür": "silah", "saldırı": 60, "savunma": 15, "can": 30, "nadirlik": "Tanrısal", "fiyat": 10000},
+    "kader_kılıcı": {"isim": "Kader Kılıcı", "emoji": "🌟", "tür": "silah", "saldırı": 70, "savunma": 20, "can": 50, "nadirlik": "Tanrısal", "fiyat": 10000},
     "cehennem_baltası": {"isim": "Cehennem Baltası", "emoji": "🪓", "tür": "silah", "saldırı": 50, "savunma": 0, "can": 20, "nadirlik": "Efsanevi", "fiyat": 20000},
     "fırtına_mızrağı": {"isim": "Fırtına Mızrağı", "emoji": "🔱", "tür": "silah", "saldırı": 38, "savunma": 5, "can": 10, "nadirlik": "Epik", "fiyat": 7500},
 
@@ -3279,12 +3280,12 @@ EKİPMANLAR = {
     "buz_zırhı": {"isim": "Buz Zırhı", "emoji": "❄️", "tür": "zırh", "saldırı": 0, "savunma": 30, "can": 45, "nadirlik": "Epik", "fiyat": 6000},
     "ateş_zırhı": {"isim": "Ateş Zırhı", "emoji": "🔥", "tür": "zırh", "saldırı": 8, "savunma": 32, "can": 40, "nadirlik": "Epik", "fiyat": 6500},
     "gölge_zırhı": {"isim": "Gölge Zırhı", "emoji": "🖤", "tür": "zırh", "saldırı": 5, "savunma": 28, "can": 35, "nadirlik": "Nadir", "fiyat": 3000},
-    "titan_zırhı": {"isim": "Titan Zırhı", "emoji": "🗿", "tür": "zırh", "saldırı": 15, "savunma": 55, "can": 100, "nadirlik": "Efsanevi", "fiyat": 22000},
-    "cennet_zırhı": {"isim": "Cennet Zırhı", "emoji": "👼", "tür": "zırh", "saldırı": 20, "savunma": 70, "can": 150, "nadirlik": "Tanrısal", "fiyat": 55000},
-    "kaos_zırhı": {"isim": "Kaos Zırhı", "emoji": "🌀", "tür": "zırh", "saldırı": 25, "savunma": 80, "can": 180, "nadirlik": "Tanrısal", "fiyat": 70000},
-    "sonsuzluk_zırhı": {"isim": "Sonsuzluk Zırhı", "emoji": "♾️", "tür": "zırh", "saldırı": 30, "savunma": 100, "can": 250, "nadirlik": "Tanrısal", "fiyat": 120000},
+    "titan_zırhı": {"isim": "Titan Zırhı", "emoji": "🗿", "tür": "zırh", "saldırı": 15, "savunma": 55, "can": 100, "nadirlik": "Efsanevi", "fiyat": 10000},
+    "cennet_zırhı": {"isim": "Cennet Zırhı", "emoji": "👼", "tür": "zırh", "saldırı": 20, "savunma": 70, "can": 150, "nadirlik": "Tanrısal", "fiyat": 13000},
+    "kaos_zırhı": {"isim": "Kaos Zırhı", "emoji": "🌀", "tür": "z��rh", "saldırı": 25, "savunma": 80, "can": 180, "nadirlik": "Tanrısal", "fiyat": 15000},
+    "sonsuzluk_zırhı": {"isim": "Sonsuzluk Zırhı", "emoji": "♾️", "tür": "zırh", "saldırı": 30, "savunma": 100, "can": 250, "nadirlik": "Tanrısal", "fiyat": 30000},
     "kemik_zırhı": {"isim": "Kemik Zırhı", "emoji": "🦴", "tür": "zırh", "saldırı": 3, "savunma": 15, "can": 25, "nadirlik": "Sıradan", "fiyat": 1000},
-    "kristal_zırhı": {"isim": "Kristal Zırhı", "emoji": "💠", "tür": "zırh", "saldırı": 12, "savunma": 45, "can": 70, "nadirlik": "Efsanevi", "fiyat": 16000},
+    "kristal_zırhı": {"isim": "Kristal Zırhı", "emoji": "💠", "tür": "zırh", "saldırı": 12, "savunma": 45, "can": 70, "nadirlik": "Efsanevi", "fiyat": 12000},
 
     # ================= YÜZÜKLER =================
     "şans_yüzüğü": {"isim": "Şans Yüzüğü", "emoji": "💍", "tür": "yüzük", "saldırı": 0, "savunma": 0, "can": 0, "nadirlik": "Nadir", "şans": 10, "fiyat": 3000},
@@ -3294,12 +3295,12 @@ EKİPMANLAR = {
     "demir_yüzük": {"isim": "Demir Yüzük", "emoji": "⚙️", "tür": "yüzük", "saldırı": 3, "savunma": 3, "can": 5, "nadirlik": "Sıradan", "şans": 2, "fiyat": 600},
     "ateş_yüzüğü": {"isim": "Ateş Yüzüğü", "emoji": "🔥", "tür": "yüzük", "saldırı": 15, "savunma": 0, "can": 10, "nadirlik": "Epik", "şans": 5, "fiyat": 6000},
     "buz_yüzüğü": {"isim": "Buz Yüzüğü", "emoji": "❄️", "tür": "yüzük", "saldırı": 5, "savunma": 10, "can": 20, "nadirlik": "Epik", "şans": 8, "fiyat": 5800},
-    "vampir_yüzüğü": {"isim": "Vampir Yüzüğü", "emoji": "🧛", "tür": "yüzük", "saldırı": 10, "savunma": 5, "can": 30, "nadirlik": "Efsanevi", "şans": 12, "fiyat": 14000},
-    "ejderha_yüzüğü": {"isim": "Ejderha Yüzüğü", "emoji": "🐉", "tür": "yüzük", "saldırı": 18, "savunma": 12, "can": 40, "nadirlik": "Efsanevi", "şans": 10, "fiyat": 16000},
+    "vampir_yüzüğü": {"isim": "Vampir Yüzüğü", "emoji": "🧛", "tür": "yüzük", "saldırı": 10, "savunma": 5, "can": 30, "nadirlik": "Efsanevi", "şans": 12, "fiyat": 1400},
+    "ejderha_yüzüğü": {"isim": "Ejderha Yüzüğü", "emoji": "🐉", "tür": "yüzük", "saldırı": 18, "savunma": 12, "can": 40, "nadirlik": "Efsanevi", "şans": 10, "fiyat": 1600},
     "karanlık_yüzük": {"isim": "Karanlık Yüzük", "emoji": "🖤", "tür": "yüzük", "saldırı": 20, "savunma": 0, "can": 0, "nadirlik": "Epik", "şans": 18, "fiyat": 7000},
-    "tanrı_yüzüğü": {"isim": "Tanrı Yüzüğü", "emoji": "👑", "tür": "yüzük", "saldırı": 30, "savunma": 20, "can": 60, "nadirlik": "Tanrısal", "şans": 25, "fiyat": 80000},
-    "sonsuzluk_yüzüğü": {"isim": "Sonsuzluk Yüzüğü", "emoji": "♾️", "tür": "yüzük", "saldırı": 35, "savunma": 25, "can": 80, "nadirlik": "Tanrısal", "şans": 30, "fiyat": 100000},
-    "kader_yüzüğü": {"isim": "Kader Yüzüğü", "emoji": "🌟", "tür": "yüzük", "saldırı": 40, "savunma": 30, "can": 100, "nadirlik": "Tanrısal", "şans": 35, "fiyat": 150000},
+    "tanrı_yüzüğü": {"isim": "Tanrı Yüzüğü", "emoji": "👑", "tür": "yüzük", "saldırı": 30, "savunma": 20, "can": 60, "nadirlik": "Tanrısal", "şans": 25, "fiyat": 8000},
+    "sonsuzluk_yüzüğü": {"isim": "Sonsuzluk Yüzüğü", "emoji": "♾️", "tür": "yüzük", "saldırı": 35, "savunma": 25, "can": 80, "nadirlik": "Tanrısal", "şans": 30, "fiyat": 10000},
+    "kader_yüzüğü": {"isim": "Kader Yüzüğü", "emoji": "🌟", "tür": "yüzük", "saldırı": 40, "savunma": 30, "can": 100, "nadirlik": "Tanrısal", "şans": 35, "fiyat": 15000},
     "koruma_yüzüğü": {"isim": "Koruma Yüzüğü", "emoji": "🛡️", "tür": "yüzük", "saldırı": 0, "savunma": 15, "can": 35, "nadirlik": "Nadir", "şans": 5, "fiyat": 3500},
 }
 
@@ -3354,7 +3355,7 @@ PRESTİJ_SEVİYELERİ = {
     1: {"isim": "Deneyimli Savaşçı", "emoji": "⭐", "bonus_saldırı": 5, "bonus_can": 20, "bonus_altın": 10},
     2: {"isim": "Usta Maceraperest", "emoji": "⭐⭐", "bonus_saldırı": 12, "bonus_can": 50, "bonus_altın": 20},
     3: {"isim": "Efsane Kahraman", "emoji": "⭐⭐⭐", "bonus_saldırı": 20, "bonus_can": 100, "bonus_altın": 35},
-    4: {"isim": "Mitik Şampion", "emoji": "💫", "bonus_saldırı": 30, "bonus_can": 150, "bonus_altın": 50},
+    4: {"isim": "Mistik Şampiyon", "emoji": "💫", "bonus_saldırı": 30, "bonus_can": 150, "bonus_altın": 50},
     5: {"isim": "Tanrısal Güç", "emoji": "👑", "bonus_saldırı": 50, "bonus_can": 250, "bonus_altın": 75},
 }
 
@@ -3490,8 +3491,8 @@ def get_dungeon(user_id):
             "boss_öldürme": 0,
             "toplam_ölüm": 0,
             "prestiж": 0,  # prestij seviyesi
-            "envanter": [],  # [{"eşya_id": "...", "kuşanılmış": False}, ...]
-            "kuşanılmış": {"silah": None, "zırh": None, "yüzük": None},
+            "envanter": [],  # [{"id": "benzersiz-uuid", "eşya_tipi": "demir_kılıç"}, ...]
+            "kuşanılmış": {"silah": None, "zırh": None, "yüzük": None},  # Benzersiz ID'ler tutulur
             "can": 0,
             "maks_can": 0,
             "iksir": 0,
@@ -3534,15 +3535,22 @@ def get_karakter_statları(dungeon):
     savunma = sınıf["temel_savunma"] + (seviye - 1) * 2
     şans = sınıf["temel_şans"]
 
-    # Ekipman bonusları
+    # Ekipman bonusları (kuşanılmış eşyaların ID'leri tutulur)
     kuşanılmış = dungeon.get("kuşanılmış", {})
-    for slot, eşya_id in kuşanılmış.items():
-        if eşya_id and eşya_id in EKİPMANLAR:
-            eşya = EKİPMANLAR[eşya_id]
-            saldırı += eşya.get("saldırı", 0)
-            savunma += eşya.get("savunma", 0)
-            can += eşya.get("can", 0)
-            şans += eşya.get("şans", 0)
+    envanter = dungeon.get("envanter", [])
+    for slot, kuşanılmış_id in kuşanılmış.items():
+        if kuşanılmış_id:
+            # Envanterde bu ID'yi bul
+            for item in envanter:
+                if item.get("id") == kuşanılmış_id:
+                    eşya_tipi = item.get("eşya_tipi") or item.get("eşya_id")  # Eski format uyumluluğu
+                    if eşya_tipi and eşya_tipi in EKİPMANLAR:
+                        eşya = EKİPMANLAR[eşya_tipi]
+                        saldırı += eşya.get("saldırı", 0)
+                        savunma += eşya.get("savunma", 0)
+                        can += eşya.get("can", 0)
+                        şans += eşya.get("şans", 0)
+                    break
 
     return {
         "can": can,
@@ -3631,11 +3639,25 @@ async def zindan(ctx):
     # Kuşanılmış ekipman
     ekipman_text = ""
     kuşanılmış = dungeon.get("kuşanılmış", {})
+    envanter = dungeon.get("envanter", [])
     for slot_adı, slot_tr in [("silah", "Silah"), ("zırh", "Zırh"), ("yüzük", "Yüzük")]:
-        eşya_id = kuşanılmış.get(slot_adı)
-        if eşya_id and eşya_id in EKİPMANLAR:
-            eşya = EKİPMANLAR[eşya_id]
-            ekipman_text += f"**{slot_tr}:** {eşya['emoji']} {eşya['isim']} ({NADİRLİK_RENKLERİ[eşya['nadirlik']]} {eşya['nadirlik']})\n"
+        kuşanılmış_id = kuşanılmış.get(slot_adı)
+        if kuşanılmış_id:
+            # Envanterde bu ID'yi bul
+            eşya_tipi = None
+            for item in envanter:
+                if item.get("id") == kuşanılmış_id:
+                    eşya_tipi = item.get("eşya_tipi") or item.get("eşya_id")
+                    break
+            # Eski format uyumluluğu (direkt eşya tipi kayıtlıysa)
+            if not eşya_tipi and kuşanılmış_id in EKİPMANLAR:
+                eşya_tipi = kuşanılmış_id
+            
+            if eşya_tipi and eşya_tipi in EKİPMANLAR:
+                eşya = EKİPMANLAR[eşya_tipi]
+                ekipman_text += f"**{slot_tr}:** {eşya['emoji']} {eşya['isim']} ({NADİRLİK_RENKLERİ[eşya['nadirlik']]} {eşya['nadirlik']}) `[{kuşanılmış_id}]`\n"
+            else:
+                ekipman_text += f"**{slot_tr}:** Boş\n"
         else:
             ekipman_text += f"**{slot_tr}:** Boş\n"
 
@@ -3765,7 +3787,7 @@ async def sınıfseç(ctx, sınıf_id: str = None):
         {"eşya_id": "paslı_kılıç", "kuşanılmış": True},
         {"eşya_id": "deri_zırh", "kuşanılmış": True},
     ]
-    dungeon["kuşanılmış"] = {"silah": "paslı_kılıç", "zırh": "deri_zırh", "yüzük": None}
+    dungeon["kuşanılmı��"] = {"silah": "paslı_kılıç", "zırh": "deri_zırh", "yüzük": None}
     save_dungeon(dungeon)
 
     embed = discord.Embed(
@@ -3989,19 +4011,22 @@ async def zsaldır(ctx):
 
         # Loot kontrolü
         düşen_eşya = None
+        düşen_id = None
         if boss_mu and savaş.get("loot"):
             # Boss garantili loot
-            düşen_eşya_id = random.choice(savaş["loot"])
-            düşen_eşya = EKİPMANLAR.get(düşen_eşya_id)
+            düşen_eşya_tipi = random.choice(savaş["loot"])
+            düşen_eşya = EKİPMANLAR.get(düşen_eşya_tipi)
             if düşen_eşya:
-                dungeon["envanter"].append({"eşya_id": düşen_eşya_id, "kuşanılmış": False})
+                düşen_id = str(uuid.uuid4())[:8]  # Kısa benzersiz ID
+                dungeon["envanter"].append({"id": düşen_id, "eşya_tipi": düşen_eşya_tipi})
         else:
             # Normal loot şansı
-            loot_id = roll_loot(savaş["kat"])
-            if loot_id:
-                düşen_eşya = EKİPMANLAR.get(loot_id)
+            loot_tipi = roll_loot(savaş["kat"])
+            if loot_tipi:
+                düşen_eşya = EKİPMANLAR.get(loot_tipi)
                 if düşen_eşya:
-                    dungeon["envanter"].append({"eşya_id": loot_id, "kuşanılmış": False})
+                    düşen_id = str(uuid.uuid4())[:8]  # Kısa benzersiz ID
+                    dungeon["envanter"].append({"id": düşen_id, "eşya_tipi": loot_tipi})
 
         dungeon["aktif_savaş"] = None
         save_dungeon(dungeon)
@@ -4020,7 +4045,7 @@ async def zsaldır(ctx):
         )
 
         if düşen_eşya:
-            sonuç_text += f"\n**EŞYA DÜŞTÜ!**\n{düşen_eşya['emoji']} {düşen_eşya['isim']} ({NADİRLİK_RENKLERİ[düşen_eşya['nadirlik']]} {düşen_eşya['nadirlik']})\n"
+            sonuç_text += f"\n**EŞYA DÜŞTÜ!**\n{düşen_eşya['emoji']} {düşen_eşya['isim']} ({NADİRLİK_RENKLERİ[düşen_eşya['nadirlik']]} {düşen_eşya['nadirlik']}) `[{düşen_id}]`\n"
 
         sonuç_text += f"\nDevam etmek için: `!gir`"
 
@@ -4347,11 +4372,19 @@ async def envanter(ctx):
     yüzükler = []
 
     for item in envanter:
-        eşya = EKİPMANLAR.get(item["eşya_id"])
+        # Yeni ve eski format uyumluluğu
+        item_id = item.get("id")
+        eşya_tipi = item.get("eşya_tipi") or item.get("eşya_id")
+        
+        eşya = EKİPMANLAR.get(eşya_tipi)
         if not eşya:
             continue
-        kuşanılmış_mı = item["eşya_id"] in kuşanılmış.values()
-        satır = f"{eşya['emoji']} **{eşya['isim']}** ({NADİRLİK_RENKLERİ[eşya['nadirlik']]} {eşya['nadirlik']})"
+        
+        kuşanılmış_mı = item_id in kuşanılmış.values() if item_id else eşya_tipi in kuşanılmış.values()
+        
+        # ID'yi göster
+        id_göster = f"`[{item_id}]`" if item_id else ""
+        satır = f"{id_göster} {eşya['emoji']} **{eşya['isim']}** ({NADİRLİK_RENKLERİ[eşya['nadirlik']]} {eşya['nadirlik']})"
         if kuşanılmış_mı:
             satır += " **[KUŞANILMIŞ]**"
         stat_text = []
@@ -4379,37 +4412,50 @@ async def envanter(ctx):
     if yüzükler:
         embed.add_field(name="Yüzükler", value="\n".join(yüzükler), inline=False)
 
-    embed.set_footer(text="Kuşanmak: !kuşan <eşya_adı> | Satmak: !eşyasat <eşya_adı>")
+    embed.set_footer(text="Kuşanmak: !kuşan <ID veya eşya_adı> | Satmak: !eşyasat <ID veya eşya_adı>")
     await ctx.send(embed=embed)
 
 
 @bot.command(name="kuşan", aliases=["equip", "giy"])
-async def kuşan(ctx, *, eşya_adı: str = None):
-    """Ekipman kuşan."""
+async def kuşan(ctx, *, girdi: str = None):
+    """Ekipman kuşan (ID veya eşya adı ile)."""
     user_id = ctx.author.id
     dungeon = get_dungeon(user_id)
 
-    if eşya_adı is None:
-        return await ctx.send(embed=discord.Embed(description="Kullanım: `!kuşan <eşya_adı>`\nÖrnek: `!kuşan demir kılıç`", color=discord.Color.blue()))
+    if girdi is None:
+        return await ctx.send(embed=discord.Embed(description="Kullanım: `!kuşan <ID veya eşya_adı>`\nÖrnek: `!kuşan abc123` veya `!kuşan demir kılıç`", color=discord.Color.blue()))
 
-    eşya_adı = eşya_adı.lower().strip().replace(" ", "_")
+    girdi = girdi.strip()
+    envanter = dungeon.get("envanter", [])
 
-    # Envanterde ara
-    bulundu = False
-    for item in dungeon.get("envanter", []):
-        if item["eşya_id"] == eşya_adı:
-            bulundu = True
+    # Önce ID ile ara
+    bulunan_item = None
+    for item in envanter:
+        item_id = item.get("id")
+        if item_id and item_id.lower() == girdi.lower():
+            bulunan_item = item
             break
+    
+    # ID bulunamadıysa eşya adı ile ara
+    if not bulunan_item:
+        girdi_normalize = girdi.lower().replace(" ", "_")
+        for item in envanter:
+            eşya_tipi = item.get("eşya_tipi") or item.get("eşya_id")
+            if eşya_tipi == girdi_normalize:
+                bulunan_item = item
+                break
 
-    if not bulundu:
+    if not bulunan_item:
         return await ctx.send(embed=discord.Embed(description="Bu eşya envanterinde yok!", color=discord.Color.red()))
 
-    eşya = EKİPMANLAR.get(eşya_adı)
+    eşya_tipi = bulunan_item.get("eşya_tipi") or bulunan_item.get("eşya_id")
+    eşya = EKİPMANLAR.get(eşya_tipi)
     if not eşya:
         return await ctx.send(embed=discord.Embed(description="Geçersiz eşya!", color=discord.Color.red()))
 
-    # Kuşan
-    dungeon["kuşanılmış"][eşya["tür"]] = eşya_adı
+    # Kuşan (benzersiz ID kullan)
+    kuşanılacak_id = bulunan_item.get("id") or eşya_tipi
+    dungeon["kuşanılmış"][eşya["tür"]] = kuşanılacak_id
     save_dungeon(dungeon)
 
     statlar = get_karakter_statları(dungeon)
@@ -4417,6 +4463,7 @@ async def kuşan(ctx, *, eşya_adı: str = None):
     embed = discord.Embed(
         title=f"{eşya['emoji']} {eşya['isim']} Kuşanıldı!",
         description=(
+            f"Eşya ID: `{kuşanılacak_id}`\n\n"
             f"**Güncel Statlar:**\n"
             f"Can: **{statlar['can']}** | Saldırı: **{statlar['saldırı']}** | "
             f"Savunma: **{statlar['savunma']}** | Kritik: **%{statlar['şans']}**"
@@ -4427,42 +4474,65 @@ async def kuşan(ctx, *, eşya_adı: str = None):
 
 
 @bot.command(name="eşyasat", aliases=["sellitem", "eşyasatış"])
-async def eşya_sat(ctx, *, eşya_adı: str = None):
-    """Ekipman sat."""
+async def eşya_sat(ctx, *, girdi: str = None):
+    """Ekipman sat (ID veya eşya adı ile)."""
     user_id = ctx.author.id
     dungeon = get_dungeon(user_id)
 
-    if eşya_adı is None:
-        return await ctx.send(embed=discord.Embed(description="Kullanım: `!eşyasat <eşya_adı>`", color=discord.Color.blue()))
+    if girdi is None:
+        return await ctx.send(embed=discord.Embed(description="Kullanım: `!eşyasat <ID veya eşya_adı>`", color=discord.Color.blue()))
 
-    eşya_adı = eşya_adı.lower().strip().replace(" ", "_")
+    girdi = girdi.strip()
+    envanter = dungeon.get("envanter", [])
+    kuşanılmış = dungeon.get("kuşanılmış", {})
+
+    # Önce ID ile ara
+    bulunan_index = None
+    bulunan_item = None
+    for i, item in enumerate(envanter):
+        item_id = item.get("id")
+        if item_id and item_id.lower() == girdi.lower():
+            bulunan_index = i
+            bulunan_item = item
+            break
+    
+    # ID bulunamadıysa eşya adı ile ara
+    if bulunan_item is None:
+        girdi_normalize = girdi.lower().replace(" ", "_")
+        for i, item in enumerate(envanter):
+            eşya_tipi = item.get("eşya_tipi") or item.get("eşya_id")
+            if eşya_tipi == girdi_normalize:
+                bulunan_index = i
+                bulunan_item = item
+                break
+
+    if bulunan_item is None:
+        return await ctx.send(embed=discord.Embed(description="Bu eşya envanterinde yok!", color=discord.Color.red()))
 
     # Kuşanılmış eşya satılamaz
-    if eşya_adı in dungeon.get("kuşanılmış", {}).values():
+    item_id = bulunan_item.get("id")
+    if item_id and item_id in kuşanılmış.values():
         return await ctx.send(embed=discord.Embed(description="Kuşanılmış eşya satılamaz! Önce başka eşya kuşan.", color=discord.Color.orange()))
 
-    # Envanterde bul ve çıkar
-    for i, item in enumerate(dungeon.get("envanter", [])):
-        if item["eşya_id"] == eşya_adı:
-            eşya = EKİPMANLAR.get(eşya_adı)
-            if not eşya:
-                break
-            satış_fiyatı = eşya["fiyat"] // 2  # Yarı fiyatına sat
-            dungeon["envanter"].pop(i)
-            save_dungeon(dungeon)
+    eşya_tipi = bulunan_item.get("eşya_tipi") or bulunan_item.get("eşya_id")
+    eşya = EKİPMANLAR.get(eşya_tipi)
+    if not eşya:
+        return await ctx.send(embed=discord.Embed(description="Geçersiz eşya!", color=discord.Color.red()))
 
-            user = get_user(user_id)
-            user["money"] += satış_fiyatı
-            save_user(user)
+    satış_fiyatı = eşya["fiyat"] // 2  # Yarı fiyatına sat
+    dungeon["envanter"].pop(bulunan_index)
+    save_dungeon(dungeon)
 
-            embed = discord.Embed(
-                title=f"{eşya['emoji']} Eşya Satıldı!",
-                description=f"**{eşya['isim']}** satıldı!\nKazanç: **+{satış_fiyatı:,}** VC\nBakiye: **{user['money']:,}** VC",
-                color=discord.Color.green(),
-            )
-            return await ctx.send(embed=embed)
+    user = get_user(user_id)
+    user["money"] += satış_fiyatı
+    save_user(user)
 
-    await ctx.send(embed=discord.Embed(description="Bu eşya envanterinde yok!", color=discord.Color.red()))
+    embed = discord.Embed(
+        title=f"{eşya['emoji']} Eşya Satıldı!",
+        description=f"**{eşya['isim']}** `[{item_id}]` satıldı!\nKazanç: **+{satış_fiyatı:,}** VC\nBakiye: **{user['money']:,}** VC",
+        color=discord.Color.green(),
+    )
+    await ctx.send(embed=embed)
 
 
 @bot.command(name="prestij", aliases=["prestige"])
@@ -6080,6 +6150,7 @@ async def korsansıralama(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
