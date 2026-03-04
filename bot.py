@@ -2666,7 +2666,7 @@ async def tohumlar(ctx):
     )
 
     for tohum_id, tohum in TOHUMLAR.items():
-        dk = tohum["süre"] // 60
+        dk = tohum["sure"] // 60
         embed.add_field(
             name=f"{tohum['emoji']} {tohum['isim']} (`{tohum_id}`)",
             value=(
@@ -3088,10 +3088,10 @@ async def gübrele(ctx, slot_no: int = None, gübre_türü: str = "normal"):
     tohum = TOHUMLAR[slot["tohum"]]
     now = time.time()
     geçen = now - slot["ekim_zamanı"]
-    kalan = max(tohum["süre"] - geçen, 0)
+    kalan = max(tohum["sure"] - geçen, 0)
     yeni_kalan = kalan * (1 - gubre["azaltma"])
     # ekim_zamanini ileriye kaydir
-    farm["slotlar"][slot_no - 1]["ekim_zamanı"] = now - (tohum["süre"] - yeni_kalan)
+    farm["slotlar"][slot_no - 1]["ekim_zamanı"] = now - (tohum["sure"] - yeni_kalan)
     save_farm(farm)
 
     kalan_dk = int(yeni_kalan) // 60
@@ -5994,6 +5994,7 @@ async def korsansıralama(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
