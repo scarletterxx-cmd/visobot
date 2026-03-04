@@ -4373,7 +4373,7 @@ async def iksir(ctx):
 
     if dungeon.get("iksir", 0) <= 0:
         embed = discord.Embed(
-            description="Can iksirin yok! `!iksirsat` ile satın al.",
+            description="Can iksirin yok! Ara kattaki gezginlerden satın al.",
             color=discord.Color.red()
         )
         return await ctx.send(embed=embed)
@@ -4395,38 +4395,6 @@ async def iksir(ctx):
             f"Can: **{dungeon['can']}/{statlar['can']}**\n"
             f"Kalan iksir: **{dungeon['iksir']}**"
         ),
-        color=discord.Color.teal(),
-    )
-    await ctx.send(embed=embed)
-
-
-@bot.command(name="iksirsat", aliases=["buypotion", "iksirsatınal"])
-async def iksir_satın_al(ctx, adet: int = 1):
-    """Can iksiri satın al (200 VisoCoin)."""
-    user_id = ctx.author.id
-    İKSİR_FİYAT = 200
-
-    if adet <= 0:
-        return await ctx.send(embed=discord.Embed(description="Geçerli adet gir.", color=discord.Color.red()))
-
-    toplam = İKSİR_FİYAT * adet
-    user = get_user(user_id)
-
-    if user["money"] < toplam:
-        return await ctx.send(embed=discord.Embed(description=f"Yetersiz bakiye! {adet}x iksir için **{toplam}** VC gerekiyor.", color=discord.Color.red()))
-
-    user["money"] -= toplam
-    save_user(user)
-
-    dungeon = get_dungeon(user_id)
-    dungeon["iksir"] = dungeon.get("iksir", 0) + adet
-    save_dungeon(dungeon)
-
-    update_quest_progress(user_id, "harca", toplam)
-
-    embed = discord.Embed(
-        title="Can İksiri Satın Alındı!",
-        description=f"**{adet}x** can iksiri aldın!\nMaliyet: **{toplam}** VC | Toplam iksir: **{dungeon['iksir']}**\nBakiye: **{user['money']:,}** VC",
         color=discord.Color.teal(),
     )
     await ctx.send(embed=embed)
@@ -4756,7 +4724,7 @@ async def devam(ctx):
             f"Can: {can_bar_sen} **{dungeon['can']}/{statlar['can']}**\n\n"
             f"`!saldır` — Normal saldırı\n"
             f"`!özel` — {sınıf['özel_yetenek']}\n"
-            f"`!iksir` — Can iksiri kullan\n"
+            f"`!iksirkullan` — Can iksiri kullan\n"
             f"`!kaç` — Kaç"
         ),
         color=discord.Color.dark_grey(),
@@ -4766,7 +4734,7 @@ async def devam(ctx):
     await ctx.send(embed=embed)
 
 
-@bot.command(name="iksir", aliases=["potion", "heal", "iyileş"])
+@bot.command(name="iksirkullan", aliases=["potion", "heal", "iyileş"])
 async def iksir_kullan(ctx, iksir_adi: str = None):
     """Iksir kullan."""
     user_id = ctx.author.id
@@ -4790,7 +4758,7 @@ async def iksir_kullan(ctx, iksir_adi: str = None):
         
         return await ctx.send(embed=discord.Embed(
             title="İksirlerin",
-            description=f"{iksir_text}\nKullanım: `!iksir <iksir_id>`",
+            description=f"{iksir_text}\nKullanım: `!iksirkullan <iksir_id>`",
             color=discord.Color.blue()
         ))
     
@@ -4847,7 +4815,7 @@ async def iksirler_goster(ctx):
         description=iksir_text,
         color=discord.Color.purple()
     )
-    embed.set_footer(text="Kullanım: !iksir <iksir_id>")
+    embed.set_footer(text="Kullanım: !iksirkullan <iksir_id>")
     await ctx.send(embed=embed)
 
 
@@ -6466,6 +6434,7 @@ async def korsansıralama(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
