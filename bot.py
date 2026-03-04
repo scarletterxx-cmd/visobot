@@ -4634,7 +4634,7 @@ async def eşya_sat(ctx, *, girdi: str = None):
     await ctx.send(embed=embed)
 
 
-@bot.command(name="satın_al", aliases=["satınal"])
+@bot.command(name="satın_al", aliases=["satinal"])
 async def satin_al(ctx, iksir_adi: str = None, adet: int = 1):
     """Marketten iksir satin al."""
     user_id = ctx.author.id
@@ -6466,6 +6466,7 @@ async def korsansıralama(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
