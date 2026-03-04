@@ -3967,16 +3967,16 @@ async def zindan_gir(ctx):
             stok_text += f"{iksir['emoji']} **{iksir['isim']}** — {miktar} adet — {iksir['fiyat']:,} VC\n"
         
         embed = discord.Embed(
-            title=f"Kat {kat} — Gezgin Satici!",
+            title=f"Kat {kat} — ARA KAT!",
             description=(
                 f"{'━' * 30}\n"
-                f"🧙 Karanlik koridorda bir gezgin satici ile karsilastin!\n"
+                f"🧙 Karanlık koridorda bir gezgin satıcı ile karşılaştın!\n"
                 f"{'━' * 30}\n\n"
                 f"**Mevcut Stok:**\n{stok_text}\n"
                 f"**Senin Durumun:**\n"
                 f"{sınıf['emoji']} Can: **{dungeon['can']}/{statlar['can']}**\n\n"
-                f"`!satin_al <iksir_adi> <adet>` — Iksir satin al\n"
-                f"`!devam` — Saticiyi gec ve devam et"
+                f"`!satın_al <iksir_adı> <adet>` — İksir satın al\n"
+                f"`!devam` — Satıcıyı geç ve devam et"
             ),
             color=discord.Color.gold(),
             timestamp=datetime.now(timezone.utc)
@@ -4634,7 +4634,7 @@ async def eşya_sat(ctx, *, girdi: str = None):
     await ctx.send(embed=embed)
 
 
-@bot.command(name="satin_al", aliases=["satinal", "buy", "al"])
+@bot.command(name="satın_al", aliases=["satınal"])
 async def satin_al(ctx, iksir_adi: str = None, adet: int = 1):
     """Marketten iksir satin al."""
     user_id = ctx.author.id
@@ -4650,7 +4650,7 @@ async def satin_al(ctx, iksir_adi: str = None, adet: int = 1):
             stok_text += f"{iksir['emoji']} `{iksir_id}` — **{iksir['isim']}** — {miktar} adet — {iksir['fiyat']:,} VC\n"
         return await ctx.send(embed=discord.Embed(
             title="Satın Alma",
-            description=f"Kullanım: `!satin_al <iksir_id> <adet>`\n\n**Mevcut Stok:**\n{stok_text}",
+            description=f"Kullanım: `!satın_al <iksir_id> <adet>`\n\n**Mevcut Stok:**\n{stok_text}",
             color=discord.Color.blue()
         ))
     
@@ -4766,7 +4766,7 @@ async def devam(ctx):
     await ctx.send(embed=embed)
 
 
-@bot.command(name="iksir", aliases=["potion", "heal", "iyiles"])
+@bot.command(name="iksir", aliases=["potion", "heal", "iyileş"])
 async def iksir_kullan(ctx, iksir_adi: str = None):
     """Iksir kullan."""
     user_id = ctx.author.id
@@ -4780,7 +4780,7 @@ async def iksir_kullan(ctx, iksir_adi: str = None):
     # Iksir listesi goster
     if iksir_adi is None:
         if not iksirler or all(v <= 0 for v in iksirler.values()):
-            return await ctx.send(embed=discord.Embed(description="Hic iksiirin yok! Zindanda gezgin satici ile karsilasarak iksir satin alabilirsin.", color=discord.Color.orange()))
+            return await ctx.send(embed=discord.Embed(description="Hiç iksirin yok! Zindanda gezgin satıcı ile karşılaşarak iksir satın alabilirsin.", color=discord.Color.orange()))
         
         iksir_text = ""
         for iksir_id, miktar in iksirler.items():
@@ -4789,18 +4789,18 @@ async def iksir_kullan(ctx, iksir_adi: str = None):
                 iksir_text += f"{iksir['emoji']} `{iksir_id}` — **{iksir['isim']}** (+{iksir['iyileşme']} can) — {miktar} adet\n"
         
         return await ctx.send(embed=discord.Embed(
-            title="Iksirlerin",
-            description=f"{iksir_text}\nKullanim: `!iksir <iksir_id>`",
+            title="İksirlerin",
+            description=f"{iksir_text}\nKullanım: `!iksir <iksir_id>`",
             color=discord.Color.blue()
         ))
     
     iksir_adi = iksir_adi.lower().strip().replace(" ", "_")
     
     if iksir_adi not in İKSİRLER:
-        return await ctx.send(embed=discord.Embed(description="Gecersiz iksir!", color=discord.Color.red()))
+        return await ctx.send(embed=discord.Embed(description="Geçersiz iksir!", color=discord.Color.red()))
     
     if iksir_adi not in iksirler or iksirler[iksir_adi] <= 0:
-        return await ctx.send(embed=discord.Embed(description="Bu iksirden hic yok!", color=discord.Color.red()))
+        return await ctx.send(embed=discord.Embed(description="Bu iksirden hiç yok!", color=discord.Color.red()))
     
     statlar = get_karakter_statları(dungeon)
     iksir = İKSİRLER[iksir_adi]
@@ -4813,10 +4813,10 @@ async def iksir_kullan(ctx, iksir_adi: str = None):
     save_dungeon(dungeon)
     
     embed = discord.Embed(
-        title=f"{iksir['emoji']} Iksir Kullanildi!",
+        title=f"{iksir['emoji']} İksir Kullanıldı!",
         description=(
-            f"**{iksir['isim']}** kullandin!\n"
-            f"Iyilesen can: **+{iyilesen}**\n"
+            f"**{iksir['isim']}** kullandın!\n"
+            f"İyileştiğin can: **+{iyilesen}**\n"
             f"Mevcut can: **{dungeon['can']}/{statlar['can']}**\n"
             f"Kalan {iksir['isim']}: **{dungeon['iksirler'][iksir_adi]}** adet"
         ),
@@ -4834,7 +4834,7 @@ async def iksirler_goster(ctx):
     iksirler = dungeon.get("iksirler", {})
     
     if not iksirler or all(v <= 0 for v in iksirler.values()):
-        return await ctx.send(embed=discord.Embed(description="Hic iksiirin yok! Zindanda gezgin satici ile karsilasarak iksir satin alabilirsin.", color=discord.Color.orange()))
+        return await ctx.send(embed=discord.Embed(description="Hiç iksirin yok! Zindanda gezgin satıcı ile karşılaşarak iksir satın alabilirsin.", color=discord.Color.orange()))
     
     iksir_text = ""
     for iksir_id, miktar in iksirler.items():
@@ -4843,11 +4843,11 @@ async def iksirler_goster(ctx):
             iksir_text += f"{iksir['emoji']} **{iksir['isim']}** (+{iksir['iyileşme']} can) — {miktar} adet\n"
     
     embed = discord.Embed(
-        title="Iksirlerin",
+        title="İksirlerin",
         description=iksir_text,
         color=discord.Color.purple()
     )
-    embed.set_footer(text="Kullanim: !iksir <iksir_id>")
+    embed.set_footer(text="Kullanım: !iksir <iksir_id>")
     await ctx.send(embed=embed)
 
 
@@ -6466,6 +6466,7 @@ async def korsansıralama(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
