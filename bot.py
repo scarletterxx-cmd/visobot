@@ -3190,7 +3190,7 @@ async def gübresat(ctx, gübre_türü: str = None, adet: int = 1):
     await ctx.send(embed=embed)
 
 
-# ================= SINIF TANIMLARI =================
+import uuid
 
 # ================= SINIF TANIMLARI =================
 
@@ -3263,9 +3263,9 @@ EKİPMANLAR = {
     "şimşek_kılıcı": {"isim": "Şimşek Kılıcı", "emoji": "⚡", "tür": "silah", "saldırı": 32, "savunma": 0, "can": 0, "nadirlik": "Epik", "fiyat": 6500},
     "zehir_kılıcı": {"isim": "Zehir Kılıcı", "emoji": "☠️", "tür": "silah", "saldırı": 22, "savunma": 0, "can": 0, "nadirlik": "Nadir", "fiyat": 2500},
     "ruh_kesici": {"isim": "Ruh Kesici", "emoji": "💀", "tür": "silah", "saldırı": 45, "savunma": 8, "can": 15, "nadirlik": "Efsanevi", "fiyat": 18000},
-    "kaos_kılıcı": {"isim": "Kaos Kılıcı", "emoji": "🌀", "tür": "silah", "saldırı": 55, "savunma": 10, "can": 25, "nadirlik": "Tanrısal", "fiyat": 20000},
-    "güneş_kılıcı": {"isim": "Güneş Kılıcı", "emoji": "☀️", "tür": "silah", "saldırı": 60, "savunma": 15, "can": 30, "nadirlik": "Tanrısal", "fiyat": 10000},
-    "kader_kılıcı": {"isim": "Kader Kılıcı", "emoji": "🌟", "tür": "silah", "saldırı": 70, "savunma": 20, "can": 50, "nadirlik": "Tanrısal", "fiyat": 10000},
+    "kaos_kılıcı": {"isim": "Kaos Kılıcı", "emoji": "🌀", "tür": "silah", "saldırı": 55, "savunma": 10, "can": 25, "nadirlik": "Tanrısal", "fiyat": 50000},
+    "güneş_kılıcı": {"isim": "Güneş Kılıcı", "emoji": "☀️", "tür": "silah", "saldırı": 60, "savunma": 15, "can": 30, "nadirlik": "Tanrısal", "fiyat": 60000},
+    "kader_kılıcı": {"isim": "Kader Kılıcı", "emoji": "🌟", "tür": "silah", "saldırı": 70, "savunma": 20, "can": 50, "nadirlik": "Tanrısal", "fiyat": 100000},
     "cehennem_baltası": {"isim": "Cehennem Baltası", "emoji": "🪓", "tür": "silah", "saldırı": 50, "savunma": 0, "can": 20, "nadirlik": "Efsanevi", "fiyat": 20000},
     "fırtına_mızrağı": {"isim": "Fırtına Mızrağı", "emoji": "🔱", "tür": "silah", "saldırı": 38, "savunma": 5, "can": 10, "nadirlik": "Epik", "fiyat": 7500},
 
@@ -3280,12 +3280,12 @@ EKİPMANLAR = {
     "buz_zırhı": {"isim": "Buz Zırhı", "emoji": "❄️", "tür": "zırh", "saldırı": 0, "savunma": 30, "can": 45, "nadirlik": "Epik", "fiyat": 6000},
     "ateş_zırhı": {"isim": "Ateş Zırhı", "emoji": "🔥", "tür": "zırh", "saldırı": 8, "savunma": 32, "can": 40, "nadirlik": "Epik", "fiyat": 6500},
     "gölge_zırhı": {"isim": "Gölge Zırhı", "emoji": "🖤", "tür": "zırh", "saldırı": 5, "savunma": 28, "can": 35, "nadirlik": "Nadir", "fiyat": 3000},
-    "titan_zırhı": {"isim": "Titan Zırhı", "emoji": "🗿", "tür": "zırh", "saldırı": 15, "savunma": 55, "can": 100, "nadirlik": "Efsanevi", "fiyat": 10000},
-    "cennet_zırhı": {"isim": "Cennet Zırhı", "emoji": "👼", "tür": "zırh", "saldırı": 20, "savunma": 70, "can": 150, "nadirlik": "Tanrısal", "fiyat": 13000},
-    "kaos_zırhı": {"isim": "Kaos Zırhı", "emoji": "🌀", "tür": "z��rh", "saldırı": 25, "savunma": 80, "can": 180, "nadirlik": "Tanrısal", "fiyat": 15000},
-    "sonsuzluk_zırhı": {"isim": "Sonsuzluk Zırhı", "emoji": "♾️", "tür": "zırh", "saldırı": 30, "savunma": 100, "can": 250, "nadirlik": "Tanrısal", "fiyat": 30000},
+    "titan_zırhı": {"isim": "Titan Zırhı", "emoji": "🗿", "tür": "zırh", "saldırı": 15, "savunma": 55, "can": 100, "nadirlik": "Efsanevi", "fiyat": 22000},
+    "cennet_zırhı": {"isim": "Cennet Zırhı", "emoji": "👼", "tür": "zırh", "saldırı": 20, "savunma": 70, "can": 150, "nadirlik": "Tanrısal", "fiyat": 55000},
+    "kaos_zırhı": {"isim": "Kaos Zırhı", "emoji": "🌀", "tür": "z��rh", "saldırı": 25, "savunma": 80, "can": 180, "nadirlik": "Tanrısal", "fiyat": 70000},
+    "sonsuzluk_zırhı": {"isim": "Sonsuzluk Zırhı", "emoji": "♾️", "tür": "zırh", "saldırı": 30, "savunma": 100, "can": 250, "nadirlik": "Tanrısal", "fiyat": 120000},
     "kemik_zırhı": {"isim": "Kemik Zırhı", "emoji": "🦴", "tür": "zırh", "saldırı": 3, "savunma": 15, "can": 25, "nadirlik": "Sıradan", "fiyat": 1000},
-    "kristal_zırhı": {"isim": "Kristal Zırhı", "emoji": "💠", "tür": "zırh", "saldırı": 12, "savunma": 45, "can": 70, "nadirlik": "Efsanevi", "fiyat": 12000},
+    "kristal_zırhı": {"isim": "Kristal Zırhı", "emoji": "💠", "tür": "zırh", "saldırı": 12, "savunma": 45, "can": 70, "nadirlik": "Efsanevi", "fiyat": 16000},
 
     # ================= YÜZÜKLER =================
     "şans_yüzüğü": {"isim": "Şans Yüzüğü", "emoji": "💍", "tür": "yüzük", "saldırı": 0, "savunma": 0, "can": 0, "nadirlik": "Nadir", "şans": 10, "fiyat": 3000},
@@ -3295,12 +3295,12 @@ EKİPMANLAR = {
     "demir_yüzük": {"isim": "Demir Yüzük", "emoji": "⚙️", "tür": "yüzük", "saldırı": 3, "savunma": 3, "can": 5, "nadirlik": "Sıradan", "şans": 2, "fiyat": 600},
     "ateş_yüzüğü": {"isim": "Ateş Yüzüğü", "emoji": "🔥", "tür": "yüzük", "saldırı": 15, "savunma": 0, "can": 10, "nadirlik": "Epik", "şans": 5, "fiyat": 6000},
     "buz_yüzüğü": {"isim": "Buz Yüzüğü", "emoji": "❄️", "tür": "yüzük", "saldırı": 5, "savunma": 10, "can": 20, "nadirlik": "Epik", "şans": 8, "fiyat": 5800},
-    "vampir_yüzüğü": {"isim": "Vampir Yüzüğü", "emoji": "🧛", "tür": "yüzük", "saldırı": 10, "savunma": 5, "can": 30, "nadirlik": "Efsanevi", "şans": 12, "fiyat": 1400},
-    "ejderha_yüzüğü": {"isim": "Ejderha Yüzüğü", "emoji": "🐉", "tür": "yüzük", "saldırı": 18, "savunma": 12, "can": 40, "nadirlik": "Efsanevi", "şans": 10, "fiyat": 1600},
+    "vampir_yüzüğü": {"isim": "Vampir Yüzüğü", "emoji": "🧛", "tür": "yüzük", "saldırı": 10, "savunma": 5, "can": 30, "nadirlik": "Efsanevi", "şans": 12, "fiyat": 14000},
+    "ejderha_yüzüğü": {"isim": "Ejderha Yüzüğü", "emoji": "🐉", "tür": "yüzük", "saldırı": 18, "savunma": 12, "can": 40, "nadirlik": "Efsanevi", "şans": 10, "fiyat": 16000},
     "karanlık_yüzük": {"isim": "Karanlık Yüzük", "emoji": "🖤", "tür": "yüzük", "saldırı": 20, "savunma": 0, "can": 0, "nadirlik": "Epik", "şans": 18, "fiyat": 7000},
-    "tanrı_yüzüğü": {"isim": "Tanrı Yüzüğü", "emoji": "👑", "tür": "yüzük", "saldırı": 30, "savunma": 20, "can": 60, "nadirlik": "Tanrısal", "şans": 25, "fiyat": 8000},
-    "sonsuzluk_yüzüğü": {"isim": "Sonsuzluk Yüzüğü", "emoji": "♾️", "tür": "yüzük", "saldırı": 35, "savunma": 25, "can": 80, "nadirlik": "Tanrısal", "şans": 30, "fiyat": 10000},
-    "kader_yüzüğü": {"isim": "Kader Yüzüğü", "emoji": "🌟", "tür": "yüzük", "saldırı": 40, "savunma": 30, "can": 100, "nadirlik": "Tanrısal", "şans": 35, "fiyat": 15000},
+    "tanrı_yüzüğü": {"isim": "Tanrı Yüzüğü", "emoji": "👑", "tür": "yüzük", "saldırı": 30, "savunma": 20, "can": 60, "nadirlik": "Tanrısal", "şans": 25, "fiyat": 80000},
+    "sonsuzluk_yüzüğü": {"isim": "Sonsuzluk Yüzüğü", "emoji": "♾️", "tür": "yüzük", "saldırı": 35, "savunma": 25, "can": 80, "nadirlik": "Tanrısal", "şans": 30, "fiyat": 100000},
+    "kader_yüzüğü": {"isim": "Kader Yüzüğü", "emoji": "🌟", "tür": "yüzük", "saldırı": 40, "savunma": 30, "can": 100, "nadirlik": "Tanrısal", "şans": 35, "fiyat": 150000},
     "koruma_yüzüğü": {"isim": "Koruma Yüzüğü", "emoji": "🛡️", "tür": "yüzük", "saldırı": 0, "savunma": 15, "can": 35, "nadirlik": "Nadir", "şans": 5, "fiyat": 3500},
 }
 
@@ -3312,6 +3312,19 @@ NADİRLİK_RENKLERİ = {
     "Efsanevi": "🟧",
     "Tanrısal": "🟥",
 }
+
+# ================= İKSİRLER =================
+İKSİRLER = {
+    "küçük_can": {"isim": "Küçük Can İksiri", "emoji": "🧪", "iyileşme": 30, "fiyat": 100},
+    "orta_can": {"isim": "Orta Can İksiri", "emoji": "🧪", "iyileşme": 60, "fiyat": 250},
+    "büyük_can": {"isim": "Büyük Can İksiri", "emoji": "🧪", "iyileşme": 120, "fiyat": 500},
+    "dev_can": {"isim": "Dev Can İksiri", "emoji": "🧪", "iyileşme": 250, "fiyat": 1200},
+    "tam_can": {"isim": "Tam İyileşme İksiri", "emoji": "💉", "iyileşme": 9999, "fiyat": 3000},
+}
+
+# Market stok ayarlari (her markette rastgele stok olacak)
+MARKET_STOK_MIN = 2
+MARKET_STOK_MAX = 5
 
 # ================= CANAVAR TANIMLARI =================
 
@@ -3355,7 +3368,7 @@ PRESTİJ_SEVİYELERİ = {
     1: {"isim": "Deneyimli Savaşçı", "emoji": "⭐", "bonus_saldırı": 5, "bonus_can": 20, "bonus_altın": 10},
     2: {"isim": "Usta Maceraperest", "emoji": "⭐⭐", "bonus_saldırı": 12, "bonus_can": 50, "bonus_altın": 20},
     3: {"isim": "Efsane Kahraman", "emoji": "⭐⭐⭐", "bonus_saldırı": 20, "bonus_can": 100, "bonus_altın": 35},
-    4: {"isim": "Mistik Şampiyon", "emoji": "💫", "bonus_saldırı": 30, "bonus_can": 150, "bonus_altın": 50},
+    4: {"isim": "Mitik Şampion", "emoji": "💫", "bonus_saldırı": 30, "bonus_can": 150, "bonus_altın": 50},
     5: {"isim": "Tanrısal Güç", "emoji": "👑", "bonus_saldırı": 50, "bonus_can": 250, "bonus_altın": 75},
 }
 
@@ -3474,6 +3487,38 @@ def roll_loot(kat):
     return None
 
 
+def market_olustur(kat):
+    """Rastgele stoklu market olustur."""
+    # Kata gore hangi iksirler satilabilir
+    mevcut_iksirler = []
+    if kat >= 1:
+        mevcut_iksirler.append("küçük_can")
+    if kat >= 5:
+        mevcut_iksirler.append("orta_can")
+    if kat >= 15:
+        mevcut_iksirler.append("büyük_can")
+    if kat >= 30:
+        mevcut_iksirler.append("dev_can")
+    if kat >= 50:
+        mevcut_iksirler.append("tam_can")
+    
+    stok = {}
+    for iksir_id in mevcut_iksirler:
+        stok[iksir_id] = random.randint(MARKET_STOK_MIN, MARKET_STOK_MAX)
+    
+    return {"stok": stok, "kat": kat}
+
+
+def market_sansi(kat):
+    """Markete rastlama sansi (her 5-7 katta bir, %30 sans)."""
+    if kat < 3:
+        return False
+    # Her 5-7 katta bir market sansi
+    if kat % random.randint(5, 7) == 0:
+        return random.random() < 0.35
+    return random.random() < 0.08  # Diger katlarda dusuk sans
+
+
 # ================= VERİTABANI FONKSİYONLARI =================
 
 def get_dungeon(user_id):
@@ -3495,15 +3540,20 @@ def get_dungeon(user_id):
             "kuşanılmış": {"silah": None, "zırh": None, "yüzük": None},  # Benzersiz ID'ler tutulur
             "can": 0,
             "maks_can": 0,
-            "iksir": 0,
+            "iksirler": {},  # {"küçük_can": 2, "orta_can": 1, ...}
             "aktif_savaş": None,  # aktif canavar savaşı
+            "aktif_market": None,  # {"stok": {"küçük_can": 3, ...}, "kat": 5}
         }
         dungeons_col.insert_one(dungeon)
 
     # Eski veriler için alan kontrolü
-    for alan in ["prestiж", "boss_öldürme", "toplam_ölüm", "iksir"]:
+    for alan in ["prestiж", "boss_öldürme", "toplam_ölüm"]:
         if alan not in dungeon:
             dungeon[alan] = 0
+    if "iksirler" not in dungeon:
+        dungeon["iksirler"] = {}
+    if "aktif_market" not in dungeon:
+        dungeon["aktif_market"] = None
     if "kuşanılmış" not in dungeon:
         dungeon["kuşanılmış"] = {"silah": None, "zırh": None, "yüzük": None}
     if "envanter" not in dungeon:
@@ -3841,6 +3891,13 @@ async def zindan_gir(ctx):
         )
         return await ctx.send(embed=embed)
 
+    if dungeon.get("aktif_market"):
+        embed = discord.Embed(
+            description="Gezgin satici ile karsilastin! `!satin_al` ile iksir al veya `!devam` ile gec.",
+            color=discord.Color.gold()
+        )
+        return await ctx.send(embed=embed)
+
     # Canı sıfırsa giremez
     statlar = get_karakter_statları(dungeon)
     if dungeon.get("can", 0) <= 0:
@@ -3895,6 +3952,36 @@ async def zindan_gir(ctx):
             timestamp=datetime.now(timezone.utc)
         )
         embed.set_footer(text="Zindan Sistemi | Boss Savaşı")
+        return await ctx.send(embed=embed)
+
+    # Market sansi kontrol et (boss katlari haric)
+    if market_sansi(kat):
+        market = market_olustur(kat)
+        dungeon["aktif_market"] = market
+        save_dungeon(dungeon)
+        
+        sınıf = SINIFLAR[dungeon["sınıf"]]
+        stok_text = ""
+        for iksir_id, miktar in market["stok"].items():
+            iksir = İKSİRLER[iksir_id]
+            stok_text += f"{iksir['emoji']} **{iksir['isim']}** — {miktar} adet — {iksir['fiyat']:,} VC\n"
+        
+        embed = discord.Embed(
+            title=f"Kat {kat} — Gezgin Satici!",
+            description=(
+                f"{'━' * 30}\n"
+                f"🧙 Karanlik koridorda bir gezgin satici ile karsilastin!\n"
+                f"{'━' * 30}\n\n"
+                f"**Mevcut Stok:**\n{stok_text}\n"
+                f"**Senin Durumun:**\n"
+                f"{sınıf['emoji']} Can: **{dungeon['can']}/{statlar['can']}**\n\n"
+                f"`!satin_al <iksir_adi> <adet>` — Iksir satin al\n"
+                f"`!devam` — Saticiyi gec ve devam et"
+            ),
+            color=discord.Color.gold(),
+            timestamp=datetime.now(timezone.utc)
+        )
+        embed.set_footer(text="Zindan Sistemi | Gezgin Satici")
         return await ctx.send(embed=embed)
 
     # Normal canavar
@@ -4544,6 +4631,223 @@ async def eşya_sat(ctx, *, girdi: str = None):
         description=f"**{eşya['isim']}** `[{item_id}]` satıldı!\nKazanç: **+{satış_fiyatı:,}** VC\nBakiye: **{user['money']:,}** VC",
         color=discord.Color.green(),
     )
+    await ctx.send(embed=embed)
+
+
+@bot.command(name="satin_al", aliases=["satinal", "buy", "al"])
+async def satin_al(ctx, iksir_adi: str = None, adet: int = 1):
+    """Marketten iksir satin al."""
+    user_id = ctx.author.id
+    dungeon = get_dungeon(user_id)
+    
+    if not dungeon.get("aktif_market"):
+        return await ctx.send(embed=discord.Embed(description="Aktif bir market yok! Zindanda gezgin satıcı ile karşılaşman gerekiyor.", color=discord.Color.red()))
+    
+    if iksir_adi is None:
+        stok_text = ""
+        for iksir_id, miktar in dungeon["aktif_market"]["stok"].items():
+            iksir = İKSİRLER[iksir_id]
+            stok_text += f"{iksir['emoji']} `{iksir_id}` — **{iksir['isim']}** — {miktar} adet — {iksir['fiyat']:,} VC\n"
+        return await ctx.send(embed=discord.Embed(
+            title="Satın Alma",
+            description=f"Kullanım: `!satin_al <iksir_id> <adet>`\n\n**Mevcut Stok:**\n{stok_text}",
+            color=discord.Color.blue()
+        ))
+    
+    iksir_adi = iksir_adi.lower().strip().replace(" ", "_")
+    market = dungeon["aktif_market"]
+    
+    # Iksir var mi kontrol et
+    if iksir_adi not in İKSİRLER:
+        return await ctx.send(embed=discord.Embed(description=f"Geçersiz iksir! Mevcut iksirler: {', '.join(İKSİRLER.keys())}", color=discord.Color.red()))
+    
+    if iksir_adi not in market["stok"] or market["stok"][iksir_adi] <= 0:
+        return await ctx.send(embed=discord.Embed(description="Bu iksir stokta yok!", color=discord.Color.red()))
+    
+    if adet < 1:
+        return await ctx.send(embed=discord.Embed(description="Gecersiz adet!", color=discord.Color.red()))
+    
+    if adet > market["stok"][iksir_adi]:
+        return await ctx.send(embed=discord.Embed(description=f"Stokta sadece **{market['stok'][iksir_adi]}** adet var!", color=discord.Color.orange()))
+    
+    iksir = İKSİRLER[iksir_adi]
+    toplam_fiyat = iksir["fiyat"] * adet
+    
+    user = get_user(user_id)
+    if user["money"] < toplam_fiyat:
+        return await ctx.send(embed=discord.Embed(description=f"Yeterli paran yok! Gereken: **{toplam_fiyat:,}** VC, Bakiyen: **{user['money']:,}** VC", color=discord.Color.red()))
+    
+    # Satin al
+    user["money"] -= toplam_fiyat
+    save_user(user)
+    
+    market["stok"][iksir_adi] -= adet
+    if "iksirler" not in dungeon:
+        dungeon["iksirler"] = {}
+    dungeon["iksirler"][iksir_adi] = dungeon["iksirler"].get(iksir_adi, 0) + adet
+    save_dungeon(dungeon)
+    
+    embed = discord.Embed(
+        title=f"{iksir['emoji']} Iksir Satin Alindi!",
+        description=(
+            f"**{adet}x {iksir['isim']}** satin aldin!\n"
+            f"Odenen: **-{toplam_fiyat:,}** VC\n"
+            f"Kalan bakiye: **{user['money']:,}** VC\n\n"
+            f"Envanterdeki {iksir['isim']}: **{dungeon['iksirler'][iksir_adi]}** adet"
+        ),
+        color=discord.Color.green(),
+    )
+    await ctx.send(embed=embed)
+
+
+@bot.command(name="devam", aliases=["continue", "gec", "skip"])
+async def devam(ctx):
+    """Marketi gec ve zindana devam et."""
+    user_id = ctx.author.id
+    dungeon = get_dungeon(user_id)
+    
+    if not dungeon.get("aktif_market"):
+        return await ctx.send(embed=discord.Embed(description="Aktif bir market yok!", color=discord.Color.red()))
+    
+    kat = dungeon["aktif_market"]["kat"]
+    dungeon["aktif_market"] = None
+    save_dungeon(dungeon)
+    
+    # Simdi normal canavarla karsilastir
+    statlar = get_karakter_statları(dungeon)
+    uygun_canavarlar = get_canavarlar_for_kat(kat)
+    canavar_id, canavar = random.choice(uygun_canavarlar)
+    
+    kat_çarpan = 1 + (kat - 1) * 0.05
+    canavar_can = int(canavar["can"] * kat_çarpan)
+    canavar_saldırı = int(canavar["saldırı"] * kat_çarpan)
+    canavar_savunma = int(canavar["savunma"] * kat_çarpan)
+    
+    dungeon["aktif_savaş"] = {
+        "tür": "canavar",
+        "id": canavar_id,
+        "isim": canavar["isim"],
+        "emoji": canavar["emoji"],
+        "can": canavar_can,
+        "maks_can": canavar_can,
+        "saldırı": canavar_saldırı,
+        "savunma": canavar_savunma,
+        "xp": canavar["xp"],
+        "altın_min": canavar["altın_min"],
+        "altın_max": canavar["altın_max"],
+        "kat": kat,
+    }
+    save_dungeon(dungeon)
+    
+    sınıf = SINIFLAR[dungeon["sınıf"]]
+    can_bar_düşman = "🟥" * 10
+    can_bar_sen = "🟩" * int(dungeon["can"] / statlar["can"] * 10) + "⬛" * (10 - int(dungeon["can"] / statlar["can"] * 10))
+    
+    embed = discord.Embed(
+        title=f"Kat {kat} — {canavar['emoji']} {canavar['isim']}",
+        description=(
+            f"Gezgin saticiyi gectikten sonra bir canavarla karsilastin!\n\n"
+            f"{'━' * 30}\n\n"
+            f"**{canavar['emoji']} {canavar['isim']}**\n"
+            f"Can: {can_bar_düşman} **{canavar_can}/{canavar_can}**\n"
+            f"Saldırı: **{canavar_saldırı}** | Savunma: **{canavar_savunma}**\n\n"
+            f"{'━' * 30}\n\n"
+            f"**{sınıf['emoji']} {ctx.author.display_name}**\n"
+            f"Can: {can_bar_sen} **{dungeon['can']}/{statlar['can']}**\n\n"
+            f"`!saldır` — Normal saldırı\n"
+            f"`!özel` — {sınıf['özel_yetenek']}\n"
+            f"`!iksir` — Can iksiri kullan\n"
+            f"`!kaç` — Kaç"
+        ),
+        color=discord.Color.dark_grey(),
+        timestamp=datetime.now(timezone.utc)
+    )
+    embed.set_footer(text=f"Zindan Sistemi | Kat {kat}")
+    await ctx.send(embed=embed)
+
+
+@bot.command(name="iksir", aliases=["potion", "heal", "iyiles"])
+async def iksir_kullan(ctx, iksir_adi: str = None):
+    """Iksir kullan."""
+    user_id = ctx.author.id
+    dungeon = get_dungeon(user_id)
+    
+    if dungeon["sınıf"] is None:
+        return await ctx.send(embed=discord.Embed(description="Once sinif sec!", color=discord.Color.red()))
+    
+    iksirler = dungeon.get("iksirler", {})
+    
+    # Iksir listesi goster
+    if iksir_adi is None:
+        if not iksirler or all(v <= 0 for v in iksirler.values()):
+            return await ctx.send(embed=discord.Embed(description="Hic iksiirin yok! Zindanda gezgin satici ile karsilasarak iksir satin alabilirsin.", color=discord.Color.orange()))
+        
+        iksir_text = ""
+        for iksir_id, miktar in iksirler.items():
+            if miktar > 0 and iksir_id in İKSİRLER:
+                iksir = İKSİRLER[iksir_id]
+                iksir_text += f"{iksir['emoji']} `{iksir_id}` — **{iksir['isim']}** (+{iksir['iyileşme']} can) — {miktar} adet\n"
+        
+        return await ctx.send(embed=discord.Embed(
+            title="Iksirlerin",
+            description=f"{iksir_text}\nKullanim: `!iksir <iksir_id>`",
+            color=discord.Color.blue()
+        ))
+    
+    iksir_adi = iksir_adi.lower().strip().replace(" ", "_")
+    
+    if iksir_adi not in İKSİRLER:
+        return await ctx.send(embed=discord.Embed(description="Gecersiz iksir!", color=discord.Color.red()))
+    
+    if iksir_adi not in iksirler or iksirler[iksir_adi] <= 0:
+        return await ctx.send(embed=discord.Embed(description="Bu iksirden hic yok!", color=discord.Color.red()))
+    
+    statlar = get_karakter_statları(dungeon)
+    iksir = İKSİRLER[iksir_adi]
+    
+    eski_can = dungeon["can"]
+    dungeon["can"] = min(statlar["can"], dungeon["can"] + iksir["iyileşme"])
+    iyilesen = dungeon["can"] - eski_can
+    
+    dungeon["iksirler"][iksir_adi] -= 1
+    save_dungeon(dungeon)
+    
+    embed = discord.Embed(
+        title=f"{iksir['emoji']} Iksir Kullanildi!",
+        description=(
+            f"**{iksir['isim']}** kullandin!\n"
+            f"Iyilesen can: **+{iyilesen}**\n"
+            f"Mevcut can: **{dungeon['can']}/{statlar['can']}**\n"
+            f"Kalan {iksir['isim']}: **{dungeon['iksirler'][iksir_adi]}** adet"
+        ),
+        color=discord.Color.green(),
+    )
+    await ctx.send(embed=embed)
+
+
+@bot.command(name="iksirler", aliases=["potions", "iksirlerim"])
+async def iksirler_goster(ctx):
+    """Tum iksirleri goster."""
+    user_id = ctx.author.id
+    dungeon = get_dungeon(user_id)
+    
+    iksirler = dungeon.get("iksirler", {})
+    
+    if not iksirler or all(v <= 0 for v in iksirler.values()):
+        return await ctx.send(embed=discord.Embed(description="Hic iksiirin yok! Zindanda gezgin satici ile karsilasarak iksir satin alabilirsin.", color=discord.Color.orange()))
+    
+    iksir_text = ""
+    for iksir_id, miktar in iksirler.items():
+        if miktar > 0 and iksir_id in İKSİRLER:
+            iksir = İKSİRLER[iksir_id]
+            iksir_text += f"{iksir['emoji']} **{iksir['isim']}** (+{iksir['iyileşme']} can) — {miktar} adet\n"
+    
+    embed = discord.Embed(
+        title="Iksirlerin",
+        description=iksir_text,
+        color=discord.Color.purple()
+    )
+    embed.set_footer(text="Kullanim: !iksir <iksir_id>")
     await ctx.send(embed=embed)
 
 
@@ -6162,6 +6466,7 @@ async def korsansıralama(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
