@@ -4364,42 +4364,6 @@ async def kaç(ctx):
     )
     await ctx.send(embed=embed)
 
-
-@bot.command(name="iksir", aliases=["potion", "heal", "iyileş"])
-async def iksir(ctx):
-    """Can iksiri kullan."""
-    user_id = ctx.author.id
-    dungeon = get_dungeon(user_id)
-
-    if dungeon.get("iksir", 0) <= 0:
-        embed = discord.Embed(
-            description="Can iksirin yok! Ara kattaki gezginlerden satın al.",
-            color=discord.Color.red()
-        )
-        return await ctx.send(embed=embed)
-
-    statlar = get_karakter_statları(dungeon)
-    if dungeon["can"] >= statlar["can"]:
-        embed = discord.Embed(description="Canın zaten dolu!", color=discord.Color.orange())
-        return await ctx.send(embed=embed)
-
-    iyileşme = int(statlar["can"] * 0.4)  # %40 can iyileştirme
-    dungeon["iksir"] -= 1
-    dungeon["can"] = min(statlar["can"], dungeon["can"] + iyileşme)
-    save_dungeon(dungeon)
-
-    embed = discord.Embed(
-        title="Can İksiri Kullanıldı!",
-        description=(
-            f"**+{iyileşme}** can iyileştirdin!\n\n"
-            f"Can: **{dungeon['can']}/{statlar['can']}**\n"
-            f"Kalan iksir: **{dungeon['iksir']}**"
-        ),
-        color=discord.Color.teal(),
-    )
-    await ctx.send(embed=embed)
-
-
 @bot.command(name="zindanenvanteri", aliases=["zenv", "ze", "ekipman"])
 async def envanter(ctx):
     """Ekipman envanterini göster."""
@@ -6434,6 +6398,7 @@ async def korsansıralama(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
