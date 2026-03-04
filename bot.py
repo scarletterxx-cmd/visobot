@@ -3347,7 +3347,7 @@ EKİPMANLAR = {
     "gölge_zırhı": {"isim": "Gölge Zırhı", "emoji": "🖤", "tür": "zırh", "saldırı": 5, "savunma": 28, "can": 35, "nadirlik": "Nadir", "fiyat": 3000},
     "titan_zırhı": {"isim": "Titan Zırhı", "emoji": "🗿", "tür": "zırh", "saldırı": 15, "savunma": 55, "can": 100, "nadirlik": "Efsanevi", "fiyat": 10000},
     "cennet_zırhı": {"isim": "Cennet Zırhı", "emoji": "👼", "tür": "zırh", "saldırı": 20, "savunma": 70, "can": 150, "nadirlik": "Tanrısal", "fiyat": 13000},
-    "kaos_zırhı": {"isim": "Kaos Zırhı", "emoji": "🌀", "tür": "z��rh", "saldırı": 25, "savunma": 80, "can": 180, "nadirlik": "Tanrısal", "fiyat": 15000},
+    "kaos_zırhı": {"isim": "Kaos Zırhı", "emoji": "🌀", "tür": "zırh", "saldırı": 25, "savunma": 80, "can": 180, "nadirlik": "Tanrısal", "fiyat": 15000},
     "sonsuzluk_zırhı": {"isim": "Sonsuzluk Zırhı", "emoji": "♾️", "tür": "zırh", "saldırı": 30, "savunma": 100, "can": 250, "nadirlik": "Tanrısal", "fiyat": 30000},
     "kemik_zırhı": {"isim": "Kemik Zırhı", "emoji": "🦴", "tür": "zırh", "saldırı": 3, "savunma": 15, "can": 25, "nadirlik": "Sıradan", "fiyat": 1000},
     "kristal_zırhı": {"isim": "Kristal Zırhı", "emoji": "💠", "tür": "zırh", "saldırı": 12, "savunma": 45, "can": 70, "nadirlik": "Efsanevi", "fiyat": 12000},
@@ -7193,4 +7193,5 @@ async def bilmece_cevap(ctx, *, cevap: str = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
