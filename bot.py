@@ -2488,7 +2488,7 @@ GÜBRELER = {
         "fiyat": 150,
         "azaltma": 0.10,   # Kalan süreyi %10 azaltır
     },
-    "altin": {
+    "altın": {
         "isim": "Altın Gübre",
         "emoji": "🧫",
         "fiyat": 500,
@@ -2516,13 +2516,13 @@ def get_farm(user_id):
             "toplam_xp": 0,
             "slotlar": [],       # [{"tohum": "buğday", "ekim_zamanı": timestamp, "gübreli": False}, ...]
             "ambar": {},         # {"buğday": 5, "domates": 3, ...}
-            "gübreler": {"normal": 0, "altin": 0, "elmas": 0},
+            "gübreler": {"normal": 0, "altın": 0, "elmas": 0},
         }
         farms_col.insert_one(farm)
     # Eski veriler için alan kontrolü (gübre -> gübreler migrasyonu)
     if "gübreler" not in farm:
         eski_gübre = farm.get("gübre", 0)
-        farm["gübreler"] = {"normal": eski_gübre, "altin": 0, "elmas": 0}
+        farm["gübreler"] = {"normal": eski_gübre, "altın": 0, "elmas": 0}
     # Eksik gübre türleri kontrolü
     for gubre_id in GÜBRELER:
         if gubre_id not in farm["gübreler"]:
@@ -2626,7 +2626,7 @@ async def tarla(ctx):
         seviye_text = f"Seviye **{seviye}** (MAKSİMUM!)"
 
     # Gübre bilgisi
-    gübreler = farm.get("gübreler", {"normal": 0, "altin": 0, "elmas": 0})
+    gübreler = farm.get("gübreler", {"normal": 0, "altın": 0, "elmas": 0})
     gübre_text = ""
     for gubre_id, gubre in GÜBRELER.items():
         miktar = gübreler.get(gubre_id, 0)
@@ -2678,7 +2678,7 @@ async def tohumlar(ctx):
             inline=True
         )
 
-    embed.set_footer(text="Gübre türleri: Normal (%10), Altin (%25), Elmas (%40)")
+    embed.set_footer(text="Gübre türleri: Normal (%10), altın (%25), Elmas (%40)")
     await ctx.send(embed=embed)
 
 
@@ -3018,7 +3018,7 @@ async def sat(ctx, ürün_id: str = None, adet: int = None):
 
 @bot.command(name="gübrele", aliases=["fertilize", "gübre"])
 async def gübrele(ctx, slot_no: int = None, gübre_türü: str = "normal"):
-    """Belirli bir slota gübre at. Türler: normal, altin, elmas"""
+    """Belirli bir slota gübre at. Türler: normal, altın, elmas"""
     user_id = ctx.author.id
     farm = get_farm(user_id)
 
@@ -3027,16 +3027,16 @@ async def gübrele(ctx, slot_no: int = None, gübre_türü: str = "normal"):
         gübre_list = ""
         for gubre_id, gubre in GÜBRELER.items():
             miktar = farm.get("gübreler", {}).get(gubre_id, 0)
-            gübre_list += f"{gubre['emoji']} **{gubre['isim']}** (`{gubre_id}`) - %{int(gubre['azaltma'] * 100)} hizlandirma - Elinde: **{miktar}**\n"
+            gübre_list += f"{gubre['emoji']} **{gubre['isim']}** (`{gubre_id}`) - %{int(gubre['azaltma'] * 100)} hızlandırma - Elinde: **{miktar}**\n"
 
         embed = discord.Embed(
-            title="Gübre Kullanimi",
+            title="Gübre Kullanımı",
             description=(
-                f"Kullanim: `!gübrele <slot_no> [tür]`\n\n"
+                f"Kullanım: `!gübrele <slot_no> [tür]`\n\n"
                 f"**Gübre Türleri:**\n{gübre_list}\n"
-                f"Ornek: `!gübrele 1 normal` veya `!gübrele 2 elmas`\n"
-                f"Tür belirtilmezse **normal** gübre kullanilir.\n\n"
-                f"Satin almak icin: `!gübresat <tür> [adet]`"
+                f"Örnek: `!gübrele 1 normal` veya `!gübrele 2 elmas`\n"
+                f"Tür belirtilmezse **normal** gübre kullanılır.\n\n"
+                f"Satın almak için: `!gübresat <tür> [adet]`"
             ),
             color=discord.Color.blue(),
             timestamp=datetime.now(timezone.utc)
@@ -3047,24 +3047,24 @@ async def gübrele(ctx, slot_no: int = None, gübre_türü: str = "normal"):
 
     if gübre_türü not in GÜBRELER:
         embed = discord.Embed(
-            description=f"Geçersiz gübre türü! Mevcut türler: `normal`, `altin`, `elmas`",
+            description=f"Geçersiz gübre türü! Mevcut türler: `normal`, `altın`, `elmas`",
             color=discord.Color.red()
         )
         return await ctx.send(embed=embed)
 
-    gübreler = farm.get("gübreler", {"normal": 0, "altin": 0, "elmas": 0})
+    gübreler = farm.get("gübreler", {"normal": 0, "altın": 0, "elmas": 0})
 
     if gübreler.get(gübre_türü, 0) <= 0:
         gubre = GÜBRELER[gübre_türü]
         embed = discord.Embed(
-            description=f"{gubre['emoji']} **{gubre['isim']}** yok! `!gübresat {gübre_türü}` ile satin al.",
+            description=f"{gubre['emoji']} **{gubre['isim']}** yok! `!gübresat {gübre_türü}` ile satın al.",
             color=discord.Color.red()
         )
         return await ctx.send(embed=embed)
 
     if slot_no < 1 or slot_no > len(farm["slotlar"]):
         embed = discord.Embed(
-            description=f"Geçersiz slot numarasi! 1-{len(farm['slotlar'])} arasi gir.",
+            description=f"Geçersiz slot numarası! 1-{len(farm['slotlar'])} arası gir.",
             color=discord.Color.red()
         )
         return await ctx.send(embed=embed)
@@ -3112,7 +3112,7 @@ async def gübrele(ctx, slot_no: int = None, gübre_türü: str = "normal"):
 
 @bot.command(name="gübresat", aliases=["buyfertilizer", "gübresal", "gübredükkanı"])
 async def gübresat(ctx, gübre_türü: str = None, adet: int = 1):
-    """Gübre satin al. Türler: normal, altin, elmas"""
+    """Gübre satin al. Türler: normal, altın, elmas"""
     user_id = ctx.author.id
 
     if gübre_türü is None:
@@ -3140,7 +3140,7 @@ async def gübresat(ctx, gübre_türü: str = None, adet: int = 1):
 
     if gübre_türü not in GÜBRELER:
         embed = discord.Embed(
-            description=f"Geçersiz gübre türü! Mevcut türler: `normal`, `altin`, `elmas`",
+            description=f"Geçersiz gübre türü! Mevcut türler: `normal`, `altın`, `elmas`",
             color=discord.Color.red()
         )
         return await ctx.send(embed=embed)
@@ -3167,7 +3167,7 @@ async def gübresat(ctx, gübre_türü: str = None, adet: int = 1):
     save_user(user)
 
     farm = get_farm(user_id)
-    gübreler = farm.get("gübreler", {"normal": 0, "altin": 0, "elmas": 0})
+    gübreler = farm.get("gübreler", {"normal": 0, "altın": 0, "elmas": 0})
     gübreler[gübre_türü] = gübreler.get(gübre_türü, 0) + adet
     farm["gübreler"] = gübreler
     save_farm(farm)
@@ -5994,6 +5994,7 @@ async def korsansıralama(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
