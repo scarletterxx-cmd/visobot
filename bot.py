@@ -2581,7 +2581,7 @@ async def tarla(ctx):
     slot_text = ""
     for i, slot in enumerate(farm["slotlar"], 1):
         tohum = TOHUMLAR[slot["tohum"]]
-        süre = tohum["süre"]
+        sure = tohum["sure"]
         geçen = now - slot["ekim_zamanı"]
 
         if geçen >= süre:
@@ -2791,7 +2791,7 @@ async def hasat(ctx):
 
     for slot in farm["slotlar"]:
         tohum = TOHUMLAR[slot["tohum"]]
-        süre = tohum["süre"]
+        sure = tohum["sure"]
 
         geçen = now - slot["ekim_zamanı"]
 
@@ -5994,6 +5994,7 @@ async def korsansıralama(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
