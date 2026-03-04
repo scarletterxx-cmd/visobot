@@ -4371,10 +4371,19 @@ async def envanter(ctx):
     zırhlar = []
     yüzükler = []
 
+    envanter_güncellendi = False
     for item in envanter:
         # Yeni ve eski format uyumluluğu
         item_id = item.get("id")
         eşya_tipi = item.get("eşya_tipi") or item.get("eşya_id")
+        
+        # Eski formattaki esyalara ID ata
+        if not item_id:
+            item_id = str(uuid.uuid4())[:8]
+            item["id"] = item_id
+            if item.get("eşya_id"):
+                item["eşya_tipi"] = item.pop("eşya_id")
+            envanter_güncellendi = True
         
         eşya = EKİPMANLAR.get(eşya_tipi)
         if not eşya:
@@ -4382,9 +4391,8 @@ async def envanter(ctx):
         
         kuşanılmış_mı = item_id in kuşanılmış.values() if item_id else eşya_tipi in kuşanılmış.values()
         
-        # ID'yi göster
-        id_göster = f"`[{item_id}]`" if item_id else ""
-        satır = f"{id_göster} {eşya['emoji']} **{eşya['isim']}** ({NADİRLİK_RENKLERİ[eşya['nadirlik']]} {eşya['nadirlik']})"
+        # ID'yi her zaman goster
+        satır = f"`{item_id}` {eşya['emoji']} **{eşya['isim']}** ({NADİRLİK_RENKLERİ[eşya['nadirlik']]} {eşya['nadirlik']})"
         if kuşanılmış_mı:
             satır += " **[KUŞANILMIŞ]**"
         stat_text = []
@@ -4412,7 +4420,11 @@ async def envanter(ctx):
     if yüzükler:
         embed.add_field(name="Yüzükler", value="\n".join(yüzükler), inline=False)
 
-    embed.set_footer(text="Kuşanmak: !kuşan <ID veya eşya_adı> | Satmak: !eşyasat <ID veya eşya_adı>")
+    # Eski formattaki esyalar guncellendiyse kaydet
+    if envanter_güncellendi:
+        save_dungeon(dungeon)
+
+    embed.set_footer(text="Kuşanmak: !kuşan <ID> | Satmak: !eşyasat <ID>")
     await ctx.send(embed=embed)
 
 
@@ -6150,6 +6162,7 @@ async def korsansıralama(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
