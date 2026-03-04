@@ -35,6 +35,7 @@ daily_messages_col = db["daily_messages"]
 farms_col = db["farms"]
 dungeons_col = db["dungeons"]
 pirates_col = db["pirates"]
+loncalar_col = db["loncalar"]
 
 app = Flask("")
 
@@ -109,6 +110,20 @@ zindan_cd = {}
 ZINDAN_COOLDOWN = 10
 zindan_savaş_cd = {}
 ZINDAN_SAVAŞ_COOLDOWN = 5
+
+# PvP Arena
+pvp_istekleri = {}  # {hedef_id: {"saldıran": user_id, "bahis": miktar, "zaman": timestamp}}
+PVP_ISTEK_SURESI = 60
+
+# Lonca
+LONCA_KURMA_UCRETI = 5000
+LONCA_MAX_UYE = 20
+LONCA_BOSS_COOLDOWN = 3600  # 1 saat
+lonca_davetleri = {}  # {hedef_id: {"lonca_id": ..., "davet_eden": ..., "zaman": ...}}
+
+# Hazine Odasi
+HAZINE_ODASI_SANSI = 15  # %15 sans ile hazine odasi cikar
+aktif_bilmeceler = {}  # {user_id: {"bilmece": ..., "zaman": ..., "odul": ...}}
 
 # ================= SOHBET PARA ODULU =================
 CHAT_REWARD_CHANNEL_ID = 1389166576242266175
@@ -2350,6 +2365,30 @@ async def yardim(ctx):
         inline=False
     )
 
+    embed.add_field(
+        name="-- PvP Arena --",
+        value=(
+            "`!pvp @kişi <bahis>` - PvP düellosu\n"
+            "`!pvpkabul` - Düelloyu kabul et\n"
+            "`!pvpreddet` - Düelloyu reddet\n"
+        ),
+        inline=False
+    )
+
+    embed.add_field(
+        name="-- Lonca --",
+        value=(
+            "`!loncakur <isim>` - Lonca kur (5000 VC)\n"
+            "`!lonca` - Lonca bilgisi\n"
+            "`!loncalar` - Lonca listesi\n"
+            "`!loncadavet @kişi` - Üye davet et\n"
+            "`!loncakabulet` - Daveti kabul et\n"
+            "`!loncaçık` - Loncadan ayrıl\n"
+            "`!loncaboss` - Lonca bossu savaşı\n"
+        ),
+        inline=False
+    )
+
     await ctx.send(embed=embed)
 
 
@@ -3243,6 +3282,32 @@ SINIFLAR = {
         "özel_açıklama": "Savunmayı 2 katına çıkararak 2 tur boyunca hasar azaltır.",
         "özel_çarpan": 0.5,  # hasar çarpanı (savunma modu)
     },
+    "suikastçi": {
+        "isim": "Suikastçi",
+        "emoji": "🗡️",
+        "açıklama": "Gölgelerde hareket eden, düşmana ıskalattırma şansı veren sınıf.",
+        "temel_can": 85,
+        "temel_saldırı": 22,
+        "temel_savunma": 9,
+        "temel_şans": 20,
+        "özel_yetenek": "Gölge Adımı",
+        "özel_açıklama": "3 tur boyunca %25 kaçınma şansı kazanır.",
+        "özel_çarpan": 1.4,
+        "kaçınma": 10,  # Pasif kaçınma şansı (%)
+    },
+    "doktor": {
+        "isim": "Doktor",
+        "emoji": "💉",
+        "açıklama": "Şifa uzmanı. Kendini iyileştirebilir ve saldırıya devam edebilir.",
+        "temel_can": 100,
+        "temel_saldırı": 15,
+        "temel_savunma": 12,
+        "temel_şans": 8,
+        "özel_yetenek": "Acil Müdahale",
+        "özel_açıklama": "Maksimum canının %40'ı kadar iyileşir ve hasar verir.",
+        "özel_çarpan": 1.0,
+        "iyileşme": 40,  # Maks canın yüzdesi olarak iyileşme
+    },
 }
 
 
@@ -3897,6 +3962,12 @@ async def zindan_gir(ctx):
         embed.set_footer(text="Zindan Sistemi | Boss Savaşı")
         return await ctx.send(embed=embed)
 
+    # Hazine odası kontrolü (boss değilse)
+    hazine_bulundu = await hazine_odası_kontrol(ctx, dungeon, kat)
+    if hazine_bulundu:
+        save_dungeon(dungeon)
+        # Hazine odasından sonra normal kata devam et
+
     # Normal canavar
     uygun_canavarlar = get_canavarlar_for_kat(kat)
     canavar_id, canavar = random.choice(uygun_canavarlar)
@@ -4074,14 +4145,34 @@ async def zsaldır(ctx):
         return
 
     # Canavar saldırısı
-    düşman_hasar, düşman_kritik = hasar_hesapla(savaş["saldırı"], statlar["savunma"], 8)
+    # Suikastci kacinma kontrolu
+    kaçındı = False
+    if dungeon["sınıf"] == "suikastçi":
+        kaçınma_şansı = SINIFLAR["suikastçi"].get("kaçınma", 10)
+        if random.randint(1, 100) <= kaçınma_şansı:
+            kaçındı = True
+            savaş_log += f"**KAÇINDIN!** {sınıf['emoji']} {savaş['emoji']} saldırısından kaçındın!\n"
 
-    if düşman_kritik:
-        savaş_log += f"**KRİTİK!** {savaş['emoji']} **{düşman_hasar}** hasar verdi!\n"
-    else:
-        savaş_log += f"{savaş['emoji']} **{düşman_hasar}** hasar verdi.\n"
+    if not kaçındı:
+        düşman_hasar, düşman_kritik = hasar_hesapla(savaş["saldırı"], statlar["savunma"], 8)
 
-    dungeon["can"] = max(0, dungeon["can"] - düşman_hasar)
+        if düşman_kritik:
+            savaş_log += f"**KRİTİK!** {savaş['emoji']} **{düşman_hasar}** hasar verdi!\n"
+        else:
+            savaş_log += f"{savaş['emoji']} **{düşman_hasar}** hasar verdi.\n"
+
+        dungeon["can"] = max(0, dungeon["can"] - düşman_hasar)
+
+    # Doktor pasif iyilesme (her 3 turda bir %10)
+    if dungeon["sınıf"] == "doktor" and savaş.get("tur", 0) % 3 == 0 and savaş.get("tur", 0) > 0:
+        iyileşme = int(statlar["can"] * 0.10)
+        eski_can = dungeon["can"]
+        dungeon["can"] = min(dungeon["can"] + iyileşme, statlar["can"])
+        if dungeon["can"] > eski_can:
+            savaş_log += f"{sınıf['emoji']} **+{iyileşme}** can iyileşti! (Doktor pasif)\n"
+    
+    # Tur sayacı
+    savaş["tur"] = savaş.get("tur", 0) + 1
 
     # Oyuncu öldü mü?
     if dungeon["can"] <= 0:
@@ -6159,39 +6250,938 @@ async def korsansıralama(ctx):
     await ctx.send(embed=embed)
 
 
+# ================= LONCA BOSSLARI =================
+
+LONCA_BOSSLARI = {
+    1: {"isim": "Lonca Trollü", "emoji": "🧌", "can": 2000, "saldırı": 35, "savunma": 20, "xp": 300, "altın": 2000, "gerekli_üye": 2},
+    2: {"isim": "Karanlık Dev", "emoji": "👹", "can": 5000, "saldırı": 55, "savunma": 35, "xp": 600, "altın": 5000, "gerekli_üye": 3},
+    3: {"isim": "Fırtına Tanrısı", "emoji": "⛈️", "can": 10000, "saldırı": 80, "savunma": 50, "xp": 1200, "altın": 12000, "gerekli_üye": 4},
+    4: {"isim": "Kaos Lordu", "emoji": "🌀", "can": 20000, "saldırı": 120, "savunma": 70, "xp": 2500, "altın": 25000, "gerekli_üye": 5},
+}
+
+# ================= HAZİNE TİPLERİ =================
+
+HAZINE_TIPLERI = {
+    "altın_sandığı": {
+        "isim": "Altın Sandığı",
+        "emoji": "💰",
+        "açıklama": "İçi altınla dolu bir sandık!",
+        "altın_min": 200,
+        "altın_max": 800,
+        "şans": 40,
+    },
+    "efsanevi_sandık": {
+        "isim": "Efsanevi Sandık",
+        "emoji": "✨",
+        "açıklama": "Nadir eşyalar içerebilir!",
+        "altın_min": 100,
+        "altın_max": 300,
+        "eşya_şansı": 60,
+        "şans": 25,
+    },
+    "tuzak_odası": {
+        "isim": "Tuzak Odası",
+        "emoji": "💀",
+        "açıklama": "Dikkat! Tuzaklar var!",
+        "hasar_min": 20,
+        "hasar_max": 50,
+        "altın_min": 50,
+        "altın_max": 150,
+        "şans": 20,
+    },
+    "bilmece_odası": {
+        "isim": "Bilmece Odası",
+        "emoji": "🧩",
+        "açıklama": "Bilmeceyi çöz, hazineyi al!",
+        "altın_min": 300,
+        "altın_max": 1000,
+        "xp_bonus": 50,
+        "şans": 10,
+    },
+    "ejderha_hazinesi": {
+        "isim": "Ejderha Hazinesi",
+        "emoji": "🐲",
+        "açıklama": "Ejderhanın gizli hazinesi!",
+        "altın_min": 500,
+        "altın_max": 2000,
+        "eşya_şansı": 80,
+        "şans": 5,
+    },
+}
+
+BILMECELER = [
+    {"soru": "Gündüz uyur, gece uyanır. Nedir?", "cevap": ["ay", "yıldız"]},
+    {"soru": "Ne kadar koşarsan koş, onu geçemezsin. Nedir?", "cevap": ["gölge", "gölgen"]},
+    {"soru": "Dili var konuşamaz, ayağı var yürüyemez. Nedir?", "cevap": ["ayakkabı", "terlik"]},
+    {"soru": "İki kardeş birbirini hiç göremez. Nedir?", "cevap": ["göz", "gözler"]},
+    {"soru": "Her gün doğar ama hiç büyümez. Nedir?", "cevap": ["güneş"]},
+    {"soru": "Ağzı var yemez, gözü var görmez. Nedir?", "cevap": ["iğne"]},
+    {"soru": "Herkes üstüne basar ama ses çıkarmaz. Nedir?", "cevap": ["yol", "toprak", "zemin"]},
+    {"soru": "Kanatları var uçamaz, bacakları var yürüyemez. Nedir?", "cevap": ["masa", "sandalye"]},
+]
+
+
+# ================= LONCA FONKSIYONLARI =================
+
+def get_lonca(lonca_id):
+    """Lonca verisini getir."""
+    return loncalar_col.find_one({"lonca_id": lonca_id})
+
+def get_user_lonca(user_id):
+    """Kullanıcının loncasını getir."""
+    return loncalar_col.find_one({"üyeler": user_id})
+
+def save_lonca(lonca):
+    """Lonca verisini kaydet."""
+    loncalar_col.update_one({"lonca_id": lonca["lonca_id"]}, {"$set": lonca}, upsert=True)
+
+
+def roll_hazine_odası():
+    """Hazine odası tipini belirle."""
+    toplam = sum(h["şans"] for h in HAZINE_TIPLERI.values())
+    zar = random.randint(1, toplam)
+    birikmiş = 0
+    for tip, hazine in HAZINE_TIPLERI.items():
+        birikmiş += hazine["şans"]
+        if zar <= birikmiş:
+            return tip, hazine
+    return None, None
+
+
+# ================= PVP ARENA SİSTEMİ =================
+
+@bot.command(name="pvp", aliases=["düello_zindan", "arena"])
+async def pvp(ctx, hedef: discord.Member = None, bahis: int = 0):
+    """Başka bir oyuncuyla PvP düellosu yap."""
+    if hedef is None:
+        embed = discord.Embed(
+            title="PvP Arena",
+            description=(
+                "Kullanım: `!pvp @kullanıcı <bahis>`\n\n"
+                "Örnek: `!pvp @Oyuncu 500`\n\n"
+                "Kazanan bahisi alır, kaybeden kaybeder!\n"
+                "Her iki tarafın da yeterli bakiyesi olmalı."
+            ),
+            color=discord.Color.red()
+        )
+        return await ctx.send(embed=embed)
+
+    if hedef.id == ctx.author.id:
+        return await ctx.send(embed=discord.Embed(description="Kendinle savaşamazsın!", color=discord.Color.red()))
+
+    if hedef.bot:
+        return await ctx.send(embed=discord.Embed(description="Botlarla savaşamazsın!", color=discord.Color.red()))
+
+    # Zindan karakteri kontrolü
+    saldıran_dungeon = get_dungeon(ctx.author.id)
+    hedef_dungeon = get_dungeon(hedef.id)
+
+    if saldıran_dungeon["sınıf"] is None:
+        return await ctx.send(embed=discord.Embed(description="Önce bir zindan karakteri oluştur! `!sınıfseç`", color=discord.Color.red()))
+
+    if hedef_dungeon["sınıf"] is None:
+        return await ctx.send(embed=discord.Embed(description=f"{hedef.mention} henüz bir zindan karakteri oluşturmamış!", color=discord.Color.red()))
+
+    # Aktif savaş kontrolü
+    if saldıran_dungeon.get("aktif_savaş"):
+        return await ctx.send(embed=discord.Embed(description="Zaten aktif bir savaşın var!", color=discord.Color.orange()))
+
+    if hedef_dungeon.get("aktif_savaş"):
+        return await ctx.send(embed=discord.Embed(description=f"{hedef.mention} şu anda başka bir savaşta!", color=discord.Color.orange()))
+
+    # Bahis kontrolü
+    bahis = max(0, bahis)
+    if bahis > 0:
+        saldıran_user = get_user(ctx.author.id)
+        hedef_user = get_user(hedef.id)
+
+        if saldıran_user["money"] < bahis:
+            return await ctx.send(embed=discord.Embed(description=f"Yeterli bakiyen yok! Bakiyen: **{saldıran_user['money']}** VisoCoin", color=discord.Color.red()))
+
+        if hedef_user["money"] < bahis:
+            return await ctx.send(embed=discord.Embed(description=f"{hedef.mention} kullanıcısının yeterli bakiyesi yok!", color=discord.Color.red()))
+
+    # PvP isteği gönder
+    pvp_istekleri[hedef.id] = {
+        "saldıran": ctx.author.id,
+        "bahis": bahis,
+        "zaman": time.time(),
+        "kanal": ctx.channel.id,
+    }
+
+    saldıran_sınıf = SINIFLAR[saldıran_dungeon["sınıf"]]
+    hedef_sınıf = SINIFLAR[hedef_dungeon["sınıf"]]
+    saldıran_statlar = get_karakter_statları(saldıran_dungeon)
+    hedef_statlar = get_karakter_statları(hedef_dungeon)
+
+    embed = discord.Embed(
+        title="PvP Arena - Düello İsteği!",
+        description=(
+            f"{ctx.author.mention} seni düelloya davet ediyor!\n\n"
+            f"**{saldıran_sınıf['emoji']} {ctx.author.display_name}** vs **{hedef_sınıf['emoji']} {hedef.display_name}**\n\n"
+            f"{'━' * 30}\n"
+            f"**{ctx.author.display_name}** (Seviye {saldıran_dungeon['seviye']})\n"
+            f"Can: {saldıran_statlar['can']} | Saldırı: {saldıran_statlar['saldırı']} | Savunma: {saldıran_statlar['savunma']}\n\n"
+            f"**{hedef.display_name}** (Seviye {hedef_dungeon['seviye']})\n"
+            f"Can: {hedef_statlar['can']} | Saldırı: {hedef_statlar['saldırı']} | Savunma: {hedef_statlar['savunma']}\n"
+            f"{'━' * 30}\n\n"
+            + (f"Bahis: **{bahis}** VisoCoin\n\n" if bahis > 0 else "") +
+            f"{hedef.mention}, kabul etmek için `!pvpkabul` yaz!\n"
+            f"60 saniye içinde yanıt vermelisin."
+        ),
+        color=discord.Color.gold(),
+        timestamp=datetime.now(timezone.utc)
+    )
+    embed.set_footer(text="PvP Arena")
+    await ctx.send(embed=embed)
+
+
+@bot.command(name="pvpkabul", aliases=["pvpaccept", "pvpkabulet"])
+async def pvp_kabul(ctx):
+    """PvP düello isteğini kabul et."""
+    user_id = ctx.author.id
+
+    if user_id not in pvp_istekleri:
+        return await ctx.send(embed=discord.Embed(description="Bekleyen bir düello isteğin yok!", color=discord.Color.red()))
+
+    istek = pvp_istekleri[user_id]
+
+    # Süre kontrolü
+    if time.time() - istek["zaman"] > PVP_ISTEK_SURESI:
+        del pvp_istekleri[user_id]
+        return await ctx.send(embed=discord.Embed(description="Düello isteği süresi doldu!", color=discord.Color.red()))
+
+    saldıran_id = istek["saldıran"]
+    bahis = istek["bahis"]
+    del pvp_istekleri[user_id]
+
+    # Savaşı başlat
+    saldıran = await bot.fetch_user(saldıran_id)
+    hedef = ctx.author
+
+    saldıran_dungeon = get_dungeon(saldıran_id)
+    hedef_dungeon = get_dungeon(user_id)
+
+    saldıran_statlar = get_karakter_statları(saldıran_dungeon)
+    hedef_statlar = get_karakter_statları(hedef_dungeon)
+
+    # Canları ayarla
+    saldıran_can = saldıran_statlar["can"]
+    hedef_can = hedef_statlar["can"]
+
+    saldıran_sınıf = SINIFLAR[saldıran_dungeon["sınıf"]]
+    hedef_sınıf = SINIFLAR[hedef_dungeon["sınıf"]]
+
+    savaş_logu = []
+    tur = 0
+    max_tur = 30
+
+    # Savaş simülasyonu
+    while saldıran_can > 0 and hedef_can > 0 and tur < max_tur:
+        tur += 1
+
+        # Saldıran vuruyor
+        # Suikastçi kaçınma kontrolü (hedef)
+        kaçındı = False
+        if hedef_dungeon["sınıf"] == "suikastçi":
+            kaçınma_şansı = SINIFLAR["suikastçi"].get("kaçınma", 10)
+            if random.randint(1, 100) <= kaçınma_şansı:
+                kaçındı = True
+                savaş_logu.append(f"**Tur {tur}:** {saldıran_sınıf['emoji']} saldırdı ama {hedef_sınıf['emoji']} kaçındı!")
+
+        if not kaçındı:
+            hasar, kritik = hasar_hesapla(saldıran_statlar["saldırı"], hedef_statlar["savunma"], saldıran_statlar["şans"])
+            hedef_can -= hasar
+            kritik_text = " **KRİTİK!**" if kritik else ""
+            savaş_logu.append(f"**Tur {tur}:** {saldıran_sınıf['emoji']} -> {hedef_sınıf['emoji']} **{hasar}** hasar{kritik_text}")
+
+        if hedef_can <= 0:
+            break
+
+        # Hedef vuruyor
+        # Suikastçi kaçınma kontrolü (saldıran)
+        kaçındı = False
+        if saldıran_dungeon["sınıf"] == "suikastçi":
+            kaçınma_şansı = SINIFLAR["suikastçi"].get("kaçınma", 10)
+            if random.randint(1, 100) <= kaçınma_şansı:
+                kaçındı = True
+                savaş_logu.append(f"**Tur {tur}:** {hedef_sınıf['emoji']} saldırdı ama {saldıran_sınıf['emoji']} kaçındı!")
+
+        if not kaçındı:
+            hasar, kritik = hasar_hesapla(hedef_statlar["saldırı"], saldıran_statlar["savunma"], hedef_statlar["şans"])
+            saldıran_can -= hasar
+            kritik_text = " **KRİTİK!**" if kritik else ""
+            savaş_logu.append(f"**Tur {tur}:** {hedef_sınıf['emoji']} -> {saldıran_sınıf['emoji']} **{hasar}** hasar{kritik_text}")
+
+        # Doktor pasif iyileşme (her 3 turda bir %10)
+        if saldıran_dungeon["sınıf"] == "doktor" and tur % 3 == 0:
+            iyileşme = int(saldıran_statlar["can"] * 0.10)
+            saldıran_can = min(saldıran_can + iyileşme, saldıran_statlar["can"])
+            savaş_logu.append(f"**Tur {tur}:** {saldıran_sınıf['emoji']} **+{iyileşme}** can iyileşti!")
+
+        if hedef_dungeon["sınıf"] == "doktor" and tur % 3 == 0:
+            iyileşme = int(hedef_statlar["can"] * 0.10)
+            hedef_can = min(hedef_can + iyileşme, hedef_statlar["can"])
+            savaş_logu.append(f"**Tur {tur}:** {hedef_sınıf['emoji']} **+{iyileşme}** can iyileşti!")
+
+    # Sonuç
+    if saldıran_can > hedef_can:
+        kazanan = saldıran
+        kazanan_id = saldıran_id
+        kaybeden = hedef
+        kaybeden_id = user_id
+    elif hedef_can > saldıran_can:
+        kazanan = hedef
+        kazanan_id = user_id
+        kaybeden = saldıran
+        kaybeden_id = saldıran_id
+    else:
+        # Berabere
+        embed = discord.Embed(
+            title="PvP Arena - Berabere!",
+            description=(
+                f"**{saldıran.display_name}** vs **{hedef.display_name}**\n\n"
+                f"Savaş berabere bitti! Bahisler iade edildi.\n\n"
+                f"**Son Durum:**\n"
+                f"{saldıran_sınıf['emoji']} {saldıran.display_name}: **{max(0, saldıran_can)}** can\n"
+                f"{hedef_sınıf['emoji']} {hedef.display_name}: **{max(0, hedef_can)}** can"
+            ),
+            color=discord.Color.greyple()
+        )
+        return await ctx.send(embed=embed)
+
+    # Bahis transferi
+    if bahis > 0:
+        kazanan_user = get_user(kazanan_id)
+        kaybeden_user = get_user(kaybeden_id)
+        kazanan_user["money"] += bahis
+        kaybeden_user["money"] -= bahis
+        save_user(kazanan_user)
+        save_user(kaybeden_user)
+
+    # XP ödülü
+    kazanan_dungeon = get_dungeon(kazanan_id)
+    xp_kazanç = 25 + tur * 2
+    kazanan_dungeon["xp"] += xp_kazanç
+    kazanan_dungeon["seviye"] = get_zindan_seviye(kazanan_dungeon["xp"])
+    save_dungeon(kazanan_dungeon)
+
+    # Savaş logu (son 10 tur)
+    log_text = "\n".join(savaş_logu[-10:]) if len(savaş_logu) > 10 else "\n".join(savaş_logu)
+
+    embed = discord.Embed(
+        title="PvP Arena - Savaş Bitti!",
+        description=(
+            f"**Kazanan:** {kazanan.mention}\n\n"
+            f"**Savaş Özeti ({tur} tur):**\n{log_text}\n\n"
+            f"{'━' * 30}\n"
+            f"**Son Durum:**\n"
+            f"{saldıran_sınıf['emoji']} {saldıran.display_name}: **{max(0, saldıran_can)}** can\n"
+            f"{hedef_sınıf['emoji']} {hedef.display_name}: **{max(0, hedef_can)}** can\n\n"
+            + (f"**Bahis:** {kazanan.display_name} **+{bahis}** VisoCoin kazandı!\n" if bahis > 0 else "") +
+            f"**XP:** {kazanan.display_name} **+{xp_kazanç}** XP kazandı!"
+        ),
+        color=discord.Color.green(),
+        timestamp=datetime.now(timezone.utc)
+    )
+    embed.set_footer(text="PvP Arena")
+    await ctx.send(embed=embed)
+
+
+@bot.command(name="pvpreddet", aliases=["pvpreject", "pvpred"])
+async def pvp_reddet(ctx):
+    """PvP düello isteğini reddet."""
+    if ctx.author.id in pvp_istekleri:
+        del pvp_istekleri[ctx.author.id]
+        await ctx.send(embed=discord.Embed(description="Düello isteği reddedildi.", color=discord.Color.red()))
+    else:
+        await ctx.send(embed=discord.Embed(description="Bekleyen bir düello isteğin yok!", color=discord.Color.red()))
+
+
+# ================= LONCA SİSTEMİ =================
+
+@bot.command(name="loncakur", aliases=["guildcreate", "loncaoluştur"])
+async def lonca_kur(ctx, *, isim: str = None):
+    """Yeni bir lonca kur."""
+    if isim is None:
+        embed = discord.Embed(
+            description="Kullanım: `!loncakur <lonca adı>`\n\nKurma ücreti: **5000** VisoCoin",
+            color=discord.Color.blue()
+        )
+        return await ctx.send(embed=embed)
+
+    user_id = ctx.author.id
+
+    # Zaten loncası var mı?
+    mevcut = get_user_lonca(user_id)
+    if mevcut:
+        return await ctx.send(embed=discord.Embed(description=f"Zaten bir loncadasın: **{mevcut['isim']}**", color=discord.Color.red()))
+
+    # Zindan karakteri var mı?
+    dungeon = get_dungeon(user_id)
+    if dungeon["sınıf"] is None:
+        return await ctx.send(embed=discord.Embed(description="Önce zindan karakteri oluştur! `!sınıfseç`", color=discord.Color.red()))
+
+    # Para kontrolü
+    user = get_user(user_id)
+    if user["money"] < LONCA_KURMA_UCRETI:
+        return await ctx.send(embed=discord.Embed(description=f"Yeterli paran yok! Gereken: **{LONCA_KURMA_UCRETI}** VisoCoin", color=discord.Color.red()))
+
+    # İsim kontrolü
+    if len(isim) < 3 or len(isim) > 25:
+        return await ctx.send(embed=discord.Embed(description="Lonca adı 3-25 karakter olmalı!", color=discord.Color.red()))
+
+    # Aynı isimde lonca var mı?
+    if loncalar_col.find_one({"isim": isim}):
+        return await ctx.send(embed=discord.Embed(description="Bu isimde bir lonca zaten var!", color=discord.Color.red()))
+
+    # Lonca oluştur
+    lonca_id = str(uuid.uuid4())[:8]
+    lonca = {
+        "lonca_id": lonca_id,
+        "isim": isim,
+        "lider": user_id,
+        "üyeler": [user_id],
+        "seviye": 1,
+        "xp": 0,
+        "toplam_boss_öldürme": 0,
+        "kasa": 0,
+        "oluşturma_tarihi": datetime.now(timezone.utc).isoformat(),
+        "son_boss_savaşı": 0,
+    }
+    loncalar_col.insert_one(lonca)
+
+    # Para düş
+    user["money"] -= LONCA_KURMA_UCRETI
+    save_user(user)
+
+    embed = discord.Embed(
+        title="Lonca Kuruldu!",
+        description=(
+            f"**{isim}** loncası başarıyla kuruldu!\n\n"
+            f"Lonca ID: `{lonca_id}`\n"
+            f"Lider: {ctx.author.mention}\n\n"
+            f"**Komutlar:**\n"
+            f"`!lonca` - Lonca bilgisi\n"
+            f"`!loncadavet @kullanıcı` - Üye davet et\n"
+            f"`!loncaboss` - Lonca bossuna saldır\n"
+            f"`!loncaçık` - Loncadan ayrıl"
+        ),
+        color=discord.Color.gold(),
+        timestamp=datetime.now(timezone.utc)
+    )
+    embed.set_footer(text="Lonca Sistemi")
+    await ctx.send(embed=embed)
+
+
+@bot.command(name="lonca", aliases=["guild", "loncabilgi"])
+async def lonca_bilgi(ctx):
+    """Lonca bilgilerini göster."""
+    user_id = ctx.author.id
+    lonca = get_user_lonca(user_id)
+
+    if not lonca:
+        embed = discord.Embed(
+            title="Lonca Sistemi",
+            description=(
+                "Bir loncaya üye değilsin!\n\n"
+                "`!loncakur <isim>` - Yeni lonca kur (5000 VisoCoin)\n"
+                "`!loncalar` - Mevcut loncaları gör"
+            ),
+            color=discord.Color.dark_grey()
+        )
+        return await ctx.send(embed=embed)
+
+    # Lider bilgisi
+    lider = await bot.fetch_user(lonca["lider"])
+
+    # Üye listesi
+    üye_text = ""
+    for üye_id in lonca["üyeler"][:10]:  # İlk 10 üye
+        try:
+            üye = await bot.fetch_user(üye_id)
+            dungeon = get_dungeon(üye_id)
+            sınıf = SINIFLAR.get(dungeon["sınıf"], {}).get("emoji", "?")
+            lider_badge = " (Lider)" if üye_id == lonca["lider"] else ""
+            üye_text += f"{sınıf} {üye.display_name} (Sv.{dungeon.get('seviye', 1)}){lider_badge}\n"
+        except:
+            pass
+
+    if len(lonca["üyeler"]) > 10:
+        üye_text += f"... ve {len(lonca['üyeler']) - 10} kişi daha"
+
+    # Lonca seviyesi
+    lonca_xp = lonca.get("xp", 0)
+    lonca_seviye = 1 + lonca_xp // 1000
+
+    embed = discord.Embed(
+        title=f"Lonca: {lonca['isim']}",
+        color=discord.Color.gold(),
+        timestamp=datetime.now(timezone.utc)
+    )
+
+    embed.add_field(
+        name="Bilgiler",
+        value=(
+            f"Lonca ID: `{lonca['lonca_id']}`\n"
+            f"Lider: {lider.display_name}\n"
+            f"Seviye: **{lonca_seviye}** ({lonca_xp} XP)\n"
+            f"Kasa: **{lonca.get('kasa', 0)}** VisoCoin\n"
+            f"Boss Öldürme: **{lonca.get('toplam_boss_öldürme', 0)}**"
+        ),
+        inline=True
+    )
+
+    embed.add_field(
+        name=f"Üyeler ({len(lonca['üyeler'])}/{LONCA_MAX_UYE})",
+        value=üye_text or "Yok",
+        inline=True
+    )
+
+    embed.set_footer(text="Lonca Sistemi")
+    await ctx.send(embed=embed)
+
+
+@bot.command(name="loncalar", aliases=["guilds", "loncalistesi"])
+async def lonca_listesi(ctx):
+    """Tüm loncaları listele."""
+    tüm_loncalar = list(loncalar_col.find().sort("xp", -1).limit(10))
+
+    if not tüm_loncalar:
+        return await ctx.send(embed=discord.Embed(description="Henüz hiç lonca yok!", color=discord.Color.dark_grey()))
+
+    embed = discord.Embed(
+        title="Loncalar",
+        color=discord.Color.gold(),
+        timestamp=datetime.now(timezone.utc)
+    )
+
+    for i, lonca in enumerate(tüm_loncalar, 1):
+        seviye = 1 + lonca.get("xp", 0) // 1000
+        embed.add_field(
+            name=f"{i}. {lonca['isim']}",
+            value=f"Seviye: {seviye} | Üye: {len(lonca['üyeler'])} | Boss: {lonca.get('toplam_boss_öldürme', 0)}",
+            inline=False
+        )
+
+    embed.set_footer(text="!loncakur <isim> ile kendi loncanı kur!")
+    await ctx.send(embed=embed)
+
+
+@bot.command(name="loncadavet", aliases=["guildinvite"])
+async def lonca_davet(ctx, hedef: discord.Member = None):
+    """Bir kullanıcıyı loncaya davet et."""
+    if hedef is None:
+        return await ctx.send(embed=discord.Embed(description="Kullanım: `!loncadavet @kullanıcı`", color=discord.Color.blue()))
+
+    user_id = ctx.author.id
+    lonca = get_user_lonca(user_id)
+
+    if not lonca:
+        return await ctx.send(embed=discord.Embed(description="Bir loncada değilsin!", color=discord.Color.red()))
+
+    if lonca["lider"] != user_id:
+        return await ctx.send(embed=discord.Embed(description="Sadece lider davet gönderebilir!", color=discord.Color.red()))
+
+    if len(lonca["üyeler"]) >= LONCA_MAX_UYE:
+        return await ctx.send(embed=discord.Embed(description="Lonca dolu!", color=discord.Color.red()))
+
+    if hedef.id in lonca["üyeler"]:
+        return await ctx.send(embed=discord.Embed(description="Bu kişi zaten loncada!", color=discord.Color.red()))
+
+    hedef_lonca = get_user_lonca(hedef.id)
+    if hedef_lonca:
+        return await ctx.send(embed=discord.Embed(description="Bu kişi zaten başka bir loncada!", color=discord.Color.red()))
+
+    # Davet gönder
+    lonca_davetleri[hedef.id] = {
+        "lonca_id": lonca["lonca_id"],
+        "davet_eden": user_id,
+        "zaman": time.time(),
+    }
+
+    embed = discord.Embed(
+        title="Lonca Daveti!",
+        description=(
+            f"{hedef.mention}, **{lonca['isim']}** loncasına davet edildin!\n\n"
+            f"Kabul etmek için: `!loncakabulet`\n"
+            f"Reddetmek için: `!loncareddet`\n\n"
+            f"60 saniye içinde yanıt vermelisin."
+        ),
+        color=discord.Color.gold()
+    )
+    await ctx.send(embed=embed)
+
+
+@bot.command(name="loncakabulet", aliases=["guildaccept"])
+async def lonca_kabul_et(ctx):
+    """Lonca davetini kabul et."""
+    user_id = ctx.author.id
+
+    if user_id not in lonca_davetleri:
+        return await ctx.send(embed=discord.Embed(description="Bekleyen bir davet yok!", color=discord.Color.red()))
+
+    davet = lonca_davetleri[user_id]
+
+    if time.time() - davet["zaman"] > 60:
+        del lonca_davetleri[user_id]
+        return await ctx.send(embed=discord.Embed(description="Davet süresi doldu!", color=discord.Color.red()))
+
+    lonca = get_lonca(davet["lonca_id"])
+    if not lonca:
+        del lonca_davetleri[user_id]
+        return await ctx.send(embed=discord.Embed(description="Lonca artık mevcut değil!", color=discord.Color.red()))
+
+    # Üye ekle
+    lonca["üyeler"].append(user_id)
+    save_lonca(lonca)
+    del lonca_davetleri[user_id]
+
+    embed = discord.Embed(
+        title="Loncaya Katıldın!",
+        description=f"**{lonca['isim']}** loncasına hoş geldin!",
+        color=discord.Color.green()
+    )
+    await ctx.send(embed=embed)
+
+
+@bot.command(name="loncareddet", aliases=["guildreject"])
+async def lonca_reddet(ctx):
+    """Lonca davetini reddet."""
+    if ctx.author.id in lonca_davetleri:
+        del lonca_davetleri[ctx.author.id]
+        await ctx.send(embed=discord.Embed(description="Davet reddedildi.", color=discord.Color.red()))
+    else:
+        await ctx.send(embed=discord.Embed(description="Bekleyen bir davet yok!", color=discord.Color.red()))
+
+
+@bot.command(name="loncaçık", aliases=["guildleave", "loncaayrıl"])
+async def lonca_cik(ctx):
+    """Loncadan ayrıl."""
+    user_id = ctx.author.id
+    lonca = get_user_lonca(user_id)
+
+    if not lonca:
+        return await ctx.send(embed=discord.Embed(description="Bir loncada değilsin!", color=discord.Color.red()))
+
+    if lonca["lider"] == user_id:
+        if len(lonca["üyeler"]) > 1:
+            return await ctx.send(embed=discord.Embed(description="Lider loncayı terk edemez! Önce liderliği devret veya herkesi çıkar.", color=discord.Color.red()))
+        else:
+            # Loncayı sil
+            loncalar_col.delete_one({"lonca_id": lonca["lonca_id"]})
+            return await ctx.send(embed=discord.Embed(description=f"**{lonca['isim']}** loncası silindi.", color=discord.Color.red()))
+
+    # Üyeyi çıkar
+    lonca["üyeler"].remove(user_id)
+    save_lonca(lonca)
+
+    await ctx.send(embed=discord.Embed(description=f"**{lonca['isim']}** loncasından ayrıldın.", color=discord.Color.orange()))
+
+
+@bot.command(name="loncaboss", aliases=["guildboss", "loncasavaş"])
+async def lonca_boss(ctx):
+    """Lonca bossu ile savaş (tüm üyeler katılır)."""
+    user_id = ctx.author.id
+    lonca = get_user_lonca(user_id)
+
+    if not lonca:
+        return await ctx.send(embed=discord.Embed(description="Bir loncada değilsin!", color=discord.Color.red()))
+
+    # Cooldown kontrolü
+    son_savaş = lonca.get("son_boss_savaşı", 0)
+    if time.time() - son_savaş < LONCA_BOSS_COOLDOWN:
+        kalan = int(LONCA_BOSS_COOLDOWN - (time.time() - son_savaş))
+        dakika = kalan // 60
+        saniye = kalan % 60
+        return await ctx.send(embed=discord.Embed(description=f"Lonca boss savaşı için **{dakika}dk {saniye}sn** bekle!", color=discord.Color.orange()))
+
+    # Boss seviyesi (lonca seviyesine göre)
+    lonca_seviye = 1 + lonca.get("xp", 0) // 1000
+    boss_seviye = min(lonca_seviye, 4)
+    boss = LONCA_BOSSLARI[boss_seviye]
+
+    # Yeterli üye kontrolü
+    if len(lonca["üyeler"]) < boss["gerekli_üye"]:
+        return await ctx.send(embed=discord.Embed(
+            description=f"Bu boss için en az **{boss['gerekli_üye']}** üye gerekli! (Mevcut: {len(lonca['üyeler'])})",
+            color=discord.Color.red()
+        ))
+
+    # Tüm üyelerin toplam hasarını hesapla
+    toplam_hasar = 0
+    katılımcılar = []
+    boss_can = boss["can"]
+
+    for üye_id in lonca["üyeler"]:
+        dungeon = get_dungeon(üye_id)
+        if dungeon["sınıf"]:
+            statlar = get_karakter_statları(dungeon)
+            # Her üye 5 tur saldırır
+            üye_hasar = 0
+            for _ in range(5):
+                h, _ = hasar_hesapla(statlar["saldırı"], boss["savunma"], statlar["şans"])
+                üye_hasar += h
+            toplam_hasar += üye_hasar
+            try:
+                üye = await bot.fetch_user(üye_id)
+                sınıf = SINIFLAR[dungeon["sınıf"]]
+                katılımcılar.append(f"{sınıf['emoji']} {üye.display_name}: **{üye_hasar}** hasar")
+            except:
+                pass
+
+    # Sonuç
+    kazandı = toplam_hasar >= boss_can
+
+    if kazandı:
+        # Ödüller
+        xp_ödül = boss["xp"]
+        altın_ödül = boss["altın"]
+
+        lonca["xp"] = lonca.get("xp", 0) + xp_ödül
+        lonca["kasa"] = lonca.get("kasa", 0) + altın_ödül
+        lonca["toplam_boss_öldürme"] = lonca.get("toplam_boss_öldürme", 0) + 1
+        lonca["son_boss_savaşı"] = time.time()
+        save_lonca(lonca)
+
+        # Her üyeye XP
+        for üye_id in lonca["üyeler"]:
+            dungeon = get_dungeon(üye_id)
+            if dungeon["sınıf"]:
+                dungeon["xp"] += xp_ödül // len(lonca["üyeler"])
+                dungeon["seviye"] = get_zindan_seviye(dungeon["xp"])
+                save_dungeon(dungeon)
+
+        embed = discord.Embed(
+            title=f"Lonca Boss Savaşı - ZAFER!",
+            description=(
+                f"**{lonca['isim']}** loncası **{boss['emoji']} {boss['isim']}** bossunu yendi!\n\n"
+                f"{'━' * 30}\n"
+                f"**Katılımcılar:**\n" + "\n".join(katılımcılar[:10]) + "\n\n"
+                f"**Toplam Hasar:** {toplam_hasar} / {boss_can}\n"
+                f"{'━' * 30}\n\n"
+                f"**Ödüller:**\n"
+                f"Lonca XP: **+{xp_ödül}**\n"
+                f"Lonca Kasası: **+{altın_ödül}** VisoCoin"
+            ),
+            color=discord.Color.green(),
+            timestamp=datetime.now(timezone.utc)
+        )
+    else:
+        lonca["son_boss_savaşı"] = time.time()
+        save_lonca(lonca)
+
+        embed = discord.Embed(
+            title=f"Lonca Boss Savaşı - YENİLGİ!",
+            description=(
+                f"**{lonca['isim']}** loncası **{boss['emoji']} {boss['isim']}** bossuna yenildi!\n\n"
+                f"{'━' * 30}\n"
+                f"**Katılımcılar:**\n" + "\n".join(katılımcılar[:10]) + "\n\n"
+                f"**Toplam Hasar:** {toplam_hasar} / {boss_can}\n"
+                f"{'━' * 30}\n\n"
+                f"Daha güçlü olun ve tekrar deneyin!"
+            ),
+            color=discord.Color.red(),
+            timestamp=datetime.now(timezone.utc)
+        )
+
+    embed.set_footer(text="Lonca Sistemi")
+    await ctx.send(embed=embed)
+
+
+# ================= HAZİNE ODASI SİSTEMİ =================
+
+async def hazine_odası_kontrol(ctx, dungeon, kat):
+    """Katta hazine odası var mı kontrol et."""
+    if random.randint(1, 100) <= HAZINE_ODASI_SANSI:
+        tip, hazine = roll_hazine_odası()
+        if not hazine:
+            return False
+
+        user_id = ctx.author.id
+        user = get_user(user_id)
+
+        if tip == "altın_sandığı":
+            altın = random.randint(hazine["altın_min"], hazine["altın_max"])
+            # Kat bonusu
+            altın = int(altın * (1 + kat * 0.05))
+            user["money"] += altın
+            save_user(user)
+
+            embed = discord.Embed(
+                title=f"{hazine['emoji']} Hazine Odası!",
+                description=(
+                    f"**{hazine['isim']}** buldun!\n\n"
+                    f"{hazine['açıklama']}\n\n"
+                    f"**Ödül:** +**{altın}** VisoCoin!"
+                ),
+                color=discord.Color.gold()
+            )
+            await ctx.send(embed=embed)
+            return True
+
+        elif tip == "efsanevi_sandık":
+            altın = random.randint(hazine["altın_min"], hazine["altın_max"])
+            user["money"] += altın
+            save_user(user)
+
+            eşya = None
+            if random.randint(1, 100) <= hazine["eşya_şansı"]:
+                eşya = roll_loot(kat + 10)  # Daha iyi eşya şansı
+                if eşya:
+                    eşya_id = str(uuid.uuid4())[:8]
+                    dungeon["envanter"].append({"id": eşya_id, "eşya_tipi": eşya})
+                    save_dungeon(dungeon)
+
+            embed = discord.Embed(
+                title=f"{hazine['emoji']} Hazine Odası!",
+                description=(
+                    f"**{hazine['isim']}** buldun!\n\n"
+                    f"{hazine['açıklama']}\n\n"
+                    f"**Ödüller:**\n"
+                    f"+**{altın}** VisoCoin\n"
+                    + (f"+**{EKİPMANLAR[eşya]['emoji']} {EKİPMANLAR[eşya]['isim']}**!" if eşya else "Eşya bulunamadı.")
+                ),
+                color=discord.Color.purple()
+            )
+            await ctx.send(embed=embed)
+            return True
+
+        elif tip == "tuzak_odası":
+            hasar = random.randint(hazine["hasar_min"], hazine["hasar_max"])
+            altın = random.randint(hazine["altın_min"], hazine["altın_max"])
+
+            dungeon["can"] = max(1, dungeon["can"] - hasar)
+            user["money"] += altın
+            save_dungeon(dungeon)
+            save_user(user)
+
+            embed = discord.Embed(
+                title=f"{hazine['emoji']} Tuzak Odası!",
+                description=(
+                    f"**{hazine['isim']}**'na düştün!\n\n"
+                    f"Tuzaklar sana **{hasar}** hasar verdi!\n"
+                    f"Ama yine de **{altın}** VisoCoin buldun.\n\n"
+                    f"Kalan canın: **{dungeon['can']}**"
+                ),
+                color=discord.Color.red()
+            )
+            await ctx.send(embed=embed)
+            return True
+
+        elif tip == "bilmece_odası":
+            bilmece = random.choice(BILMECELER)
+            altın = random.randint(hazine["altın_min"], hazine["altın_max"])
+            altın = int(altın * (1 + kat * 0.05))
+
+            aktif_bilmeceler[user_id] = {
+                "bilmece": bilmece,
+                "zaman": time.time(),
+                "altın": altın,
+                "xp": hazine["xp_bonus"],
+            }
+
+            embed = discord.Embed(
+                title=f"{hazine['emoji']} Bilmece Odası!",
+                description=(
+                    f"**{hazine['isim']}** buldun!\n\n"
+                    f"Bilmeceyi çöz ve hazineyi al!\n\n"
+                    f"**Bilmece:** {bilmece['soru']}\n\n"
+                    f"Cevaplamak için: `!cevap <cevabın>`\n"
+                    f"30 saniye içinde cevap ver!"
+                ),
+                color=discord.Color.blue()
+            )
+            await ctx.send(embed=embed)
+            return True
+
+        elif tip == "ejderha_hazinesi":
+            altın = random.randint(hazine["altın_min"], hazine["altın_max"])
+            altın = int(altın * (1 + kat * 0.05))
+            user["money"] += altın
+            save_user(user)
+
+            eşya = None
+            if random.randint(1, 100) <= hazine["eşya_şansı"]:
+                # Daha iyi loot
+                eşya = roll_loot(max(kat, 50))
+                if eşya:
+                    eşya_id = str(uuid.uuid4())[:8]
+                    dungeon["envanter"].append({"id": eşya_id, "eşya_tipi": eşya})
+                    save_dungeon(dungeon)
+
+            embed = discord.Embed(
+                title=f"{hazine['emoji']} EJDERHA HAZİNESİ!",
+                description=(
+                    f"**{hazine['isim']}** buldun!\n\n"
+                    f"Muhteşem bir hazine!\n\n"
+                    f"**Ödüller:**\n"
+                    f"+**{altın}** VisoCoin!\n"
+                    + (f"+**{EKİPMANLAR[eşya]['emoji']} {EKİPMANLAR[eşya]['isim']}** ({EKİPMANLAR[eşya]['nadirlik']})!" if eşya else "")
+                ),
+                color=discord.Color.dark_gold()
+            )
+            await ctx.send(embed=embed)
+            return True
+
+    return False
+
+
+@bot.command(name="cevap", aliases=["answer", "bilmececevap"])
+async def bilmece_cevap(ctx, *, cevap: str = None):
+    """Bilmece odasının cevabını ver."""
+    user_id = ctx.author.id
+
+    if user_id not in aktif_bilmeceler:
+        return await ctx.send(embed=discord.Embed(description="Aktif bir bilmece sorun yok!", color=discord.Color.red()))
+
+    bilmece_data = aktif_bilmeceler[user_id]
+
+    # Süre kontrolü
+    if time.time() - bilmece_data["zaman"] > 30:
+        del aktif_bilmeceler[user_id]
+        return await ctx.send(embed=discord.Embed(description="Süre doldu! Bilmece iptal edildi.", color=discord.Color.red()))
+
+    if cevap is None:
+        return await ctx.send(embed=discord.Embed(description="Kullanım: `!cevap <cevabın>`", color=discord.Color.blue()))
+
+    cevap = cevap.lower().strip()
+    doğru_cevaplar = bilmece_data["bilmece"]["cevap"]
+
+    if cevap in doğru_cevaplar:
+        # Doğru cevap!
+        user = get_user(user_id)
+        dungeon = get_dungeon(user_id)
+
+        user["money"] += bilmece_data["altın"]
+        dungeon["xp"] += bilmece_data["xp"]
+        dungeon["seviye"] = get_zindan_seviye(dungeon["xp"])
+
+        save_user(user)
+        save_dungeon(dungeon)
+        del aktif_bilmeceler[user_id]
+
+        embed = discord.Embed(
+            title="Doğru Cevap!",
+            description=(
+                f"Tebrikler! Bilmeceyi çözdün!\n\n"
+                f"**Ödüller:**\n"
+                f"+**{bilmece_data['altın']}** VisoCoin\n"
+                f"+**{bilmece_data['xp']}** XP"
+            ),
+            color=discord.Color.green()
+        )
+        await ctx.send(embed=embed)
+    else:
+        del aktif_bilmeceler[user_id]
+        embed = discord.Embed(
+            title="Yanlış Cevap!",
+            description=f"Maalesef yanlış. Doğru cevap: **{doğru_cevaplar[0]}**",
+            color=discord.Color.red()
+        )
+        await ctx.send(embed=embed)
+
+
 # ================== RUN ==================
 
 bot.run(TOKEN)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
