@@ -2381,85 +2381,85 @@ async def yardim(ctx):
 
 
 TOHUMLAR = {
-    "bugday": {
-        "isim": "Bugday",
+    "buğday": {
+        "isim": "Buğday",
         "emoji": "🌾",
         "fiyat": 50,
-        "sure": 300,          # 5 dakika
-        "satis_min": 75,
-        "satis_max": 100,
+        "süre": 300,          # 5 dakika
+        "satış_min": 75,
+        "satış_max": 100,
         "xp": 5,
     },
     "domates": {
         "isim": "Domates",
         "emoji": "🍅",
         "fiyat": 120,
-        "sure": 600,          # 10 dakika
-        "satis_min": 180,
-        "satis_max": 240,
+        "süre": 600,          # 10 dakika
+        "satış_min": 180,
+        "satış_max": 240,
         "xp": 10,
     },
-    "misir": {
-        "isim": "Misir",
+    "mısır": {
+        "isim": "Mısır",
         "emoji": "🌽",
         "fiyat": 200,
-        "sure": 600,          # 10 dakika
-        "satis_min": 300,
-        "satis_max": 400,
+        "süre": 600,          # 10 dakika
+        "satış_min": 300,
+        "satış_max": 400,
         "xp": 15,
     },
     "havuc": {
         "isim": "Havuc",
         "emoji": "🥕",
         "fiyat": 80,
-        "sure": 600,          # 10 dakika
-        "satis_min": 120,
-        "satis_max": 160,
+        "süre": 600,          # 10 dakika
+        "satış_min": 120,
+        "satış_max": 160,
         "xp": 7,
     },
     "patates": {
         "isim": "Patates",
         "emoji": "🥔",
         "fiyat": 100,
-        "sure": 1800,         # 30 dakika
-        "satis_min": 150,
-        "satis_max": 200,
+        "süre": 1800,         # 30 dakika
+        "satış_min": 150,
+        "satış_max": 200,
         "xp": 8,
     },
     "cilek": {
         "isim": "Cilek",
         "emoji": "🍓",
         "fiyat": 300,
-        "sure": 3600,         # 1 saat
-        "satis_min": 450,
-        "satis_max": 600,
+        "süre": 3600,         # 1 saat
+        "satış_min": 450,
+        "satış_max": 600,
         "xp": 20,
     },
     "karpuz": {
         "isim": "Karpuz",
         "emoji": "🍉",
         "fiyat": 500,
-        "sure": 10800,        # 3 saat
-        "satis_min": 750,
-        "satis_max": 1000,
+        "süre": 10800,        # 3 saat
+        "satış_min": 750,
+        "satış_max": 1000,
         "xp": 30,
     },
     "altin_elma": {
         "isim": "Altin Elma",
         "emoji": "🍎",
         "fiyat": 1000,
-        "sure": 43200,        # 12 saat
-        "satis_min": 1500,
-        "satis_max": 2000,
+        "süre": 43200,        # 12 saat
+        "satış_min": 1500,
+        "satış_max": 2000,
         "xp": 50,
     },
     "ananas": {
         "isim": "Ananas",
         "emoji": "🍍",
         "fiyat": 2500,
-        "sure": 86400,        # 24 saat
-        "satis_min": 3000,
-        "satis_max": 4500,
+        "süre": 86400,        # 24 saat
+        "satış_min": 3000,
+        "satış_max": 4500,
         "xp": 75,
     },
 }
@@ -2581,10 +2581,10 @@ async def tarla(ctx):
     slot_text = ""
     for i, slot in enumerate(farm["slotlar"], 1):
         tohum = TOHUMLAR[slot["tohum"]]
-        sure = tohum["sure"]
+        süre = tohum["süre"]
         geçen = now - slot["ekim_zamanı"]
 
-        if geçen >= sure:
+        if geçen >= süre:
             slot_text += f"**{i}.** {tohum['emoji']} {tohum['isim']} -- Hasat icin hazir!\n"
         else:
             kalan = int(süre - geçen)
@@ -2666,7 +2666,7 @@ async def tohumlar(ctx):
     )
 
     for tohum_id, tohum in TOHUMLAR.items():
-        dk = tohum["sure"] // 60
+        dk = tohum["süre"] // 60
         embed.add_field(
             name=f"{tohum['emoji']} {tohum['isim']} (`{tohum_id}`)",
             value=(
@@ -2767,7 +2767,7 @@ async def ek(ctx, tohum_id: str = None, adet: int = 1):
         description=(
             f"{ctx.author.mention}, **{adet}x {tohum['emoji']} {tohum['isim']}** ekildi!\n\n"
             f"Maliyet: **{toplam_fiyat}** VisoCoin\n"
-            f"Büyüme süresi: **{tohum['sure'] // 60}** dakika\n"
+            f"Büyüme süresi: **{tohum['süre'] // 60}** dakika\n"
             f"Tarla: {len(farm['slotlar'])}/{max_slot} slot dolu\n\n"
             f"Hasat için: `!hasat`"
         ),
@@ -2791,11 +2791,11 @@ async def hasat(ctx):
 
     for slot in farm["slotlar"]:
         tohum = TOHUMLAR[slot["tohum"]]
-        sure = tohum["sure"]
+        süre = tohum["süre"]
 
         geçen = now - slot["ekim_zamanı"]
 
-        if geçen >= sure:
+        if geçen >= süre:
             # Hasat hazır
             hazır_ürünler.append(slot["tohum"])
         else:
@@ -3088,10 +3088,10 @@ async def gübrele(ctx, slot_no: int = None, gübre_türü: str = "normal"):
     tohum = TOHUMLAR[slot["tohum"]]
     now = time.time()
     geçen = now - slot["ekim_zamanı"]
-    kalan = max(tohum["sure"] - geçen, 0)
+    kalan = max(tohum["süre"] - geçen, 0)
     yeni_kalan = kalan * (1 - gubre["azaltma"])
     # ekim_zamanini ileriye kaydir
-    farm["slotlar"][slot_no - 1]["ekim_zamanı"] = now - (tohum["sure"] - yeni_kalan)
+    farm["slotlar"][slot_no - 1]["ekim_zamanı"] = now - (tohum["süre"] - yeni_kalan)
     save_farm(farm)
 
     kalan_dk = int(yeni_kalan) // 60
@@ -3175,13 +3175,13 @@ async def gübresat(ctx, gübre_türü: str = None, adet: int = 1):
     update_quest_progress(user_id, "harca", toplam_fiyat)
 
     embed = discord.Embed(
-        title=f"{gubre['emoji']} {gubre['isim']} Satin Alindi!",
+        title=f"{gubre['emoji']} {gubre['isim']} Satın Alındı!",
         description=(
-            f"{ctx.author.mention}, **{adet}x {gubre['emoji']} {gubre['isim']}** satin aldin!\n\n"
+            f"{ctx.author.mention}, **{adet}x {gubre['emoji']} {gubre['isim']}** satın aldın!\n\n"
             f"Maliyet: **{toplam_fiyat}** VisoCoin\n"
             f"Toplam {gubre['isim']}: **{gübreler[gübre_türü]}**\n"
             f"Bakiye: **{user['money']:,}** VisoCoin\n\n"
-            f"Kullanmak icin: `!gübrele <slot_no> {gübre_türü}`"
+            f"Kullanmak için: `!gübrele <slot_no> {gübre_türü}`"
         ),
         color=discord.Color.green(),
         timestamp=datetime.now(timezone.utc)
@@ -5994,6 +5994,7 @@ async def korsansıralama(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
