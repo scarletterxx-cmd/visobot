@@ -2584,7 +2584,7 @@ async def tarla(ctx):
         sure = tohum["sure"]
         geçen = now - slot["ekim_zamanı"]
 
-        if geçen >= süre:
+        if geçen >= sure:
             slot_text += f"**{i}.** {tohum['emoji']} {tohum['isim']} -- Hasat icin hazir!\n"
         else:
             kalan = int(süre - geçen)
@@ -2767,7 +2767,7 @@ async def ek(ctx, tohum_id: str = None, adet: int = 1):
         description=(
             f"{ctx.author.mention}, **{adet}x {tohum['emoji']} {tohum['isim']}** ekildi!\n\n"
             f"Maliyet: **{toplam_fiyat}** VisoCoin\n"
-            f"Büyüme süresi: **{tohum['süre'] // 60}** dakika\n"
+            f"Büyüme süresi: **{tohum['sure'] // 60}** dakika\n"
             f"Tarla: {len(farm['slotlar'])}/{max_slot} slot dolu\n\n"
             f"Hasat için: `!hasat`"
         ),
@@ -2795,7 +2795,7 @@ async def hasat(ctx):
 
         geçen = now - slot["ekim_zamanı"]
 
-        if geçen >= süre:
+        if geçen >= sure:
             # Hasat hazır
             hazır_ürünler.append(slot["tohum"])
         else:
@@ -5994,6 +5994,7 @@ async def korsansıralama(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
