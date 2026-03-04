@@ -2666,7 +2666,7 @@ async def tarla(ctx):
         seviye_text = f"Seviye **{seviye}** (MAKSİMUM!)"
 
     # Gübre bilgisi
-    gübreler = farm.get("gübreler", {"normal": 0, "altın": 0, "elmas": 0})
+    g��breler = farm.get("gübreler", {"normal": 0, "altın": 0, "elmas": 0})
     gübre_text = ""
     for gubre_id, gubre in GÜBRELER.items():
         miktar = gübreler.get(gubre_id, 0)
@@ -7028,10 +7028,14 @@ async def hazine_odası_kontrol(ctx, dungeon, kat):
             eşya = None
             if random.randint(1, 100) <= hazine["eşya_şansı"]:
                 eşya = roll_loot(kat + 10)  # Daha iyi eşya şansı
-                if eşya:
+                if eşya and eşya in EKİPMANLAR:
                     eşya_id = str(uuid.uuid4())[:8]
                     dungeon["envanter"].append({"id": eşya_id, "eşya_tipi": eşya})
-                    save_dungeon(dungeon)
+                    # Dogrudan veritabanina kaydet
+                    dungeons_col.update_one(
+                        {"user_id": user_id},
+                        {"$push": {"envanter": {"id": eşya_id, "eşya_tipi": eşya}}}
+                    )
 
             embed = discord.Embed(
                 title=f"{hazine['emoji']} Hazine Odası!",
@@ -7040,7 +7044,7 @@ async def hazine_odası_kontrol(ctx, dungeon, kat):
                     f"{hazine['açıklama']}\n\n"
                     f"**Ödüller:**\n"
                     f"+**{altın}** VisoCoin\n"
-                    + (f"+**{EKİPMANLAR[eşya]['emoji']} {EKİPMANLAR[eşya]['isim']}**!" if eşya else "Eşya bulunamadı.")
+                    + (f"+**{EKİPMANLAR[eşya]['emoji']} {EKİPMANLAR[eşya]['isim']}**!" if eşya and eşya in EKİPMANLAR else "Eşya bulunamadı.")
                 ),
                 color=discord.Color.purple()
             )
@@ -7105,10 +7109,14 @@ async def hazine_odası_kontrol(ctx, dungeon, kat):
             if random.randint(1, 100) <= hazine["eşya_şansı"]:
                 # Daha iyi loot
                 eşya = roll_loot(max(kat, 50))
-                if eşya:
+                if eşya and eşya in EKİPMANLAR:
                     eşya_id = str(uuid.uuid4())[:8]
                     dungeon["envanter"].append({"id": eşya_id, "eşya_tipi": eşya})
-                    save_dungeon(dungeon)
+                    # Dogrudan veritabanina kaydet
+                    dungeons_col.update_one(
+                        {"user_id": user_id},
+                        {"$push": {"envanter": {"id": eşya_id, "eşya_tipi": eşya}}}
+                    )
 
             embed = discord.Embed(
                 title=f"{hazine['emoji']} EJDERHA HAZİNESİ!",
@@ -7117,7 +7125,7 @@ async def hazine_odası_kontrol(ctx, dungeon, kat):
                     f"Muhteşem bir hazine!\n\n"
                     f"**Ödüller:**\n"
                     f"+**{altın}** VisoCoin!\n"
-                    + (f"+**{EKİPMANLAR[eşya]['emoji']} {EKİPMANLAR[eşya]['isim']}** ({EKİPMANLAR[eşya]['nadirlik']})!" if eşya else "")
+                    + (f"+**{EKİPMANLAR[eşya]['emoji']} {EKİPMANLAR[eşya]['isim']}** ({EKİPMANLAR[eşya]['nadirlik']})!" if eşya and eşya in EKİPMANLAR else "")
                 ),
                 color=discord.Color.dark_gold()
             )
