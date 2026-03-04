@@ -3191,6 +3191,8 @@ async def gübresat(ctx, gübre_türü: str = None, adet: int = 1):
 
 # ================= SINIF TANIMLARI =================
 
+# ================= SINIF TANIMLARI =================
+
 SINIFLAR = {
     "savaşçı": {
         "isim": "Savaşçı",
@@ -3246,7 +3248,7 @@ SINIFLAR = {
 # ================= EKİPMAN SİSTEMİ =================
 
 EKİPMANLAR = {
-    # Silahlar
+    # ================= KILIÇLAR =================
     "paslı_kılıç": {"isim": "Paslı Kılıç", "emoji": "🗡️", "tür": "silah", "saldırı": 3, "savunma": 0, "can": 0, "nadirlik": "Yaygın", "fiyat": 0},
     "demir_kılıç": {"isim": "Demir Kılıç", "emoji": "🗡️", "tür": "silah", "saldırı": 8, "savunma": 0, "can": 0, "nadirlik": "Sıradan", "fiyat": 500},
     "çelik_kılıç": {"isim": "Çelik Kılıç", "emoji": "⚔️", "tür": "silah", "saldırı": 15, "savunma": 0, "can": 0, "nadirlik": "Nadir", "fiyat": 1500},
@@ -3254,18 +3256,51 @@ EKİPMANLAR = {
     "ejderha_kılıcı": {"isim": "Ejderha Kılıcı", "emoji": "🐉", "tür": "silah", "saldırı": 40, "savunma": 5, "can": 10, "nadirlik": "Efsanevi", "fiyat": 15000},
     "karanlık_asa": {"isim": "Karanlık Asa", "emoji": "🪄", "tür": "silah", "saldırı": 35, "savunma": 0, "can": 0, "nadirlik": "Epik", "fiyat": 6000},
     "yıldırım_yayı": {"isim": "Yıldırım Yayı", "emoji": "⚡", "tür": "silah", "saldırı": 30, "savunma": 0, "can": 0, "nadirlik": "Epik", "fiyat": 5500},
+    # Yeni Kılıçlar
+    "gümüş_kılıç": {"isim": "Gümüş Kılıç", "emoji": "🌙", "tür": "silah", "saldırı": 12, "savunma": 2, "can": 0, "nadirlik": "Nadir", "fiyat": 1800},
+    "buz_kılıcı": {"isim": "Buz Kılıcı", "emoji": "❄️", "tür": "silah", "saldırı": 28, "savunma": 0, "can": 10, "nadirlik": "Epik", "fiyat": 5500},
+    "şimşek_kılıcı": {"isim": "Şimşek Kılıcı", "emoji": "⚡", "tür": "silah", "saldırı": 32, "savunma": 0, "can": 0, "nadirlik": "Epik", "fiyat": 6500},
+    "zehir_kılıcı": {"isim": "Zehir Kılıcı", "emoji": "☠️", "tür": "silah", "saldırı": 22, "savunma": 0, "can": 0, "nadirlik": "Nadir", "fiyat": 2500},
+    "ruh_kesici": {"isim": "Ruh Kesici", "emoji": "💀", "tür": "silah", "saldırı": 45, "savunma": 8, "can": 15, "nadirlik": "Efsanevi", "fiyat": 18000},
+    "kaos_kılıcı": {"isim": "Kaos Kılıcı", "emoji": "🌀", "tür": "silah", "saldırı": 55, "savunma": 10, "can": 25, "nadirlik": "Tanrısal", "fiyat": 50000},
+    "güneş_kılıcı": {"isim": "Güneş Kılıcı", "emoji": "☀️", "tür": "silah", "saldırı": 60, "savunma": 15, "can": 30, "nadirlik": "Tanrısal", "fiyat": 60000},
+    "kader_kılıcı": {"isim": "Kader Kılıcı", "emoji": "🌟", "tür": "silah", "saldırı": 70, "savunma": 20, "can": 50, "nadirlik": "Tanrısal", "fiyat": 100000},
+    "cehennem_baltası": {"isim": "Cehennem Baltası", "emoji": "🪓", "tür": "silah", "saldırı": 50, "savunma": 0, "can": 20, "nadirlik": "Efsanevi", "fiyat": 20000},
+    "fırtına_mızrağı": {"isim": "Fırtına Mızrağı", "emoji": "🔱", "tür": "silah", "saldırı": 38, "savunma": 5, "can": 10, "nadirlik": "Epik", "fiyat": 7500},
 
-    # Zırhlar
+    # ================= ZIRHLAR =================
     "deri_zırh": {"isim": "Deri Zırh", "emoji": "🦺", "tür": "zırh", "saldırı": 0, "savunma": 5, "can": 10, "nadirlik": "Yaygın", "fiyat": 0},
     "demir_zırh": {"isim": "Demir Zırh", "emoji": "🛡️", "tür": "zırh", "saldırı": 0, "savunma": 12, "can": 20, "nadirlik": "Sıradan", "fiyat": 800},
     "çelik_zırh": {"isim": "Çelik Zırh", "emoji": "🛡️", "tür": "zırh", "saldırı": 0, "savunma": 20, "can": 35, "nadirlik": "Nadir", "fiyat": 2000},
     "elmas_zırh": {"isim": "Elmas Zırh", "emoji": "💎", "tür": "zırh", "saldırı": 5, "savunma": 35, "can": 50, "nadirlik": "Epik", "fiyat": 7000},
     "ejderha_zırhı": {"isim": "Ejderha Zırhı", "emoji": "🐲", "tür": "zırh", "saldırı": 10, "savunma": 50, "can": 80, "nadirlik": "Efsanevi", "fiyat": 18000},
+    # Yeni Zırhlar
+    "gümüş_zırh": {"isim": "Gümüş Zırh", "emoji": "🌙", "tür": "zırh", "saldırı": 0, "savunma": 18, "can": 30, "nadirlik": "Nadir", "fiyat": 2500},
+    "buz_zırhı": {"isim": "Buz Zırhı", "emoji": "❄️", "tür": "zırh", "saldırı": 0, "savunma": 30, "can": 45, "nadirlik": "Epik", "fiyat": 6000},
+    "ateş_zırhı": {"isim": "Ateş Zırhı", "emoji": "🔥", "tür": "zırh", "saldırı": 8, "savunma": 32, "can": 40, "nadirlik": "Epik", "fiyat": 6500},
+    "gölge_zırhı": {"isim": "Gölge Zırhı", "emoji": "🖤", "tür": "zırh", "saldırı": 5, "savunma": 28, "can": 35, "nadirlik": "Nadir", "fiyat": 3000},
+    "titan_zırhı": {"isim": "Titan Zırhı", "emoji": "🗿", "tür": "zırh", "saldırı": 15, "savunma": 55, "can": 100, "nadirlik": "Efsanevi", "fiyat": 22000},
+    "cennet_zırhı": {"isim": "Cennet Zırhı", "emoji": "👼", "tür": "zırh", "saldırı": 20, "savunma": 70, "can": 150, "nadirlik": "Tanrısal", "fiyat": 55000},
+    "kaos_zırhı": {"isim": "Kaos Zırhı", "emoji": "🌀", "tür": "zırh", "saldırı": 25, "savunma": 80, "can": 180, "nadirlik": "Tanrısal", "fiyat": 70000},
+    "sonsuzluk_zırhı": {"isim": "Sonsuzluk Zırhı", "emoji": "♾️", "tür": "zırh", "saldırı": 30, "savunma": 100, "can": 250, "nadirlik": "Tanrısal", "fiyat": 120000},
+    "kemik_zırhı": {"isim": "Kemik Zırhı", "emoji": "🦴", "tür": "zırh", "saldırı": 3, "savunma": 15, "can": 25, "nadirlik": "Sıradan", "fiyat": 1000},
+    "kristal_zırhı": {"isim": "Kristal Zırhı", "emoji": "💠", "tür": "zırh", "saldırı": 12, "savunma": 45, "can": 70, "nadirlik": "Efsanevi", "fiyat": 16000},
 
-    # Yüzükler (özel bonus)
+    # ================= YÜZÜKLER =================
     "şans_yüzüğü": {"isim": "Şans Yüzüğü", "emoji": "💍", "tür": "yüzük", "saldırı": 0, "savunma": 0, "can": 0, "nadirlik": "Nadir", "şans": 10, "fiyat": 3000},
     "güç_yüzüğü": {"isim": "Güç Yüzüğü", "emoji": "💍", "tür": "yüzük", "saldırı": 12, "savunma": 5, "can": 15, "nadirlik": "Epik", "şans": 0, "fiyat": 5500},
     "hayalet_yüzüğü": {"isim": "Hayalet Yüzüğü", "emoji": "👻", "tür": "yüzük", "saldırı": 8, "savunma": 8, "can": 25, "nadirlik": "Efsanevi", "şans": 15, "fiyat": 12000},
+    # Yeni Yüzükler
+    "demir_yüzük": {"isim": "Demir Yüzük", "emoji": "⚙️", "tür": "yüzük", "saldırı": 3, "savunma": 3, "can": 5, "nadirlik": "Sıradan", "şans": 2, "fiyat": 600},
+    "ateş_yüzüğü": {"isim": "Ateş Yüzüğü", "emoji": "🔥", "tür": "yüzük", "saldırı": 15, "savunma": 0, "can": 10, "nadirlik": "Epik", "şans": 5, "fiyat": 6000},
+    "buz_yüzüğü": {"isim": "Buz Yüzüğü", "emoji": "❄️", "tür": "yüzük", "saldırı": 5, "savunma": 10, "can": 20, "nadirlik": "Epik", "şans": 8, "fiyat": 5800},
+    "vampir_yüzüğü": {"isim": "Vampir Yüzüğü", "emoji": "🧛", "tür": "yüzük", "saldırı": 10, "savunma": 5, "can": 30, "nadirlik": "Efsanevi", "şans": 12, "fiyat": 14000},
+    "ejderha_yüzüğü": {"isim": "Ejderha Yüzüğü", "emoji": "🐉", "tür": "yüzük", "saldırı": 18, "savunma": 12, "can": 40, "nadirlik": "Efsanevi", "şans": 10, "fiyat": 16000},
+    "karanlık_yüzük": {"isim": "Karanlık Yüzük", "emoji": "🖤", "tür": "yüzük", "saldırı": 20, "savunma": 0, "can": 0, "nadirlik": "Epik", "şans": 18, "fiyat": 7000},
+    "tanrı_yüzüğü": {"isim": "Tanrı Yüzüğü", "emoji": "👑", "tür": "yüzük", "saldırı": 30, "savunma": 20, "can": 60, "nadirlik": "Tanrısal", "şans": 25, "fiyat": 80000},
+    "sonsuzluk_yüzüğü": {"isim": "Sonsuzluk Yüzüğü", "emoji": "♾️", "tür": "yüzük", "saldırı": 35, "savunma": 25, "can": 80, "nadirlik": "Tanrısal", "şans": 30, "fiyat": 100000},
+    "kader_yüzüğü": {"isim": "Kader Yüzüğü", "emoji": "🌟", "tür": "yüzük", "saldırı": 40, "savunma": 30, "can": 100, "nadirlik": "Tanrısal", "şans": 35, "fiyat": 150000},
+    "koruma_yüzüğü": {"isim": "Koruma Yüzüğü", "emoji": "🛡️", "tür": "yüzük", "saldırı": 0, "savunma": 15, "can": 35, "nadirlik": "Nadir", "şans": 5, "fiyat": 3500},
 }
 
 NADİRLİK_RENKLERİ = {
@@ -3274,6 +3309,7 @@ NADİRLİK_RENKLERİ = {
     "Nadir": "🟦",
     "Epik": "🟪",
     "Efsanevi": "🟧",
+    "Tanrısal": "🟥",
 }
 
 # ================= CANAVAR TANIMLARI =================
@@ -3337,13 +3373,17 @@ LOOT_TABLOSU = {
     "kolay": [
         {"eşya": "paslı_kılıç", "şans": 20},
         {"eşya": "deri_zırh", "şans": 20},
-        {"eşya": None, "şans": 60},  # eşya düşmez
+        {"eşya": "demir_yüzük", "şans": 8},
+        {"eşya": None, "şans": 52},  # eşya düşmez
     ],
     "orta": [
         {"eşya": "demir_kılıç", "şans": 12},
         {"eşya": "demir_zırh", "şans": 12},
+        {"eşya": "gümüş_kılıç", "şans": 8},
+        {"eşya": "gümüş_zırh", "şans": 8},
         {"eşya": "şans_yüzüğü", "şans": 5},
-        {"eşya": None, "şans": 71},
+        {"eşya": "kemik_zırhı", "şans": 6},
+        {"eşya": None, "şans": 49},
     ],
     "zor": [
         {"eşya": "çelik_kılıç", "şans": 10},
@@ -3351,16 +3391,54 @@ LOOT_TABLOSU = {
         {"eşya": "ateş_kılıcı", "şans": 5},
         {"eşya": "karanlık_asa", "şans": 5},
         {"eşya": "güç_yüzüğü", "şans": 3},
-        {"eşya": None, "şans": 67},
+        {"eşya": "buz_kılıcı", "şans": 5},
+        {"eşya": "buz_zırhı", "şans": 5},
+        {"eşya": "şimşek_kılıcı", "şans": 4},
+        {"eşya": "ateş_zırhı", "şans": 4},
+        {"eşya": "ateş_yüzüğü", "şans": 3},
+        {"eşya": "buz_yüzüğü", "şans": 3},
+        {"eşya": None, "şans": 43},
     ],
     "çok_zor": [
-        {"eşya": "ateş_kılıcı", "şans": 8},
+        {"eşya": "ateş_kılıcı", "şans": 6},
         {"eşya": "ejderha_kılıcı", "şans": 3},
-        {"eşya": "elmas_zırh", "şans": 6},
+        {"eşya": "elmas_zırh", "şans": 5},
         {"eşya": "ejderha_zırhı", "şans": 2},
         {"eşya": "hayalet_yüzüğü", "şans": 2},
-        {"eşya": "yıldırım_yayı", "şans": 5},
-        {"eşya": None, "şans": 74},
+        {"eşya": "yıldırım_yayı", "şans": 4},
+        {"eşya": "ruh_kesici", "şans": 2},
+        {"eşya": "titan_zırhı", "şans": 2},
+        {"eşya": "vampir_yüzüğü", "şans": 2},
+        {"eşya": "ejderha_yüzüğü", "şans": 2},
+        {"eşya": "cehennem_baltası", "şans": 2},
+        {"eşya": "kristal_zırhı", "şans": 2},
+        {"eşya": None, "şans": 66},
+    ],
+    "efsanevi": [
+        {"eşya": "ejderha_kılıcı", "şans": 5},
+        {"eşya": "ejderha_zırhı", "şans": 5},
+        {"eşya": "ruh_kesici", "şans": 4},
+        {"eşya": "titan_zırhı", "şans": 4},
+        {"eşya": "cehennem_baltası", "şans": 4},
+        {"eşya": "kaos_kılıcı", "şans": 1},
+        {"eşya": "güneş_kılıcı", "şans": 1},
+        {"eşya": "cennet_zırhı", "şans": 1},
+        {"eşya": "kaos_zırhı", "şans": 1},
+        {"eşya": "tanrı_yüzüğü", "şans": 1},
+        {"eşya": "sonsuzluk_yüzüğü", "şans": 1},
+        {"eşya": None, "şans": 72},
+    ],
+    "tanrısal": [
+        {"eşya": "kaos_kılıcı", "şans": 3},
+        {"eşya": "güneş_kılıcı", "şans": 3},
+        {"eşya": "kader_kılıcı", "şans": 2},
+        {"eşya": "cennet_zırhı", "şans": 3},
+        {"eşya": "kaos_zırhı", "şans": 3},
+        {"eşya": "sonsuzluk_zırhı", "şans": 2},
+        {"eşya": "tanrı_yüzüğü", "şans": 3},
+        {"eşya": "sonsuzluk_yüzüğü", "şans": 2},
+        {"eşya": "kader_yüzüğü", "şans": 1},
+        {"eşya": None, "şans": 78},
     ],
 }
 
@@ -3373,8 +3451,12 @@ def get_loot_zorluk(kat):
         return "orta"
     elif kat <= 25:
         return "zor"
-    else:
+    elif kat <= 40:
         return "çok_zor"
+    elif kat <= 60:
+        return "efsanevi"
+    else:
+        return "tanrısal"
 
 
 def roll_loot(kat):
@@ -3978,9 +4060,11 @@ async def zsaldır(ctx):
 
     # Oyuncu öldü mü?
     if dungeon["can"] <= 0:
-        # Ölüm
+        # Ölüm - 5 kat geri at (mevcut kat zaten +1 artmış, bu yüzden -6 yapıyoruz ki 5 kat geriye düşsün)
         dungeon["toplam_ölüm"] += 1
-        dungeon["mevcut_kat"] = max(0, dungeon["mevcut_kat"] - 4)
+        eski_kat = dungeon["mevcut_kat"]
+        dungeon["mevcut_kat"] = max(0, dungeon["mevcut_kat"] - 6)
+        düşülen_kat = eski_kat - dungeon["mevcut_kat"]
         dungeon["can"] = statlar["can"]  # Canı yenile
         dungeon["aktif_savaş"] = None
         save_dungeon(dungeon)
@@ -3990,7 +4074,7 @@ async def zsaldır(ctx):
             description=(
                 f"{savaş_log}\n"
                 f"**{savaş['emoji']} {savaş['isim']}** seni yendi!\n\n"
-                f"**3 kat** geri düştün. Mevcut kat: **{dungeon['mevcut_kat']}**\n"
+                f"**5 kat** geri düştün. Mevcut kat: **{dungeon['mevcut_kat']}**\n"
                 f"Canın yenilendi.\n\n"
                 f"Tekrar denemek için: `!gir`"
             ),
@@ -4120,12 +4204,13 @@ async def özel_saldırı(ctx):
         return await ctx.send(embed=embed)
 
     if dungeon["can"] <= 0:
+        # Ölüm - 5 kat geri at
         dungeon["toplam_ölüm"] += 1
-        dungeon["mevcut_kat"] = max(0, dungeon["mevcut_kat"] - 3)
+        dungeon["mevcut_kat"] = max(0, dungeon["mevcut_kat"] - 6)
         dungeon["can"] = statlar["can"]
         dungeon["aktif_savaş"] = None
         save_dungeon(dungeon)
-        embed = discord.Embed(title="YENİLDİN!", description=f"{savaş_log}\n3 kat geri düştün. `!gir` ile tekrar dene.", color=discord.Color.dark_red())
+        embed = discord.Embed(title="YENİLDİN!", description=f"{savaş_log}\n**5 kat** geri düştün. Mevcut kat: **{dungeon['mevcut_kat']}**\n`!gir` ile tekrar dene.", color=discord.Color.dark_red())
         return await ctx.send(embed=embed)
 
     dungeon["aktif_savaş"] = savaş
@@ -4141,7 +4226,7 @@ async def özel_saldırı(ctx):
 
 @bot.command(name="kaç", aliases=["flee", "kaçış"])
 async def kaç(ctx):
-    """Savaştan kaç (mevcut katı kaybedersin)."""
+    """Savaştan kaç (aynı kattan devam edersin)."""
     user_id = ctx.author.id
     dungeon = get_dungeon(user_id)
 
@@ -4150,7 +4235,8 @@ async def kaç(ctx):
         return await ctx.send(embed=embed)
 
     savaş = dungeon["aktif_savaş"]
-    dungeon["mevcut_kat"] = max(0, dungeon["mevcut_kat"] - 2)
+    # Kaçınca aynı kattan devam et (mevcut kat zaten +1 artmış, -1 yaparak aynı kata dönüyoruz)
+    dungeon["mevcut_kat"] = max(0, dungeon["mevcut_kat"] - 1)
     dungeon["aktif_savaş"] = None
     save_dungeon(dungeon)
 
@@ -4158,7 +4244,7 @@ async def kaç(ctx):
         title="Kaçış Başarılı!",
         description=(
             f"{savaş['emoji']} **{savaş['isim']}** karşısından kaçtın!\n\n"
-            f"**1 kat** geri düştün. Mevcut kat: **{dungeon['mevcut_kat']}**\n\n"
+            f"Aynı kattan devam ediyorsun. Mevcut kat: **{dungeon['mevcut_kat']}**\n\n"
             f"Tekrar girmek için: `!gir`"
         ),
         color=discord.Color.light_grey(),
@@ -5994,6 +6080,7 @@ async def korsansıralama(ctx):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
