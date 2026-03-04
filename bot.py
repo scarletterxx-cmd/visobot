@@ -2666,7 +2666,7 @@ async def tarla(ctx):
         seviye_text = f"Seviye **{seviye}** (MAKSİMUM!)"
 
     # Gübre bilgisi
-    g��breler = farm.get("gübreler", {"normal": 0, "altın": 0, "elmas": 0})
+    gübreler = farm.get("gübreler", {"normal": 0, "altın": 0, "elmas": 0})
     gübre_text = ""
     for gubre_id, gubre in GÜBRELER.items():
         miktar = gübreler.get(gubre_id, 0)
@@ -7193,3 +7193,4 @@ async def bilmece_cevap(ctx, *, cevap: str = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
