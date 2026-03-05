@@ -3411,9 +3411,9 @@ EKİPMANLAR = {
 
     # ================= SCARLET SETİ EKİPMANLARI (ZİNDANA) =================
     # %0.001 düşme şansı - Oyundaki en nadir ekipmanlar
-    "scarlet_kılıcı": {"isim": "Scarlet Kılıcı", "emoji": "🩸", "tür": "silah", "saldırı": 250, "savunma": 60, "can": 200, "nadirlik": "Zindana", "fiyat": 999999},
-    "scarlet_zırhı": {"isim": "Scarlet Zırhı", "emoji": "🩸", "tür": "zırh", "saldırı": 80, "savunma": 300, "can": 500, "nadirlik": "Zindana", "fiyat": 999999},
-    "scarlet_yüzüğü": {"isim": "Scarlet Yüzüğü", "emoji": "🩸", "tür": "yüzük", "saldırı": 120, "savunma": 80, "can": 300, "nadirlik": "Zindana", "şans": 50, "fiyat": 999999},
+    "scarlet_kılıcı": {"isim": "Scarlet Kılıcı", "emoji": "🩸", "tür": "silah", "saldırı": 250, "savunma": 60, "can": 200, "nadirlik": "Zindana", "fiyat": 100000},
+    "scarlet_zırhı": {"isim": "Scarlet Zırhı", "emoji": "🩸", "tür": "zırh", "saldırı": 80, "savunma": 300, "can": 500, "nadirlik": "Zindana", "fiyat": 100000},
+    "scarlet_yüzüğü": {"isim": "Scarlet Yüzüğü", "emoji": "🩸", "tür": "yüzük", "saldırı": 120, "savunma": 80, "can": 300, "nadirlik": "Zindana", "şans": 50, "fiyat": 100000},
 }
 
 NADİRLİK_RENKLERİ = {
@@ -5069,7 +5069,7 @@ async def özel_saldırı(ctx):
             f"{'━' * 30}\n\n"
             f"**{savaş['emoji']} {savaş['isim']}**\n"
             f"Can: {can_bar_düşman} **{savaş['can']}/{savaş['maks_can']}**\n\n"
-            f"**{sınıf['emoji']} {ctx.author.display_name}**\n"
+            f"**{sın��f['emoji']} {ctx.author.display_name}**\n"
             f"Can: {can_bar_sen} **{dungeon['can']}/{statlar['can']}**{kalkan_text}\n"
             f"Mana: {mana_bar_sen} **{dungeon['mana']}/{MAKS_MANA}**{mana_hazır}\n\n"
             f"`!saldır` (+{sınıf['vuruş_mana_kazanç']}) | `!özel` (Mana dolunca) | `!iksir` | `!kaç`"
@@ -5789,19 +5789,19 @@ async def prestij_yap(ctx):
         visored_mesaj = "\n**VISORED ADASI AÇILDI!** `!bolgesec visored` ile yeni maceraya başla!\n"
 
     embed = discord.Embed(
-        title=f"PRESTİJ {sonraki_prestij}!",
+        title=f"PRESTIJ {sonraki_prestij}!",
         description=(
             f"{'━' * 30}\n\n"
             f"{prestij_bilgi['emoji']} **{prestij_bilgi['isim']}** oldun!\n\n"
-            f"**Kalıcı Bonuslar:**\n"
+            f"**Kalici Bonuslar:**\n"
             f"Saldırı: **+{prestij_bilgi['bonus_saldırı']}**\n"
             f"Can: **+{prestij_bilgi['bonus_can']}**\n"
             f"Altın: **+%{prestij_bilgi['bonus_altın']}**\n\n"
             f"**Ödül:** +{ödül:,} VisoCoin\n"
             f"{visored_mesaj}\n"
-            f"**Sıfırlanan:** Seviye, kat, ekipman, sınıf\n"
+            f"**Sifirlanan:** Seviye, kat, ekipman, sinif\n"
             f"**Korunan:** Prestij bonusları, istatistikler, en yüksek kat\n\n"
-            f"Yeni sınıf seçmek için: `!sınıfseç <sınıf>`"
+            f"Yeni sinif secmek icin: `!sınıfseç <sınıf>`"
         ),
         color=discord.Color.gold(),
         timestamp=datetime.now(timezone.utc)
@@ -5809,6 +5809,285 @@ async def prestij_yap(ctx):
     embed.set_thumbnail(url=ctx.author.display_avatar.url)
     embed.set_footer(text="Zindan Sistemi | Prestij")
     await ctx.send(embed=embed)
+
+
+@bot.command(name="indeks", aliases=["index", "ekipmanlar", "items"])
+async def indeks(ctx, kategori: str = None):
+    """Tüm ekipmanları, nadirlikleri ve set bonuslarını göster."""
+    
+    # Nadirlik sıralaması (en düşükten en yükseğe)
+    nadirlik_sırası = ["Yaygın", "Sıradan", "Nadir", "Epik", "Efsanevi", "Tanrısal", "Zindana"]
+    
+    # Nadirlik renkleri (Discord embed renkleri)
+    nadirlik_discord_renkleri = {
+        "Yaygın": 0x9e9e9e,      # Gri
+        "Sıradan": 0x4caf50,     # Yeşil
+        "Nadir": 0x2196f3,       # Mavi
+        "Epik": 0x9c27b0,        # Mor
+        "Efsanevi": 0xff9800,    # Turuncu
+        "Tanrısal": 0xf44336,    # Kırmızı
+        "Zindana": 0x000000,     # Siyah (gizemli)
+    }
+    
+    # Düşme şansları
+    düşme_şansları = {
+        "Yaygın": "%30",
+        "Sıradan": "%20",
+        "Nadir": "%10",
+        "Epik": "%5",
+        "Efsanevi": "%1",
+        "Tanrısal": "%0.1",
+        "Zindana": "%0.001",  # Götünüz tutuşsun
+    }
+    
+    if kategori is None:
+        # Ana menü - kategorileri göster
+        embed = discord.Embed(
+            title="📜 EKİPMAN İNDEKSİ",
+            description=(
+                "Zindan dünyasındaki tüm ekipmanları keşfet!\n\n"
+                "**Kategoriler:**\n"
+                "`!indeks nadirlik` - Nadirlik seviyelerini göster\n"
+                "`!indeks silahlar` - Tüm silahları göster\n"
+                "`!indeks zırhlar` - Tüm zırhları göster\n"
+                "`!indeks yüzükler` - Tüm yüzükleri göster\n"
+                "`!indeks setler` - Set bonuslarını göster\n"
+                "`!indeks zindana` - Zindana enderliğini göster\n\n"
+                f"**Toplam Ekipman:** {len(EKİPMANLAR)}\n"
+                f"**Toplam Set:** {len(SETLER)}"
+            ),
+            color=0xc9a44a,  # Altın rengi
+        )
+        embed.set_footer(text="Zindan Sistemi | Ekipman İndeksi")
+        return await ctx.send(embed=embed)
+    
+    kategori = kategori.lower()
+    
+    if kategori in ["nadirlik", "nadir", "rarity"]:
+        # Nadirlik tablosu
+        embed = discord.Embed(
+            title="💎 NADİRLİK SEVİYELERİ",
+            description="Her nadirlik seviyesinin düşme şansı ve özellikleri:\n\n",
+            color=0xc9a44a,
+        )
+        
+        for nadirlik in nadirlik_sırası:
+            emoji = NADİRLİK_RENKLERİ.get(nadirlik, "⬜")
+            şans = düşme_şansları.get(nadirlik, "?")
+            
+            # Her nadirlik için ekipman sayısı
+            ekipman_sayısı = len([e for e in EKİPMANLAR.values() if e.get("nadirlik") == nadirlik])
+            
+            if nadirlik == "Zindana":
+                embed.add_field(
+                    name=f"{emoji} {nadirlik} — ULTRA NADİR",
+                    value=f"Düşme: **{şans}** (1/100.000)\nEkipman: **{ekipman_sayısı}** adet\n*Efsanelerin bile göremediği...*",
+                    inline=False,
+                )
+            else:
+                embed.add_field(
+                    name=f"{emoji} {nadirlik}",
+                    value=f"Düşme: **{şans}**\nEkipman: **{ekipman_sayısı}** adet",
+                    inline=True,
+                )
+        
+        embed.set_footer(text="Zindan Sistemi | Nadirlik Tablosu")
+        return await ctx.send(embed=embed)
+    
+    elif kategori in ["silah", "silahlar", "weapons", "weapon"]:
+        # Silahlar listesi
+        silahlar = {k: v for k, v in EKİPMANLAR.items() if v.get("tür") == "silah"}
+        
+        # Nadirliğe göre grupla
+        embed = discord.Embed(
+            title="⚔️ SİLAH İNDEKSİ",
+            description=f"Toplam **{len(silahlar)}** silah bulundu.\n\n",
+            color=0xf44336,
+        )
+        
+        for nadirlik in nadirlik_sırası:
+            nadirlik_silahlar = [v for v in silahlar.values() if v.get("nadirlik") == nadirlik]
+            if nadirlik_silahlar:
+                emoji = NADİRLİK_RENKLERİ.get(nadirlik, "⬜")
+                silah_listesi = "\n".join([
+                    f"{s['emoji']} **{s['isim']}** — Saldırı: {s.get('saldırı', 0)} | Fiyat: {s.get('fiyat', 0):,}"
+                    for s in sorted(nadirlik_silahlar, key=lambda x: x.get('saldırı', 0), reverse=True)
+                ])
+                embed.add_field(
+                    name=f"{emoji} {nadirlik} Silahlar",
+                    value=silah_listesi[:1024],  # Discord limit
+                    inline=False,
+                )
+        
+        embed.set_footer(text="Zindan Sistemi | Silah İndeksi")
+        return await ctx.send(embed=embed)
+    
+    elif kategori in ["zırh", "zırhlar", "armor", "armors"]:
+        # Zırhlar listesi
+        zırhlar = {k: v for k, v in EKİPMANLAR.items() if v.get("tür") == "zırh"}
+        
+        embed = discord.Embed(
+            title="🛡️ ZIRH İNDEKSİ",
+            description=f"Toplam **{len(zırhlar)}** zırh bulundu.\n\n",
+            color=0x2196f3,
+        )
+        
+        for nadirlik in nadirlik_sırası:
+            nadirlik_zırhlar = [v for v in zırhlar.values() if v.get("nadirlik") == nadirlik]
+            if nadirlik_zırhlar:
+                emoji = NADİRLİK_RENKLERİ.get(nadirlik, "⬜")
+                zırh_listesi = "\n".join([
+                    f"{z['emoji']} **{z['isim']}** — Savunma: {z.get('savunma', 0)} | Can: {z.get('can', 0)}"
+                    for z in sorted(nadirlik_zırhlar, key=lambda x: x.get('savunma', 0), reverse=True)
+                ])
+                embed.add_field(
+                    name=f"{emoji} {nadirlik} Zırhlar",
+                    value=zırh_listesi[:1024],
+                    inline=False,
+                )
+        
+        embed.set_footer(text="Zindan Sistemi | Zırh İndeksi")
+        return await ctx.send(embed=embed)
+    
+    elif kategori in ["yüzük", "yüzükler", "ring", "rings"]:
+        # Yüzükler listesi
+        yüzükler = {k: v for k, v in EKİPMANLAR.items() if v.get("tür") == "yüzük"}
+        
+        embed = discord.Embed(
+            title="💍 YÜZÜK İNDEKSİ",
+            description=f"Toplam **{len(yüzükler)}** yüzük bulundu.\n\n",
+            color=0x9c27b0,
+        )
+        
+        for nadirlik in nadirlik_sırası:
+            nadirlik_yüzükler = [v for v in yüzükler.values() if v.get("nadirlik") == nadirlik]
+            if nadirlik_yüzükler:
+                emoji = NADİRLİK_RENKLERİ.get(nadirlik, "⬜")
+                yüzük_listesi = "\n".join([
+                    f"{y['emoji']} **{y['isim']}** — Saldırı: {y.get('saldırı', 0)} | Şans: +{y.get('şans', 0)}%"
+                    for y in sorted(nadirlik_yüzükler, key=lambda x: x.get('saldırı', 0), reverse=True)
+                ])
+                embed.add_field(
+                    name=f"{emoji} {nadirlik} Yüzükler",
+                    value=yüzük_listesi[:1024],
+                    inline=False,
+                )
+        
+        embed.set_footer(text="Zindan Sistemi | Yüzük İndeksi")
+        return await ctx.send(embed=embed)
+    
+    elif kategori in ["set", "setler", "sets"]:
+        # Set bonusları
+        embed = discord.Embed(
+            title="🎭 SET BONUSLARI",
+            description="3 parça tamamlandığında aktif olan özel güçler:\n\n",
+            color=0xff9800,
+        )
+        
+        for set_id, set_bilgi in SETLER.items():
+            parça_isimleri = []
+            for parça_id in set_bilgi["parçalar"]:
+                ekipman = EKİPMANLAR.get(parça_id)
+                if ekipman:
+                    parça_isimleri.append(f"{ekipman['emoji']} {ekipman['isim']}")
+            
+            bonus_açıklama = set_bilgi.get("pasif_açıklama", "Bilinmiyor")
+            
+            # Zindana seti için özel görünüm
+            if set_id == "scarlet":
+                embed.add_field(
+                    name=f"❓ {set_bilgi['emoji']} {set_bilgi['isim']} — ZİNDANA",
+                    value=(
+                        f"**Pasif:** {set_bilgi['pasif_isim']}\n"
+                        f"*{bonus_açıklama}*\n"
+                        f"**Parçalar:**\n" + "\n".join(parça_isimleri) + "\n"
+                        f"⚠️ *%0.001 düşme şansı — Efsanelerin bile göremediği set...*"
+                    ),
+                    inline=False,
+                )
+            else:
+                embed.add_field(
+                    name=f"{set_bilgi['emoji']} {set_bilgi['isim']}",
+                    value=(
+                        f"**Pasif:** {set_bilgi['pasif_isim']}\n"
+                        f"*{bonus_açıklama}*\n"
+                        f"**Parçalar:**\n" + "\n".join(parça_isimleri)
+                    ),
+                    inline=False,
+                )
+        
+        embed.set_footer(text="Zindan Sistemi | Set Bonusları")
+        return await ctx.send(embed=embed)
+    
+    elif kategori in ["zindana", "???", "scarlet"]:
+        # Zindana özel sayfası
+        zindana_ekipmanlar = [v for v in EKİPMANLAR.values() if v.get("nadirlik") == "Zindana"]
+        scarlet_set = SETLER.get("scarlet", {})
+        
+        embed = discord.Embed(
+            title="❓ ZİNDANA ENDERLİĞİ",
+            description=(
+                "```\n"
+                "░▒▓█ UYARI █▓▒░\n"
+                "```\n"
+                "**Düşme Şansı:** %0.001 (1/100.000)\n"
+                "*Bu ekipmanları görenler... bir daha göremez.*\n\n"
+                "━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+            ),
+            color=0x000000,  # Siyah
+        )
+        
+        # Zindana ekipmanlarını listele
+        for ekipman in zindana_ekipmanlar:
+            embed.add_field(
+                name=f"{ekipman['emoji']} {ekipman['isim']}",
+                value=(
+                    f"Tür: **{ekipman['tür'].capitalize()}**\n"
+                    f"Saldırı: **{ekipman.get('saldırı', 0)}**\n"
+                    f"Savunma: **{ekipman.get('savunma', 0)}**\n"
+                    f"Can: **{ekipman.get('can', 0)}**\n"
+                    f"Fiyat: **{ekipman.get('fiyat', 0):,}** VC"
+                ),
+                inline=True,
+            )
+        
+        # Scarlet set bonusu
+        if scarlet_set:
+            embed.add_field(
+                name=f"\n🩸 SCARLET SETİ — Kanlı İntikam",
+                value=(
+                    f"*{scarlet_set.get('pasif_açıklama', '')}*\n\n"
+                    f"**Bonus Detayları:**\n"
+                    f"• Tüm statlar **+%100**\n"
+                    f"• Hasarın **%50**'si kadar can çalma\n"
+                    f"• Her turda **%5** can yenilenme\n"
+                    f"• **3 kez** ölümden kurtulma\n"
+                    f"• Verilen hasar **2 katına** çıkar"
+                ),
+                inline=False,
+            )
+        
+        embed.add_field(
+            name="━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+            value="*\"Karanlığın derinliklerinde, kanla yazılmış bir efsane...\"*",
+            inline=False,
+        )
+        
+        embed.set_footer(text="Zindan Sistemi | Zindana Enderliği")
+        return await ctx.send(embed=embed)
+    
+    else:
+        # Bilinmeyen kategori
+        embed = discord.Embed(
+            title="❌ Geçersiz Kategori",
+            description=(
+                "Geçerli kategoriler:\n"
+                "`nadirlik`, `silahlar`, `zırhlar`, `yüzükler`, `setler`, `zindana`\n\n"
+                "Örnek: `!indeks silahlar`"
+            ),
+            color=0xf44336,
+        )
+        return await ctx.send(embed=embed)
 
 # ================= GEMİ TİPLERİ =================
 
