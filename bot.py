@@ -3228,6 +3228,7 @@ async def gübresat(ctx, gübre_türü: str = None, adet: int = 1):
     )
     await ctx.send(embed=embed)
 
+
 # ================= SINIF TANIMLARI =================
 
 SINIFLAR = {
@@ -5419,8 +5420,7 @@ async def envanter(ctx, sayfa: int = 1):
     
     # Her kategori icin field ekle (1024 karakter limitini asma)
     for kategori, eşyalar in sayfa_gruplu.items():
-        if len(eşyalar) == 1:
-            field_text = "\n".join(eşyalar)
+        field_text = "\n".join(eşyalar)
         if len(field_text) > 1020:
             # Çok uzunsa böl
             parçalar = []
@@ -5703,7 +5703,6 @@ async def prestij_yap(ctx):
     embed.set_thumbnail(url=ctx.author.display_avatar.url)
     embed.set_footer(text="Zindan Sistemi | Prestij")
     await ctx.send(embed=embed)
-
 
 # ================= GEMİ TİPLERİ =================
 
@@ -8130,6 +8129,7 @@ async def bilmece_cevap(ctx, *, cevap: str = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
