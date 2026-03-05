@@ -4845,16 +4845,16 @@ async def mana_iksiri_satın_al(ctx, adet: int = 1):
 
 # ================= BOLGE KOMUTLARI =================
 
-@bot.command(name="bolgeler", aliases=["regions", "adalar", "bolge"])
-async def bolgeler(ctx):
-    """Mevcut bolgeleri goster."""
+@bot.command(name="bölgeler", aliases=["bölge"])
+async def bölgeler(ctx):
+    """Mevcut bölgeleri goster."""
     user_id = ctx.author.id
     dungeon = get_dungeon(user_id)
     prestij = dungeon.get("prestiж", 0)
 
     embed = discord.Embed(
         title="Bolgeler",
-        description="Macera bolgeleri ve gereksinimleri:",
+        description="Macera bölgeleri ve gereksinimleri:",
         color=discord.Color.teal(),
         timestamp=datetime.now(timezone.utc)
     )
@@ -4908,7 +4908,7 @@ async def bolge_sec(ctx, bolge_id: str = None):
     
     if bolge_id not in BOLGELER:
         return await ctx.send(embed=discord.Embed(
-            description=f"Gecersiz bolge! Mevcut bolgeler: {', '.join(BOLGELER.keys())}",
+            description=f"Gecersiz bolge! Mevcut bölgeler: {', '.join(BOLGELER.keys())}",
             color=discord.Color.red()
         ))
 
@@ -6065,7 +6065,7 @@ async def gemial(ctx, gemi_id: str = None):
     await ctx.send(embed=embed)
 
 
-@bot.command(name="bölgeler", aliases=["regions", "denizler", "harita"])
+@bot.command(name="denizler", aliases=["regions", "denizler", "harita"])
 async def bölgeler(ctx):
     """Sefere çıkılabilecek bölgeleri listele."""
     pirate = get_pirate(ctx.author.id)
@@ -6108,7 +6108,7 @@ async def sefer(ctx, bölge_id: str = None):
 
     if bölge_id is None:
         embed = discord.Embed(
-            description="Kullanım: `!sefer <bölge>`\nBölgeleri görmek için: `!bölgeler`",
+            description="Kullanım: `!sefer <bölge>`\nBölgeleri görmek için: `!denizler`",
             color=discord.Color.blue()
         )
         return await ctx.send(embed=embed)
@@ -6116,7 +6116,7 @@ async def sefer(ctx, bölge_id: str = None):
     bölge_id = bölge_id.lower().strip()
 
     if bölge_id not in BÖLGELER:
-        embed = discord.Embed(description="Böyle bir bölge yok! `!bölgeler` ile haritaya bak.", color=discord.Color.red())
+        embed = discord.Embed(description="Böyle bir bölge yok! `!denizler` ile haritaya bak.", color=discord.Color.red())
         return await ctx.send(embed=embed)
 
     pirate = get_pirate(user_id)
@@ -7781,6 +7781,7 @@ async def bilmece_cevap(ctx, *, cevap: str = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
