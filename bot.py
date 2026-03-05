@@ -3229,6 +3229,7 @@ async def gübresat(ctx, gübre_türü: str = None, adet: int = 1):
     await ctx.send(embed=embed)
 
 
+
 # ================= SINIF TANIMLARI =================
 
 SINIFLAR = {
@@ -4476,6 +4477,22 @@ async def zsaldır(ctx):
     else:
         savaş_log += f"{sınıf['emoji']} **{hasar}** hasar verdin.\n"
 
+    # Zehir efekti kontrolu (Okcu)
+    zehir = dungeon.get("zehir_efekti")
+    if zehir and zehir["tur"] > 0:
+        zehir_hasar = zehir["hasar"]
+        savaş["can"] = max(0, savaş["can"] - zehir_hasar)
+        zehir["tur"] -= 1
+        dungeon["zehir_efekti"] = zehir if zehir["tur"] > 0 else None
+        savaş_log += f"☠️ **ZEHİR!** Düşman **{zehir_hasar}** hasar aldı! ({zehir['tur']} tur kaldı)\n"
+
+    # Kalkan Duvarı kontrolu (Sovalye)
+    kalkan_duvarı = dungeon.get("kalkan_duvarı", 0)
+    if kalkan_duvarı > 0:
+        dungeon["kalkan_duvarı"] = kalkan_duvarı - 1
+        if dungeon["kalkan_duvarı"] > 0:
+            savaş_log += f"🛡️ **Kalkan Duvarı** aktif! ({dungeon['kalkan_duvarı']} tur kaldı)\n"
+
     # Set pasiflerini uygula
     aktif_setler = statlar.get("aktif_setler", [])
     ekstra_hasar = 0
@@ -4564,6 +4581,8 @@ async def zsaldır(ctx):
                     dungeon["envanter"].append({"id": düşen_id, "eşya_tipi": loot_tipi})
 
         dungeon["aktif_savaş"] = None
+        dungeon["zehir_efekti"] = None  # Zehir sıfırlanır
+        dungeon["kalkan_duvarı"] = 0  # Kalkan duvarı sıfırlanır
         save_dungeon(dungeon)
 
         # Zafer embed
@@ -4618,7 +4637,12 @@ async def zsaldır(ctx):
             savaş_log += f"**KAÇINDIN!** {sınıf['emoji']} {savaş['emoji']} saldırısından kaçındın!\n"
 
     if not kaçındı:
-        düşman_hasar, düşman_kritik = hasar_hesapla(savaş["saldırı"], statlar["savunma"], 8)
+        # Kalkan Duvarı aktifse savunma 2 katı
+        etkili_savunma = statlar["savunma"]
+        if dungeon.get("kalkan_duvarı", 0) > 0:
+            etkili_savunma = statlar["savunma"] * 2
+        
+        düşman_hasar, düşman_kritik = hasar_hesapla(savaş["saldırı"], etkili_savunma, 8)
 
         # Kalkan sistemi ile hasar al
         can_hasarı, kalkan_hasarı, kalan_kalkan = hasar_al(dungeon, düşman_hasar)
@@ -4720,6 +4744,8 @@ async def zsaldır(ctx):
         dungeon["can"] = statlar["can"]  # Canı yenile
         dungeon["mana"] = 0  # Mana sıfırlanır (ölümde)
         dungeon["kalkan"] = 0  # Kalkan sıfırlanır
+        dungeon["zehir_efekti"] = None  # Zehir sıfırlanır
+        dungeon["kalkan_duvarı"] = 0  # Kalkan duvarı sıfırlanır
         dungeon["aktif_savaş"] = None
         save_dungeon(dungeon)
 
@@ -4758,20 +4784,34 @@ async def zsaldır(ctx):
 
     # Kalkan bilgisi
     kalkan_text = f" 🛡️ +{kalkan}" if kalkan > 0 else ""
+    
+    # Aktif efektler
+    efekt_text = ""
+    zehir = dungeon.get("zehir_efekti")
+    if zehir and zehir["tur"] > 0:
+        efekt_text += f"☠️ Zehir ({zehir['hasar']}/tur, {zehir['tur']} tur)\n"
+    if dungeon.get("kalkan_duvarı", 0) > 0:
+        efekt_text += f"🛡️ Kalkan Duvarı ({dungeon['kalkan_duvarı']} tur)\n"
+    
+    # Düşman durumu (zehirli mi)
+    düşman_durum = ""
+    if zehir and zehir["tur"] > 0:
+        düşman_durum = " ☠️"
 
     embed = discord.Embed(
-        title=f"Kat {savaş['kat']} — Savaş Devam Ediyor",
+        title=f"Kat {savaş['kat']} — Savas Devam Ediyor",
         description=(
             f"{savaş_log}\n"
             f"{'━' * 30}\n\n"
-            f"**{savaş['emoji']} {savaş['isim']}**\n"
+            f"**{savaş['emoji']} {savaş['isim']}**{düşman_durum}\n"
             f"Can: {can_bar_düşman} **{savaş['can']}/{savaş['maks_can']}**\n\n"
             f"**{sınıf['emoji']} {ctx.author.display_name}**\n"
             f"Can: {can_bar_sen} **{dungeon['can']}/{statlar['can']}**{kalkan_text}\n"
-            f"Mana: {mana_bar_sen} **{dungeon['mana']}/{MAKS_MANA}**{mana_hazır}\n\n"
-            f"`!saldır` (+{sınıf['vuruş_mana_kazanç']}) | `!özel` (Mana dolunca) | `!iksir` | `!kaç`"
+            f"Mana: {mana_bar_sen} **{dungeon['mana']}/{MAKS_MANA}**{mana_hazır}\n"
+            + (f"\n**Aktif Efektler:**\n{efekt_text}" if efekt_text else "") +
+            f"\n`!saldır` (+{sınıf['vuruş_mana_kazanç']}) | `!özel` (Mana dolunca) | `!iksir` | `!kaç`"
         ),
-        color=discord.Color.orange(),
+        color=discord.Color.gold() if efekt_text else discord.Color.orange(),
         timestamp=datetime.now(timezone.utc)
     )
     embed.set_footer(text=f"Zindan Sistemi | Kat {savaş['kat']}")
@@ -4805,15 +4845,57 @@ async def özel_saldırı(ctx):
     dungeon["mana"] = 0
     savaş_log = f"⚡ *Mana harcandı (100 → 0)*\n"
 
-    # Şövalye kalkan modu
+    # Şövalye - Kalkan Duvarı: 2 tur boyunca savunma 2 katı
     if dungeon["sınıf"] == "şövalye":
-        # Düşman saldırır ama hasar %50 azalır
+        dungeon["kalkan_duvarı"] = 2  # 2 tur boyunca aktif
+        savaş_log += f"\n{'━' * 25}\n"
+        savaş_log += f"🛡️ **{sınıf['özel_yetenek']} AKTİF!**\n"
+        savaş_log += f"┌─────────────────────┐\n"
+        savaş_log += f"│  SAVUNMA x2 (2 TUR)  │\n"
+        savaş_log += f"└─────────────────────┘\n"
+        savaş_log += f"{'━' * 25}\n\n"
+        
+        # Düşman saldırır ama savunma 2 katı
         düşman_hasar, _ = hasar_hesapla(savaş["saldırı"], int(statlar["savunma"] * 2), 5)
-        savaş_log += f"🛡️ **{sınıf['özel_yetenek']}** aktif! Savunma 2 katına çıktı!\n"
-        savaş_log += f"{savaş['emoji']} sadece **{düşman_hasar}** hasar verebildi.\n"
+        savaş_log += f"{savaş['emoji']} **{düşman_hasar}** hasar vermeye calisti!\n"
         can_hasarı, kalkan_hasarı, _ = hasar_al(dungeon, düşman_hasar)
         if kalkan_hasarı > 0:
-            savaş_log += f"(🛡️ -{kalkan_hasarı} kalkan absorbe etti)\n"
+            savaş_log += f"   (Kalkan -{kalkan_hasarı} absorbe etti)\n"
+    
+    # Okcu - Zehirli Ok: 3 tur boyunca zehir hasari
+    elif dungeon["sınıf"] == "okçu":
+        zehir_hasar = int(statlar["saldırı"] * 0.4)  # Her tur saldirinin %40'i
+        dungeon["zehir_efekti"] = {"tur": 3, "hasar": zehir_hasar}
+        
+        # Ilk ok hasari
+        güçlü_saldırı = int(statlar["saldırı"] * sınıf["özel_çarpan"])
+        hasar, kritik = hasar_hesapla(güçlü_saldırı, savaş["savunma"], statlar["şans"] + 15)
+        savaş["can"] = max(0, savaş["can"] - hasar)
+        
+        savaş_log += f"\n{'━' * 25}\n"
+        savaş_log += f"🏹 **{sınıf['özel_yetenek']} FIRLATTI!**\n"
+        savaş_log += f"┌─────────────────────┐\n"
+        if kritik:
+            savaş_log += f"│ KRİTİK! {hasar} hasar!   │\n"
+        else:
+            savaş_log += f"│   {hasar} hasar verdin!  │\n"
+        savaş_log += f"│ ☠️ ZEHİR: {zehir_hasar}/tur (3 tur) │\n"
+        savaş_log += f"└─────────────────────┘\n"
+        savaş_log += f"{'━' * 25}\n\n"
+        
+        # Canavar karşı saldırı
+        düşman_hasar, düşman_kritik = hasar_hesapla(savaş["saldırı"], statlar["savunma"], 8)
+        can_hasarı, kalkan_hasarı, _ = hasar_al(dungeon, düşman_hasar)
+        
+        if düşman_kritik:
+            savaş_log += f"**KRİTİK!** {savaş['emoji']} **{düşman_hasar}** hasar verdi!"
+        else:
+            savaş_log += f"{savaş['emoji']} **{düşman_hasar}** hasar verdi."
+        
+        if kalkan_hasarı > 0:
+            savaş_log += f" (Kalkan -{kalkan_hasarı})\n"
+        else:
+            savaş_log += "\n"
     # Doktor - Acil Müdahale: Can fullenir + %25 kalkan
     elif dungeon["sınıf"] == "doktor":
         eski_can = dungeon["can"]
@@ -5679,7 +5761,7 @@ async def prestij_yap(ctx):
 
     # Prestij 5 ise Visored Adası açıldı mesajı
     visored_mesaj = ""
-    if sonraki_prestij >= 5:
+    if sonraki_prestij == 5:
         visored_mesaj = "\n**VISORED ADASI AÇILDI!** `!bolgesec visored` ile yeni maceraya başla!\n"
 
     embed = discord.Embed(
@@ -5703,6 +5785,7 @@ async def prestij_yap(ctx):
     embed.set_thumbnail(url=ctx.author.display_avatar.url)
     embed.set_footer(text="Zindan Sistemi | Prestij")
     await ctx.send(embed=embed)
+
 
 # ================= GEMİ TİPLERİ =================
 
@@ -8129,6 +8212,7 @@ async def bilmece_cevap(ctx, *, cevap: str = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
