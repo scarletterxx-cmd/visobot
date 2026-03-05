@@ -3230,6 +3230,7 @@ async def gübresat(ctx, gübre_türü: str = None, adet: int = 1):
 
 
 
+
 # ================= SINIF TANIMLARI =================
 
 SINIFLAR = {
@@ -4527,9 +4528,9 @@ async def zsaldır(ctx):
         dungeon["can"] = min(dungeon["can"] + can_çalma, statlar["can"])
         savaş_log += f"🧛 **Can Çaldın!** +**{can_çalma}** can!\n"
     
-    # Toplam hasarı uygula
+    # Toplam hasarı uygula (ana hasar + ekstra hasar)
     toplam_hasar = hasar + ekstra_hasar
-    savaş["can"] = max(0, savaş["can"] - ekstra_hasar)  # Ekstra hasar zaten ana hasar uygulandı
+    savaş["can"] = max(0, savaş["can"] - toplam_hasar)
 
     # Canavar öldü mü?
     if savaş["can"] <= 0:
@@ -5761,7 +5762,7 @@ async def prestij_yap(ctx):
 
     # Prestij 5 ise Visored Adası açıldı mesajı
     visored_mesaj = ""
-    if sonraki_prestij == 5:
+    if sonraki_prestij >= 5:
         visored_mesaj = "\n**VISORED ADASI AÇILDI!** `!bolgesec visored` ile yeni maceraya başla!\n"
 
     embed = discord.Embed(
@@ -8212,6 +8213,7 @@ async def bilmece_cevap(ctx, *, cevap: str = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
