@@ -3239,11 +3239,14 @@ SINIFLAR = {
         "emoji": "⚔️",
         "açıklama": "Yüksek saldırı ve dayanıklılık. Yakın dövüş uzmanı.",
         "temel_can": 120,
+        "temel_mana": 50,
         "temel_saldırı": 18,
         "temel_savunma": 14,
         "temel_şans": 5,
+        "saldırı_mana": 5,  # Normal saldırı mana maliyeti
         "özel_yetenek": "Öfke Darbesi",
-        "özel_açıklama": "Saldırı gücünü %50 artırarak tek vuruş yapar.",
+        "özel_açıklama": "Saldırı gücünü %50 artırarak tek vuruş yapar. (25 Mana)",
+        "özel_mana": 25,  # Özel yetenek mana maliyeti
         "özel_çarpan": 1.5,
     },
     "büyücü": {
@@ -3251,11 +3254,14 @@ SINIFLAR = {
         "emoji": "🧙",
         "açıklama": "Güçlü büyüler ve kritik hasar. Düşük dayanıklılık.",
         "temel_can": 80,
+        "temel_mana": 120,
         "temel_saldırı": 25,
         "temel_savunma": 8,
         "temel_şans": 12,
+        "saldırı_mana": 8,  # Normal saldırı mana maliyeti
         "özel_yetenek": "Ateş Topu",
-        "özel_açıklama": "Düşmana %80 ekstra hasar veren büyü fırlatır.",
+        "özel_açıklama": "Düşmana %80 ekstra hasar veren büyü fırlatır. (40 Mana)",
+        "özel_mana": 40,  # Özel yetenek mana maliyeti
         "özel_çarpan": 1.8,
     },
     "okçu": {
@@ -3263,11 +3269,14 @@ SINIFLAR = {
         "emoji": "🏹",
         "açıklama": "Dengeli saldırı, yüksek kritik şansı. Uzak mesafe.",
         "temel_can": 95,
+        "temel_mana": 70,
         "temel_saldırı": 20,
         "temel_savunma": 10,
         "temel_şans": 18,
+        "saldırı_mana": 6,  # Normal saldırı mana maliyeti
         "özel_yetenek": "Zehirli Ok",
-        "özel_açıklama": "3 tur boyunca her tur ekstra hasar verir.",
+        "özel_açıklama": "3 tur boyunca her tur ekstra hasar verir. (30 Mana)",
+        "özel_mana": 30,  # Özel yetenek mana maliyeti
         "özel_çarpan": 1.3,
     },
     "şövalye": {
@@ -3275,11 +3284,14 @@ SINIFLAR = {
         "emoji": "🛡️",
         "açıklama": "En yüksek savunma ve can. Tank sınıfı.",
         "temel_can": 150,
+        "temel_mana": 40,
         "temel_saldırı": 14,
         "temel_savunma": 22,
         "temel_şans": 3,
+        "saldırı_mana": 4,  # Normal saldırı mana maliyeti
         "özel_yetenek": "Kalkan Duvarı",
-        "özel_açıklama": "Savunmayı 2 katına çıkararak 2 tur boyunca hasar azaltır.",
+        "özel_açıklama": "Savunmayı 2 katına çıkararak 2 tur boyunca hasar azaltır. (20 Mana)",
+        "özel_mana": 20,  # Özel yetenek mana maliyeti
         "özel_çarpan": 0.5,  # hasar çarpanı (savunma modu)
     },
     "suikastçi": {
@@ -3287,11 +3299,14 @@ SINIFLAR = {
         "emoji": "🗡️",
         "açıklama": "Gölgelerde hareket eden, düşmana ıskalattırma şansı veren sınıf.",
         "temel_can": 85,
+        "temel_mana": 80,
         "temel_saldırı": 22,
         "temel_savunma": 9,
         "temel_şans": 20,
+        "saldırı_mana": 7,  # Normal saldırı mana maliyeti
         "özel_yetenek": "Gölge Adımı",
-        "özel_açıklama": "3 tur boyunca %25 kaçınma şansı kazanır.",
+        "özel_açıklama": "3 tur boyunca %25 kaçınma şansı kazanır. (35 Mana)",
+        "özel_mana": 35,  # Özel yetenek mana maliyeti
         "özel_çarpan": 1.4,
         "kaçınma": 10,  # Pasif kaçınma şansı (%)
     },
@@ -3300,11 +3315,14 @@ SINIFLAR = {
         "emoji": "💉",
         "açıklama": "Şifa uzmanı. Kendini iyileştirebilir ve saldırıya devam edebilir.",
         "temel_can": 100,
+        "temel_mana": 90,
         "temel_saldırı": 15,
         "temel_savunma": 12,
         "temel_şans": 8,
+        "saldırı_mana": 6,  # Normal saldırı mana maliyeti
         "özel_yetenek": "Acil Müdahale",
-        "özel_açıklama": "Maksimum canının %40'ı kadar iyileşir ve hasar verir.",
+        "özel_açıklama": "Maksimum canının %40'ı kadar iyileşir ve hasar verir. (35 Mana)",
+        "özel_mana": 35,  # Özel yetenek mana maliyeti
         "özel_çarpan": 1.0,
         "iyileşme": 40,  # Maks canın yüzdesi olarak iyileşme
     },
@@ -3367,6 +3385,36 @@ EKİPMANLAR = {
     "sonsuzluk_yüzüğü": {"isim": "Sonsuzluk Yüzüğü", "emoji": "♾️", "tür": "yüzük", "saldırı": 35, "savunma": 25, "can": 80, "nadirlik": "Tanrısal", "şans": 30, "fiyat": 10000},
     "kader_yüzüğü": {"isim": "Kader Yüzüğü", "emoji": "🌟", "tür": "yüzük", "saldırı": 40, "savunma": 30, "can": 100, "nadirlik": "Tanrısal", "şans": 35, "fiyat": 15000},
     "koruma_yüzüğü": {"isim": "Koruma Yüzüğü", "emoji": "🛡️", "tür": "yüzük", "saldırı": 0, "savunma": 15, "can": 35, "nadirlik": "Nadir", "şans": 5, "fiyat": 3500},
+
+    # ================= VISORED ADASI EKİPMANLARI =================
+    # Silahlar
+    "okyanus_kılıcı": {"isim": "Okyanus Kılıcı", "emoji": "🌊", "tür": "silah", "saldırı": 45, "savunma": 8, "can": 20, "nadirlik": "Epik", "fiyat": 12000},
+    "sirena_asası": {"isim": "Sirena Asası", "emoji": "🧜", "tür": "silah", "saldırı": 55, "savunma": 5, "can": 15, "nadirlik": "Efsanevi", "fiyat": 18000},
+    "fırtına_baltası": {"isim": "Fırtına Baltası", "emoji": "⛈️", "tür": "silah", "saldırı": 65, "savunma": 10, "can": 30, "nadirlik": "Efsanevi", "fiyat": 25000},
+    "kraken_mızrağı": {"isim": "Kraken Mızrağı", "emoji": "🦑", "tür": "silah", "saldırı": 80, "savunma": 15, "can": 40, "nadirlik": "Tanrısal", "fiyat": 40000},
+    "poseidon_mızrağı": {"isim": "Poseidon Mızrağı", "emoji": "🔱", "tür": "silah", "saldırı": 100, "savunma": 25, "can": 60, "nadirlik": "Tanrısal", "fiyat": 60000},
+    "visored_kılıcı": {"isim": "Visored Kılıcı", "emoji": "💀", "tür": "silah", "saldırı": 130, "savunma": 35, "can": 100, "nadirlik": "Tanrısal", "fiyat": 100000},
+    "mercan_kılıcı": {"isim": "Mercan Kılıcı", "emoji": "🪸", "tür": "silah", "saldırı": 35, "savunma": 5, "can": 15, "nadirlik": "Nadir", "fiyat": 8000},
+    "köpekbalığı_dişi": {"isim": "Köpekbalığı Dişi", "emoji": "🦈", "tür": "silah", "saldırı": 50, "savunma": 0, "can": 10, "nadirlik": "Epik", "fiyat": 14000},
+
+    # Zırhlar
+    "korsan_zırhı": {"isim": "Korsan Zırhı", "emoji": "🏴‍☠️", "tür": "zırh", "saldırı": 8, "savunma": 40, "can": 60, "nadirlik": "Epik", "fiyat": 12000},
+    "inci_zırhı": {"isim": "İnci Zırhı", "emoji": "🦪", "tür": "zırh", "saldırı": 10, "savunma": 55, "can": 80, "nadirlik": "Efsanevi", "fiyat": 20000},
+    "şimşek_zırhı": {"isim": "Şimşek Zırhı", "emoji": "⚡", "tür": "zırh", "saldırı": 15, "savunma": 70, "can": 100, "nadirlik": "Efsanevi", "fiyat": 28000},
+    "kraken_zırhı": {"isim": "Kraken Zırhı", "emoji": "🦑", "tür": "zırh", "saldırı": 25, "savunma": 90, "can": 150, "nadirlik": "Tanrısal", "fiyat": 45000},
+    "tanrı_zırhı": {"isim": "Deniz Tanrısı Zırhı", "emoji": "🔱", "tür": "zırh", "saldırı": 35, "savunma": 120, "can": 200, "nadirlik": "Tanrısal", "fiyat": 70000},
+    "visored_zırhı": {"isim": "Visored Zırhı", "emoji": "💀", "tür": "zırh", "saldırı": 50, "savunma": 150, "can": 300, "nadirlik": "Tanrısal", "fiyat": 120000},
+    "denizci_zırhı": {"isim": "Denizci Zırhı", "emoji": "⚓", "tür": "zırh", "saldırı": 5, "savunma": 30, "can": 45, "nadirlik": "Nadir", "fiyat": 7000},
+    "kabuk_zırhı": {"isim": "Kabuk Zırhı", "emoji": "🐚", "tür": "zırh", "saldırı": 3, "savunma": 25, "can": 35, "nadirlik": "Sıradan", "fiyat": 4000},
+
+    # Yüzükler
+    "deniz_yüzüğü": {"isim": "Deniz Yüzüğü", "emoji": "🌊", "tür": "yüzük", "saldırı": 12, "savunma": 8, "can": 25, "nadirlik": "Epik", "şans": 12, "fiyat": 10000},
+    "büyülü_deniz_yüzüğü": {"isim": "Büyülü Deniz Yüzüğü", "emoji": "✨", "tür": "yüzük", "saldırı": 20, "savunma": 15, "can": 45, "nadirlik": "Efsanevi", "şans": 18, "fiyat": 18000},
+    "fırtına_yüzüğü": {"isim": "Fırtına Yüzüğü", "emoji": "⛈️", "tür": "yüzük", "saldırı": 28, "savunma": 18, "can": 60, "nadirlik": "Efsanevi", "şans": 22, "fiyat": 25000},
+    "kraken_yüzüğü": {"isim": "Kraken Yüzüğü", "emoji": "🦑", "tür": "yüzük", "saldırı": 40, "savunma": 25, "can": 80, "nadirlik": "Tanrısal", "şans": 28, "fiyat": 40000},
+    "deniz_tanrısı_yüzüğü": {"isim": "Deniz Tanrısı Yüzüğü", "emoji": "🔱", "tür": "yüzük", "saldırı": 55, "savunma": 35, "can": 120, "nadirlik": "Tanrısal", "şans": 35, "fiyat": 65000},
+    "visored_yüzüğü": {"isim": "Visored Yüzüğü", "emoji": "💀", "tür": "yüzük", "saldırı": 75, "savunma": 50, "can": 180, "nadirlik": "Tanrısal", "şans": 45, "fiyat": 110000},
+    "mercan_yüzüğü": {"isim": "Mercan Yüzüğü", "emoji": "🪸", "tür": "yüzük", "saldırı": 8, "savunma": 6, "can": 18, "nadirlik": "Nadir", "şans": 8, "fiyat": 6000},
 }
 
 NADİRLİK_RENKLERİ = {
@@ -3430,6 +3478,58 @@ PRESTİJ_GEREKSİNİMLERİ = {
     3: {"kat": 50, "boss": 10, "seviye": 20},
     4: {"kat": 75, "boss": 15, "seviye": 25},
     5: {"kat": 100, "boss": 20, "seviye": 30},
+}
+
+
+# ================= BOLGE SİSTEMİ =================
+
+BOLGELER = {
+    "zindan": {
+        "isim": "Karanlık Zindan",
+        "emoji": "🏰",
+        "açıklama": "Klasik zindan macerası. Tüm maceracılar için açık.",
+        "gerekli_prestij": 0,
+    },
+    "visored": {
+        "isim": "Visored Adası",
+        "emoji": "🏝️",
+        "açıklama": "Gizemli ada. Tehlikeli yaratıklar ve efsanevi hazineler barındırır.",
+        "gerekli_prestij": 5,
+    },
+}
+
+# ================= VISORED ADASI CANAVAR TANIMLARI =================
+
+VISORED_CANAVARLAR = {
+    # Kat 1-5: Orta-Zor (Zindan 10-15 seviyesi gibi)
+    "ada_yengeci": {"isim": "Dev Yengeç", "emoji": "🦀", "can": 150, "saldırı": 25, "savunma": 20, "xp": 45, "altın_min": 80, "altın_max": 200, "kat_min": 1, "kat_max": 5},
+    "deniz_yılanı": {"isim": "Deniz Yılanı", "emoji": "🐍", "can": 180, "saldırı": 35, "savunma": 15, "xp": 55, "altın_min": 100, "altın_max": 250, "kat_min": 1, "kat_max": 8},
+    "hayalet_korsan": {"isim": "Hayalet Korsan", "emoji": "👻", "can": 200, "saldırı": 30, "savunma": 18, "xp": 60, "altın_min": 120, "altın_max": 300, "kat_min": 3, "kat_max": 10},
+
+    # Kat 5-15: Zor
+    "sirena": {"isim": "Karanlık Sirena", "emoji": "🧜", "can": 280, "saldırı": 45, "savunma": 22, "xp": 85, "altın_min": 180, "altın_max": 450, "kat_min": 5, "kat_max": 15},
+    "kraken_yavrusu": {"isim": "Kraken Yavrusu", "emoji": "🐙", "can": 350, "saldırı": 50, "savunma": 28, "xp": 100, "altın_min": 220, "altın_max": 550, "kat_min": 8, "kat_max": 18},
+    "dev_köpekbalığı": {"isim": "Megalodon", "emoji": "🦈", "can": 400, "saldırı": 55, "savunma": 25, "xp": 120, "altın_min": 280, "altın_max": 700, "kat_min": 10, "kat_max": 20},
+
+    # Kat 15-30: Cok Zor
+    "fırtına_elementi": {"isim": "Fırtına Elementi", "emoji": "🌪️", "can": 500, "saldırı": 70, "savunma": 35, "xp": 160, "altın_min": 400, "altın_max": 1000, "kat_min": 15, "kat_max": 30},
+    "deniz_canavarı": {"isim": "Leviathan", "emoji": "🐋", "can": 650, "saldırı": 80, "savunma": 40, "xp": 200, "altın_min": 500, "altın_max": 1200, "kat_min": 18, "kat_max": 35},
+    "lanetli_kaptan": {"isim": "Lanetli Kaptan", "emoji": "☠️", "can": 550, "saldırı": 90, "savunma": 30, "xp": 220, "altın_min": 600, "altın_max": 1500, "kat_min": 20, "kat_max": 40},
+
+    # Kat 30+: Efsanevi
+    "deniz_tanrısı": {"isim": "Poseidon'un Gazabı", "emoji": "🔱", "can": 900, "saldırı": 110, "savunma": 50, "xp": 350, "altın_min": 1000, "altın_max": 2500, "kat_min": 30, "kat_max": 50},
+    "kraken": {"isim": "Antik Kraken", "emoji": "🦑", "can": 1200, "saldırı": 130, "savunma": 60, "xp": 450, "altın_min": 1500, "altın_max": 4000, "kat_min": 35, "kat_max": 50},
+}
+
+# ================= VISORED ADASI BOSS TANIMLARI =================
+
+VISORED_BOSSLAR = {
+    5: {"isim": "Korsan Kralı", "emoji": "🏴‍☠️", "can": 600, "saldırı": 50, "savunma": 30, "xp": 300, "altın_min": 800, "altın_max": 2000, "loot": ["okyanus_kılıcı", "korsan_zırhı", "deniz_yüzüğü"]},
+    10: {"isim": "Sirena Kraliçesi", "emoji": "👑", "can": 1000, "saldırı": 70, "savunma": 40, "xp": 500, "altın_min": 1500, "altın_max": 4000, "loot": ["sirena_asası", "inci_zırhı", "büyülü_deniz_yüzüğü"]},
+    15: {"isim": "Fırtına Lordu", "emoji": "⛈️", "can": 1500, "saldırı": 90, "savunma": 50, "xp": 750, "altın_min": 2500, "altın_max": 6000, "loot": ["fırtına_baltası", "şimşek_zırhı", "fırtına_yüzüğü"]},
+    20: {"isim": "Kraken Efendisi", "emoji": "🦑", "can": 2200, "saldırı": 120, "savunma": 65, "xp": 1200, "altın_min": 4000, "altın_max": 10000, "loot": ["kraken_mızrağı", "kraken_zırhı", "kraken_yüzüğü"]},
+    30: {"isim": "Deniz Tanrısı", "emoji": "🔱", "can": 4000, "saldırı": 160, "savunma": 85, "xp": 2500, "altın_min": 10000, "altın_max": 25000, "loot": ["poseidon_mızrağı", "tanrı_zırhı", "deniz_tanrısı_yüzüğü"]},
+    50: {"isim": "Visored'in Ruhu", "emoji": "💀", "can": 8000, "saldırı": 220, "savunma": 110, "xp": 5000, "altın_min": 25000, "altın_max": 60000, "loot": ["visored_kılıcı", "visored_zırhı", "visored_yüzüğü"]},
 }
 
 
@@ -3508,27 +3608,106 @@ LOOT_TABLOSU = {
     ],
 }
 
+# ================= VISORED ADASI LOOT TABLOSU =================
 
-def get_loot_zorluk(kat):
-    """Kata göre loot zorluk seviyesi."""
-    if kat <= 5:
-        return "kolay"
-    elif kat <= 12:
-        return "orta"
-    elif kat <= 25:
-        return "zor"
-    elif kat <= 40:
-        return "çok_zor"
-    elif kat <= 60:
-        return "efsanevi"
+VISORED_LOOT_TABLOSU = {
+    "kolay": [  # Kat 1-5
+        {"eşya": "mercan_kılıcı", "şans": 12},
+        {"eşya": "kabuk_zırhı", "şans": 12},
+        {"eşya": "denizci_zırhı", "şans": 8},
+        {"eşya": "mercan_yüzüğü", "şans": 6},
+        {"eşya": None, "şans": 62},
+    ],
+    "orta": [  # Kat 5-10
+        {"eşya": "mercan_kılıcı", "şans": 8},
+        {"eşya": "denizci_zırhı", "şans": 8},
+        {"eşya": "okyanus_kılıcı", "şans": 6},
+        {"eşya": "korsan_zırhı", "şans": 6},
+        {"eşya": "deniz_yüzüğü", "şans": 5},
+        {"eşya": "köpekbalığı_dişi", "şans": 5},
+        {"eşya": None, "şans": 62},
+    ],
+    "zor": [  # Kat 10-18
+        {"eşya": "okyanus_kılıcı", "şans": 8},
+        {"eşya": "korsan_zırhı", "şans": 8},
+        {"eşya": "köpekbalığı_dişi", "şans": 6},
+        {"eşya": "sirena_asası", "şans": 4},
+        {"eşya": "inci_zırhı", "şans": 4},
+        {"eşya": "deniz_yüzüğü", "şans": 5},
+        {"eşya": "büyülü_deniz_yüzüğü", "şans": 3},
+        {"eşya": None, "şans": 62},
+    ],
+    "çok_zor": [  # Kat 18-30
+        {"eşya": "sirena_asası", "şans": 6},
+        {"eşya": "inci_zırhı", "şans": 6},
+        {"eşya": "fırtına_baltası", "şans": 4},
+        {"eşya": "şimşek_zırhı", "şans": 4},
+        {"eşya": "büyülü_deniz_yüzüğü", "şans": 5},
+        {"eşya": "fırtına_yüzüğü", "şans": 3},
+        {"eşya": None, "şans": 72},
+    ],
+    "efsanevi": [  # Kat 30-45
+        {"eşya": "fırtına_baltası", "şans": 5},
+        {"eşya": "şimşek_zırhı", "şans": 5},
+        {"eşya": "kraken_mızrağı", "şans": 3},
+        {"eşya": "kraken_zırhı", "şans": 3},
+        {"eşya": "fırtına_yüzüğü", "şans": 4},
+        {"eşya": "kraken_yüzüğü", "şans": 2},
+        {"eşya": None, "şans": 78},
+    ],
+    "tanrısal": [  # Kat 45+
+        {"eşya": "kraken_mızrağı", "şans": 4},
+        {"eşya": "kraken_zırhı", "şans": 4},
+        {"eşya": "poseidon_mızrağı", "şans": 2},
+        {"eşya": "tanrı_zırhı", "şans": 2},
+        {"eşya": "kraken_yüzüğü", "şans": 3},
+        {"eşya": "deniz_tanrısı_yüzüğü", "şans": 2},
+        {"eşya": "visored_kılıcı", "şans": 1},
+        {"eşya": "visored_zırhı", "şans": 1},
+        {"eşya": "visored_yüzüğü", "şans": 1},
+        {"eşya": None, "şans": 80},
+    ],
+}
+
+
+def get_loot_zorluk(kat, bolge="zindan"):
+    """Kata ve bolgeye göre loot zorluk seviyesi."""
+    if bolge == "visored":
+        # Visored Adasi daha yuksek katlarda basliyor gibi davran
+        if kat <= 5:
+            return "kolay"
+        elif kat <= 10:
+            return "orta"
+        elif kat <= 18:
+            return "zor"
+        elif kat <= 30:
+            return "çok_zor"
+        elif kat <= 45:
+            return "efsanevi"
+        else:
+            return "tanrısal"
     else:
-        return "tanrısal"
+        if kat <= 5:
+            return "kolay"
+        elif kat <= 12:
+            return "orta"
+        elif kat <= 25:
+            return "zor"
+        elif kat <= 40:
+            return "çok_zor"
+        elif kat <= 60:
+            return "efsanevi"
+        else:
+            return "tanrısal"
 
 
-def roll_loot(kat):
+def roll_loot(kat, bolge="zindan"):
     """Katta eşya düşürme şansını hesapla."""
-    zorluk = get_loot_zorluk(kat)
-    tablo = LOOT_TABLOSU[zorluk]
+    zorluk = get_loot_zorluk(kat, bolge)
+    if bolge == "visored":
+        tablo = VISORED_LOOT_TABLOSU[zorluk]
+    else:
+        tablo = LOOT_TABLOSU[zorluk]
     toplam = sum(item["şans"] for item in tablo)
     zar = random.randint(1, toplam)
     birikmiş = 0
@@ -3560,15 +3739,23 @@ def get_dungeon(user_id):
             "kuşanılmış": {"silah": None, "zırh": None, "yüzük": None},  # Benzersiz ID'ler tutulur
             "can": 0,
             "maks_can": 0,
+            "mana": 0,
+            "maks_mana": 0,
             "iksir": 0,
+            "mana_iksiri": 0,
             "aktif_savaş": None,  # aktif canavar savaşı
+            "bolge": "zindan",  # aktif bolge
+            "visored_kat": 0,  # Visored Adasi mevcut kati
+            "visored_en_yuksek": 0,  # Visored Adasi en yuksek kati
         }
         dungeons_col.insert_one(dungeon)
 
     # Eski veriler için alan kontrolü
-    for alan in ["prestiж", "boss_öldürme", "toplam_ölüm", "iksir"]:
+    for alan in ["prestiж", "boss_öldürme", "toplam_ölüm", "iksir", "mana", "maks_mana", "mana_iksiri", "visored_kat", "visored_en_yuksek"]:
         if alan not in dungeon:
             dungeon[alan] = 0
+    if "bolge" not in dungeon:
+        dungeon["bolge"] = "zindan"
     if "kuşanılmış" not in dungeon:
         dungeon["kuşanılmış"] = {"silah": None, "zırh": None, "yüzük": None}
     if "envanter" not in dungeon:
@@ -3596,6 +3783,7 @@ def get_karakter_statları(dungeon):
 
     # Temel statlar + seviye bonusu
     can = sınıf["temel_can"] + (seviye - 1) * 8 + prestij_bonus["bonus_can"]
+    mana = sınıf["temel_mana"] + (seviye - 1) * 5  # Her seviye +5 mana
     saldırı = sınıf["temel_saldırı"] + (seviye - 1) * 3 + prestij_bonus["bonus_saldırı"]
     savunma = sınıf["temel_savunma"] + (seviye - 1) * 2
     şans = sınıf["temel_şans"]
@@ -3619,6 +3807,7 @@ def get_karakter_statları(dungeon):
 
     return {
         "can": can,
+        "mana": mana,
         "saldırı": saldırı,
         "savunma": savunma,
         "şans": şans,
@@ -3635,15 +3824,16 @@ def get_zindan_seviye(xp):
     return seviye
 
 
-def get_canavarlar_for_kat(kat):
-    """Kata uygun canavarları filtrele."""
+def get_canavarlar_for_kat(kat, bolge="zindan"):
+    """Kata ve bolgeye uygun canavarları filtrele."""
     uygun = []
-    for canavar_id, canavar in CANAVARLAR.items():
+    canavar_listesi = VISORED_CANAVARLAR if bolge == "visored" else CANAVARLAR
+    for canavar_id, canavar in canavar_listesi.items():
         if canavar["kat_min"] <= kat <= canavar["kat_max"]:
             uygun.append((canavar_id, canavar))
     if not uygun:
         # Hiç canavar yoksa en güçlüleri döndür
-        uygun = list(CANAVARLAR.items())[-3:]
+        uygun = list(canavar_listesi.items())[-3:]
     return uygun
 
 
@@ -3748,6 +3938,7 @@ async def zindan(ctx):
         name="Statlar",
         value=(
             f"Can: **{statlar['can']}** | "
+            f"Mana: **{statlar['mana']}** | "
             f"Saldırı: **{statlar['saldırı']}** | "
             f"Savunma: **{statlar['savunma']}** | "
             f"Kritik: **%{statlar['şans']}**"
@@ -3761,15 +3952,26 @@ async def zindan(ctx):
         inline=False
     )
 
+    # Aktif bolge bilgisi
+    aktif_bolge = dungeon.get("bolge", "zindan")
+    aktif_bolge_bilgi = BOLGELER.get(aktif_bolge, BOLGELER["zindan"])
+    
     embed.add_field(
-        name="Zindan Bilgileri",
+        name=f"{aktif_bolge_bilgi['emoji']} Aktif Bolge: {aktif_bolge_bilgi['isim']}",
         value=(
-            f"Mevcut kat: **{dungeon['mevcut_kat']}** | "
-            f"En yüksek: **{dungeon['en_yüksek_kat']}**\n"
-            f"Öldürme: **{dungeon['toplam_öldürme']}** | "
+            f"**Karanlik Zindan:** Kat **{dungeon['mevcut_kat']}** | En Yuksek: **{dungeon['en_yüksek_kat']}**\n"
+            f"**Visored Adasi:** Kat **{dungeon.get('visored_kat', 0)}** | En Yuksek: **{dungeon.get('visored_en_yuksek', 0)}**"
+        ),
+        inline=False
+    )
+    
+    embed.add_field(
+        name="Istatistikler",
+        value=(
+            f"Oldurme: **{dungeon['toplam_öldürme']}** | "
             f"Boss: **{dungeon['boss_öldürme']}** | "
-            f"Ölüm: **{dungeon['toplam_ölüm']}**\n"
-            f"Can İksiri: **{dungeon.get('iksir', 0)}** adet"
+            f"Olum: **{dungeon['toplam_ölüm']}**\n"
+            f"Can Iksiri: **{dungeon.get('iksir', 0)}** | Mana Iksiri: **{dungeon.get('mana_iksiri', 0)}**"
         ),
         inline=False
     )
@@ -3795,9 +3997,11 @@ async def sınıflar(ctx):
             value=(
                 f"{sınıf['açıklama']}\n\n"
                 f"Can: **{sınıf['temel_can']}** | "
+                f"Mana: **{sınıf['temel_mana']}** | "
                 f"Saldırı: **{sınıf['temel_saldırı']}** | "
                 f"Savunma: **{sınıf['temel_savunma']}** | "
                 f"Kritik: **%{sınıf['temel_şans']}**\n"
+                f"Saldırı Mana: **{sınıf['saldırı_mana']}** | Yetenek Mana: **{sınıf['özel_mana']}**\n"
                 f"Yetenek: **{sınıf['özel_yetenek']}** — {sınıf['özel_açıklama']}"
             ),
             inline=False
@@ -3838,21 +4042,20 @@ async def sınıfseç(ctx, sınıf_id: str = None):
         return await ctx.send(embed=embed)
 
     sınıf = SINIFLAR[sınıf_id]
-    statlar_hesapla = {
-        "can": sınıf["temel_can"],
-    }
 
     dungeon["sınıf"] = sınıf_id
     dungeon["seviye"] = 1
     dungeon["xp"] = 0
     dungeon["can"] = sınıf["temel_can"]
     dungeon["maks_can"] = sınıf["temel_can"]
+    dungeon["mana"] = sınıf["temel_mana"]
+    dungeon["maks_mana"] = sınıf["temel_mana"]
     dungeon["mevcut_kat"] = 0
     dungeon["envanter"] = [
         {"eşya_id": "paslı_kılıç", "kuşanılmış": True},
         {"eşya_id": "deri_zırh", "kuşanılmış": True},
     ]
-    dungeon["kuşanılmı��"] = {"silah": "paslı_kılıç", "zırh": "deri_zırh", "yüzük": None}
+    dungeon["kuşanılmış"] = {"silah": "paslı_kılıç", "zırh": "deri_zırh", "yüzük": None}
     save_dungeon(dungeon)
 
     embed = discord.Embed(
@@ -3860,8 +4063,11 @@ async def sınıfseç(ctx, sınıf_id: str = None):
         description=(
             f"{ctx.author.mention}, **{sınıf['isim']}** olarak yolculuğun başlıyor!\n\n"
             f"**Statların:**\n"
-            f"Can: **{sınıf['temel_can']}** | Saldırı: **{sınıf['temel_saldırı']}** | "
+            f"Can: **{sınıf['temel_can']}** | Mana: **{sınıf['temel_mana']}** | "
+            f"Saldırı: **{sınıf['temel_saldırı']}** | "
             f"Savunma: **{sınıf['temel_savunma']}** | Kritik: **%{sınıf['temel_şans']}**\n\n"
+            f"**Mana Maliyetleri:**\n"
+            f"Saldırı: **{sınıf['saldırı_mana']}** | {sınıf['özel_yetenek']}: **{sınıf['özel_mana']}**\n\n"
             f"**Başlangıç Ekipmanı:**\n"
             f"🗡️ Paslı Kılıç | 🦺 Deri Zırh\n\n"
             f"**Yetenek:** {sınıf['özel_yetenek']} — {sınıf['özel_açıklama']}\n\n"
@@ -3877,7 +4083,7 @@ async def sınıfseç(ctx, sınıf_id: str = None):
 
 @bot.command(name="gir", aliases=["enter", "zindangir", "dalış"])
 async def zindan_gir(ctx):
-    """Zindanın bir sonraki katına gir."""
+    """Bolgenin bir sonraki katina gir."""
     user_id = ctx.author.id
 
     # Cooldown kontrolü
@@ -3906,24 +4112,37 @@ async def zindan_gir(ctx):
         )
         return await ctx.send(embed=embed)
 
-    # Canı sıfırsa giremez
+    # Canı veya manası sıfırsa yenile
     statlar = get_karakter_statları(dungeon)
     if dungeon.get("can", 0) <= 0:
         dungeon["can"] = statlar["can"]
-        save_dungeon(dungeon)
+    if dungeon.get("mana", 0) <= 0:
+        dungeon["mana"] = statlar["mana"]
+    save_dungeon(dungeon)
 
     zindan_cd[user_id] = now
 
-    # Kat ilerle
-    dungeon["mevcut_kat"] += 1
-    kat = dungeon["mevcut_kat"]
-
-    if kat > dungeon["en_yüksek_kat"]:
-        dungeon["en_yüksek_kat"] = kat
+    # Bolge kontrolu
+    bolge = dungeon.get("bolge", "zindan")
+    bolge_bilgi = BOLGELER.get(bolge, BOLGELER["zindan"])
+    
+    # Kat ilerle (bolgeye gore)
+    if bolge == "visored":
+        dungeon["visored_kat"] = dungeon.get("visored_kat", 0) + 1
+        kat = dungeon["visored_kat"]
+        if kat > dungeon.get("visored_en_yuksek", 0):
+            dungeon["visored_en_yuksek"] = kat
+        boss_listesi = VISORED_BOSSLAR
+    else:
+        dungeon["mevcut_kat"] += 1
+        kat = dungeon["mevcut_kat"]
+        if kat > dungeon["en_yüksek_kat"]:
+            dungeon["en_yüksek_kat"] = kat
+        boss_listesi = BOSSLAR
 
     # Boss katı mı?
-    if kat in BOSSLAR:
-        boss = BOSSLAR[kat]
+    if kat in boss_listesi:
+        boss = boss_listesi[kat]
         dungeon["aktif_savaş"] = {
             "tür": "boss",
             "isim": boss["isim"],
@@ -3937,43 +4156,47 @@ async def zindan_gir(ctx):
             "altın_max": boss["altın_max"],
             "loot": boss.get("loot", []),
             "kat": kat,
+            "bolge": bolge,
         }
         save_dungeon(dungeon)
 
         sınıf = SINIFLAR[dungeon["sınıf"]]
         embed = discord.Embed(
-            title=f"Kat {kat} — BOSS SAVAŞI!",
+            title=f"{bolge_bilgi['emoji']} Kat {kat} — BOSS SAVAŞI!",
             description=(
                 f"{'━' * 30}\n"
                 f"{boss['emoji']} **{boss['isim']}** yolunu kesiyor!\n"
                 f"{'━' * 30}\n\n"
-                f"**Boss Statları:**\n"
-                f"Can: **{boss['can']}** | Saldırı: **{boss['saldırı']}** | Savunma: **{boss['savunma']}**\n\n"
+                f"**Boss Statlari:**\n"
+                f"Can: **{boss['can']}** | Saldiri: **{boss['saldırı']}** | Savunma: **{boss['savunma']}**\n\n"
                 f"**Senin Durumun:**\n"
-                f"{sınıf['emoji']} Can: **{dungeon['can']}/{statlar['can']}**\n\n"
-                f"`!saldır` — Normal saldırı\n"
-                f"`!özel` — {sınıf['özel_yetenek']} (3 katta bir)\n"
-                f"`!iksir` — Can iksiri kullan\n"
-                f"`!kaç` — Kaç (katı kaybedersin)"
+                f"{sınıf['emoji']} Can: **{dungeon['can']}/{statlar['can']}** | Mana: **{dungeon['mana']}/{statlar['mana']}**\n\n"
+                f"`!saldır` — Normal saldırı ({sınıf['saldırı_mana']} mana)\n"
+                f"`!özel` — {sınıf['özel_yetenek']} ({sınıf['özel_mana']} mana)\n"
+                f"`!iksir` — Can iksiri | `!manaiksir` — Mana iksiri\n"
+                f"`!kaç` — Kac (kati kaybedersin)"
             ),
             color=discord.Color.dark_red(),
             timestamp=datetime.now(timezone.utc)
         )
-        embed.set_footer(text="Zindan Sistemi | Boss Savaşı")
+        embed.set_footer(text=f"{bolge_bilgi['isim']} | Boss Savasi")
         return await ctx.send(embed=embed)
 
-    # Hazine odası kontrolü (boss değilse)
-    hazine_bulundu = await hazine_odası_kontrol(ctx, dungeon, kat)
-    if hazine_bulundu:
-        save_dungeon(dungeon)
-        # Hazine odasından sonra normal kata devam et
+    # Hazine odası kontrolü (boss değilse) - sadece zindan icin
+    if bolge == "zindan":
+        hazine_bulundu = await hazine_odası_kontrol(ctx, dungeon, kat)
+        if hazine_bulundu:
+            save_dungeon(dungeon)
 
     # Normal canavar
-    uygun_canavarlar = get_canavarlar_for_kat(kat)
+    uygun_canavarlar = get_canavarlar_for_kat(kat, bolge)
     canavar_id, canavar = random.choice(uygun_canavarlar)
 
-    # Kat bonusu (zorluk artışı)
-    kat_çarpan = 1 + (kat - 1) * 0.05
+    # Kat bonusu (zorluk artışı) - Visored icin daha yuksek carpan
+    if bolge == "visored":
+        kat_çarpan = 1 + (kat - 1) * 0.08  # %8 artis per kat
+    else:
+        kat_çarpan = 1 + (kat - 1) * 0.05  # %5 artis per kat
     canavar_can = int(canavar["can"] * kat_çarpan)
     canavar_saldırı = int(canavar["saldırı"] * kat_çarpan)
     canavar_savunma = int(canavar["savunma"] * kat_çarpan)
@@ -3983,6 +4206,7 @@ async def zindan_gir(ctx):
         "id": canavar_id,
         "isim": canavar["isim"],
         "emoji": canavar["emoji"],
+        "bolge": bolge,
         "can": canavar_can,
         "maks_can": canavar_can,
         "saldırı": canavar_saldırı,
@@ -3997,26 +4221,29 @@ async def zindan_gir(ctx):
     sınıf = SINIFLAR[dungeon["sınıf"]]
     can_bar_düşman = "🟥" * 10
     can_bar_sen = "🟩" * int(dungeon["can"] / statlar["can"] * 10) + "⬛" * (10 - int(dungeon["can"] / statlar["can"] * 10))
+    mana_bar_sen = "🟦" * int(dungeon["mana"] / statlar["mana"] * 10) + "⬛" * (10 - int(dungeon["mana"] / statlar["mana"] * 10))
+
+    # Bolgeye gore renk
+    embed_renk = discord.Color.teal() if bolge == "visored" else discord.Color.dark_grey()
 
     embed = discord.Embed(
-        title=f"Kat {kat} — {canavar['emoji']} {canavar['isim']}",
+        title=f"{bolge_bilgi['emoji']} Kat {kat} — {canavar['emoji']} {canavar['isim']}",
         description=(
             f"{'━' * 30}\n\n"
             f"**{canavar['emoji']} {canavar['isim']}**\n"
             f"Can: {can_bar_düşman} **{canavar_can}/{canavar_can}**\n"
-            f"Saldırı: **{canavar_saldırı}** | Savunma: **{canavar_savunma}**\n\n"
+            f"Saldiri: **{canavar_saldırı}** | Savunma: **{canavar_savunma}**\n\n"
             f"{'━' * 30}\n\n"
             f"**{sınıf['emoji']} {ctx.author.display_name}**\n"
-            f"Can: {can_bar_sen} **{dungeon['can']}/{statlar['can']}**\n\n"
-            f"`!saldır` — Normal saldırı\n"
-            f"`!özel` — {sınıf['özel_yetenek']}\n"
-            f"`!iksir` — Can iksiri kullan\n"
-            f"`!kaç` — Kaç"
+            f"Can: {can_bar_sen} **{dungeon['can']}/{statlar['can']}**\n"
+            f"Mana: {mana_bar_sen} **{dungeon['mana']}/{statlar['mana']}**\n\n"
+            f"`!saldır` ({sınıf['saldırı_mana']} mana) | `!özel` ({sınıf['özel_mana']} mana)\n"
+            f"`!iksir` | `!manaiksir` | `!kaç`"
         ),
-        color=discord.Color.dark_grey(),
+        color=embed_renk,
         timestamp=datetime.now(timezone.utc)
     )
-    embed.set_footer(text=f"Zindan Sistemi | Kat {kat}")
+    embed.set_footer(text=f"{bolge_bilgi['isim']} | Kat {kat}")
     await ctx.send(embed=embed)
 
     # Görev ilerlemesi
@@ -4040,10 +4267,22 @@ async def zsaldır(ctx):
     statlar = get_karakter_statları(dungeon)
     sınıf = SINIFLAR[dungeon["sınıf"]]
 
+    # Mana kontrolü
+    mana_gerekli = sınıf["saldırı_mana"]
+    if dungeon.get("mana", 0) < mana_gerekli:
+        embed = discord.Embed(
+            description=f"Yetersiz mana! Saldırı için **{mana_gerekli}** mana gerekiyor.\nMevcut manan: **{dungeon.get('mana', 0)}**\n\n`!manaiksir` ile mana iksiri kullan.",
+            color=discord.Color.blue()
+        )
+        return await ctx.send(embed=embed)
+
+    # Mana harca
+    dungeon["mana"] = dungeon.get("mana", 0) - mana_gerekli
+
     # Oyuncu saldırısı
     hasar, kritik = hasar_hesapla(statlar["saldırı"], savaş["savunma"], statlar["şans"])
 
-    savaş_log = ""
+    savaş_log = f"*-{mana_gerekli} mana*\n"
     if kritik:
         savaş_log += f"**KRİTİK VURUŞ!** {sınıf['emoji']} **{hasar}** hasar verdin!\n"
     else:
@@ -4080,7 +4319,8 @@ async def zsaldır(ctx):
         if boss_mu:
             dungeon["boss_öldürme"] += 1
 
-        # Loot kontrolü
+        # Loot kontrolü (bolgeye gore)
+        savas_bolge = savaş.get("bolge", "zindan")
         düşen_eşya = None
         düşen_id = None
         if boss_mu and savaş.get("loot"):
@@ -4091,8 +4331,8 @@ async def zsaldır(ctx):
                 düşen_id = str(uuid.uuid4())[:8]  # Kısa benzersiz ID
                 dungeon["envanter"].append({"id": düşen_id, "eşya_tipi": düşen_eşya_tipi})
         else:
-            # Normal loot şansı
-            loot_tipi = roll_loot(savaş["kat"])
+            # Normal loot şansı (bolgeye gore)
+            loot_tipi = roll_loot(savaş["kat"], savas_bolge)
             if loot_tipi:
                 düşen_eşya = EKİPMANLAR.get(loot_tipi)
                 if düşen_eşya:
@@ -4176,23 +4416,33 @@ async def zsaldır(ctx):
 
     # Oyuncu öldü mü?
     if dungeon["can"] <= 0:
-        # Ölüm - 5 kat geri at (mevcut kat zaten +1 artmış, bu yüzden -6 yapıyoruz ki 5 kat geriye düşsün)
+        # Ölüm - 5 kat geri at (bolgeye gore)
         dungeon["toplam_ölüm"] += 1
-        eski_kat = dungeon["mevcut_kat"]
-        dungeon["mevcut_kat"] = max(0, dungeon["mevcut_kat"] - 6)
-        düşülen_kat = eski_kat - dungeon["mevcut_kat"]
+        savas_bolge = savaş.get("bolge", "zindan")
+        
+        if savas_bolge == "visored":
+            eski_kat = dungeon.get("visored_kat", 0)
+            dungeon["visored_kat"] = max(0, eski_kat - 6)
+            mevcut_kat = dungeon["visored_kat"]
+        else:
+            eski_kat = dungeon["mevcut_kat"]
+            dungeon["mevcut_kat"] = max(0, dungeon["mevcut_kat"] - 6)
+            mevcut_kat = dungeon["mevcut_kat"]
+            
         dungeon["can"] = statlar["can"]  # Canı yenile
+        dungeon["mana"] = statlar["mana"]  # Manayı yenile
         dungeon["aktif_savaş"] = None
         save_dungeon(dungeon)
 
+        bolge_bilgi = BOLGELER.get(savas_bolge, BOLGELER["zindan"])
         embed = discord.Embed(
             title="YENILDIN!",
             description=(
                 f"{savaş_log}\n"
                 f"**{savaş['emoji']} {savaş['isim']}** seni yendi!\n\n"
-                f"**5 kat** geri düştün. Mevcut kat: **{dungeon['mevcut_kat']}**\n"
-                f"Canın yenilendi.\n\n"
-                f"Tekrar denemek için: `!gir`"
+                f"**5 kat** geri dustun. Mevcut kat: **{mevcut_kat}**\n"
+                f"Can ve manan yenilendi.\n\n"
+                f"Tekrar denemek icin: `!gir`"
             ),
             color=discord.Color.dark_red(),
             timestamp=datetime.now(timezone.utc)
@@ -4212,6 +4462,10 @@ async def zsaldır(ctx):
     sen_bar_dolu = int(sen_can_pct * 10)
     can_bar_sen = "🟩" * sen_bar_dolu + "⬛" * (10 - sen_bar_dolu)
 
+    mana_pct = max(0, dungeon["mana"] / statlar["mana"])
+    mana_bar_dolu = int(mana_pct * 10)
+    mana_bar_sen = "🟦" * mana_bar_dolu + "⬛" * (10 - mana_bar_dolu)
+
     embed = discord.Embed(
         title=f"Kat {savaş['kat']} — Savaş Devam Ediyor",
         description=(
@@ -4220,8 +4474,9 @@ async def zsaldır(ctx):
             f"**{savaş['emoji']} {savaş['isim']}**\n"
             f"Can: {can_bar_düşman} **{savaş['can']}/{savaş['maks_can']}**\n\n"
             f"**{sınıf['emoji']} {ctx.author.display_name}**\n"
-            f"Can: {can_bar_sen} **{dungeon['can']}/{statlar['can']}**\n\n"
-            f"`!saldır` | `!özel` | `!iksir` | `!kaç`"
+            f"Can: {can_bar_sen} **{dungeon['can']}/{statlar['can']}**\n"
+            f"Mana: {mana_bar_sen} **{dungeon['mana']}/{statlar['mana']}**\n\n"
+            f"`!saldır` ({sınıf['saldırı_mana']}) | `!özel` ({sınıf['özel_mana']}) | `!iksir` | `!manaiksir` | `!kaç`"
         ),
         color=discord.Color.orange(),
         timestamp=datetime.now(timezone.utc)
@@ -4232,7 +4487,7 @@ async def zsaldır(ctx):
 
 @bot.command(name="özel", aliases=["special", "yetenek"])
 async def özel_saldırı(ctx):
-    """Özel yetenek kullan (3 katta bir)."""
+    """Özel yetenek kullan (mana gerektirir)."""
     user_id = ctx.author.id
     dungeon = get_dungeon(user_id)
 
@@ -4244,19 +4499,24 @@ async def özel_saldırı(ctx):
     statlar = get_karakter_statları(dungeon)
     sınıf = SINIFLAR[dungeon["sınıf"]]
 
-    # 3 katta bir kullanılabilir
-    if savaş["kat"] % 3 != 0 and savaş["kat"] != 1:
+    # Mana kontrolü
+    mana_gerekli = sınıf["özel_mana"]
+    if dungeon.get("mana", 0) < mana_gerekli:
         embed = discord.Embed(
-            description=f"**{sınıf['özel_yetenek']}** sadece 3'ün katı katlarda kullanılabilir! (3, 6, 9...)\nMevcut kat: **{savaş['kat']}**",
-            color=discord.Color.orange()
+            description=f"Yetersiz mana! **{sınıf['özel_yetenek']}** için **{mana_gerekli}** mana gerekiyor.\nMevcut manan: **{dungeon.get('mana', 0)}**\n\n`!manaiksir` ile mana iksiri kullan.",
+            color=discord.Color.blue()
         )
         return await ctx.send(embed=embed)
+
+    # Mana harca
+    dungeon["mana"] = dungeon.get("mana", 0) - mana_gerekli
+    savaş_log = f"*-{mana_gerekli} mana*\n"
 
     # Şövalye kalkan modu
     if dungeon["sınıf"] == "şövalye":
         # Düşman saldırır ama hasar %50 azalır
         düşman_hasar, _ = hasar_hesapla(savaş["saldırı"], int(statlar["savunma"] * 2), 5)
-        savaş_log = f"🛡️ **{sınıf['özel_yetenek']}** aktif! Savunma 2 katına çıktı!\n"
+        savaş_log += f"🛡️ **{sınıf['özel_yetenek']}** aktif! Savunma 2 katına çıktı!\n"
         savaş_log += f"{savaş['emoji']} sadece **{düşman_hasar}** hasar verebildi.\n"
         dungeon["can"] = max(0, dungeon["can"] - düşman_hasar)
     else:
@@ -4264,7 +4524,7 @@ async def özel_saldırı(ctx):
         güçlü_saldırı = int(statlar["saldırı"] * sınıf["özel_çarpan"])
         hasar, kritik = hasar_hesapla(güçlü_saldırı, savaş["savunma"], statlar["şans"] + 15)
 
-        savaş_log = f"**{sınıf['özel_yetenek']}!** "
+        savaş_log += f"**{sınıf['özel_yetenek']}!** "
         if kritik:
             savaş_log += f"**KRİTİK! {hasar}** hasar!\n"
         else:
@@ -4320,52 +4580,98 @@ async def özel_saldırı(ctx):
         return await ctx.send(embed=embed)
 
     if dungeon["can"] <= 0:
-        # Ölüm - 5 kat geri at
+        # Olum - 5 kat geri at (bolgeye gore)
         dungeon["toplam_ölüm"] += 1
-        dungeon["mevcut_kat"] = max(0, dungeon["mevcut_kat"] - 6)
+        savas_bolge = savaş.get("bolge", "zindan")
+        
+        if savas_bolge == "visored":
+            dungeon["visored_kat"] = max(0, dungeon.get("visored_kat", 0) - 6)
+            mevcut_kat = dungeon["visored_kat"]
+        else:
+            dungeon["mevcut_kat"] = max(0, dungeon["mevcut_kat"] - 6)
+            mevcut_kat = dungeon["mevcut_kat"]
+            
         dungeon["can"] = statlar["can"]
+        dungeon["mana"] = statlar["mana"]
         dungeon["aktif_savaş"] = None
         save_dungeon(dungeon)
-        embed = discord.Embed(title="YENİLDİN!", description=f"{savaş_log}\n**5 kat** geri düştün. Mevcut kat: **{dungeon['mevcut_kat']}**\n`!gir` ile tekrar dene.", color=discord.Color.dark_red())
+        embed = discord.Embed(title="YENILDIN!", description=f"{savaş_log}\n**5 kat** geri dustun. Mevcut kat: **{mevcut_kat}**\nCan ve manan yenilendi.\n`!gir` ile tekrar dene.", color=discord.Color.dark_red())
         return await ctx.send(embed=embed)
 
     dungeon["aktif_savaş"] = savaş
     save_dungeon(dungeon)
 
+    # Savaş devam ediyor - aynı embed formatı
+    savas_bolge = savaş.get("bolge", "zindan")
+    bolge_bilgi = BOLGELER.get(savas_bolge, BOLGELER["zindan"])
+    
+    düşman_can_pct = max(0, savaş["can"] / savaş["maks_can"])
+    düşman_bar_dolu = int(düşman_can_pct * 10)
+    can_bar_düşman = "🟥" * düşman_bar_dolu + "⬛" * (10 - düşman_bar_dolu)
+
+    sen_can_pct = max(0, dungeon["can"] / statlar["can"])
+    sen_bar_dolu = int(sen_can_pct * 10)
+    can_bar_sen = "🟩" * sen_bar_dolu + "⬛" * (10 - sen_bar_dolu)
+
+    mana_pct = max(0, dungeon["mana"] / statlar["mana"])
+    mana_bar_dolu = int(mana_pct * 10)
+    mana_bar_sen = "🟦" * mana_bar_dolu + "⬛" * (10 - mana_bar_dolu)
+
     embed = discord.Embed(
-        title=f"Kat {savaş['kat']} — Özel Yetenek Kullanıldı",
-        description=f"{savaş_log}\n{savaş['emoji']} Can: **{savaş['can']}/{savaş['maks_can']}** | Sen: **{dungeon['can']}/{statlar['can']}**\n\n`!saldır` | `!özel` | `!iksir` | `!kaç`",
-        color=discord.Color.purple(),
+        title=f"{bolge_bilgi['emoji']} Kat {savaş['kat']} — Savaş Devam Ediyor",
+        description=(
+            f"{savaş_log}\n"
+            f"{'━' * 30}\n\n"
+            f"**{savaş['emoji']} {savaş['isim']}**\n"
+            f"Can: {can_bar_düşman} **{savaş['can']}/{savaş['maks_can']}**\n\n"
+            f"**{sınıf['emoji']} {ctx.author.display_name}**\n"
+            f"Can: {can_bar_sen} **{dungeon['can']}/{statlar['can']}**\n"
+            f"Mana: {mana_bar_sen} **{dungeon['mana']}/{statlar['mana']}**\n\n"
+            f"`!saldır` ({sınıf['saldırı_mana']}) | `!özel` ({sınıf['özel_mana']}) | `!iksir` | `!manaiksir` | `!kaç`"
+        ),
+        color=discord.Color.orange(),
+        timestamp=datetime.now(timezone.utc)
     )
+    embed.set_footer(text=f"{bolge_bilgi['isim']} | Kat {savaş['kat']}")
     await ctx.send(embed=embed)
 
 
 @bot.command(name="kaç", aliases=["flee", "kaçış"])
 async def kaç(ctx):
-    """Savaştan kaç (aynı kattan devam edersin)."""
+    """Savastan kac (ayni kattan devam edersin)."""
     user_id = ctx.author.id
     dungeon = get_dungeon(user_id)
 
     if not dungeon.get("aktif_savaş"):
-        embed = discord.Embed(description="Aktif bir savaşın yok!", color=discord.Color.red())
+        embed = discord.Embed(description="Aktif bir savasin yok!", color=discord.Color.red())
         return await ctx.send(embed=embed)
 
     savaş = dungeon["aktif_savaş"]
-    # Kaçınca aynı kattan devam et (mevcut kat zaten +1 artmış, -1 yaparak aynı kata dönüyoruz)
-    dungeon["mevcut_kat"] = max(0, dungeon["mevcut_kat"] - 1)
+    savas_bolge = savaş.get("bolge", "zindan")
+    bolge_bilgi = BOLGELER.get(savas_bolge, BOLGELER["zindan"])
+    
+    # Kacinca ayni kattan devam et (bolgeye gore)
+    if savas_bolge == "visored":
+        dungeon["visored_kat"] = max(0, dungeon.get("visored_kat", 0) - 1)
+        mevcut_kat = dungeon["visored_kat"]
+    else:
+        dungeon["mevcut_kat"] = max(0, dungeon["mevcut_kat"] - 1)
+        mevcut_kat = dungeon["mevcut_kat"]
+        
     dungeon["aktif_savaş"] = None
     save_dungeon(dungeon)
 
     embed = discord.Embed(
-        title="Kaçış Başarılı!",
+        title="Kacis Basarili!",
         description=(
-            f"{savaş['emoji']} **{savaş['isim']}** karşısından kaçtın!\n\n"
-            f"Aynı kattan devam ediyorsun. Mevcut kat: **{dungeon['mevcut_kat']}**\n\n"
-            f"Tekrar girmek için: `!gir`"
+            f"{savaş['emoji']} **{savaş['isim']}** karsisindan kactin!\n\n"
+            f"Ayni kattan devam ediyorsun. Mevcut kat: **{mevcut_kat}**\n\n"
+            f"Tekrar girmek icin: `!gir`"
         ),
         color=discord.Color.light_grey(),
         timestamp=datetime.now(timezone.utc)
     )
+    embed.set_footer(text=f"{bolge_bilgi['isim']}")
     await ctx.send(embed=embed)
 
 
@@ -4397,14 +4703,83 @@ async def iksir(ctx):
         description=(
             f"**+{iyileşme}** can iyileştirdin!\n\n"
             f"Can: **{dungeon['can']}/{statlar['can']}**\n"
-            f"Kalan iksir: **{dungeon['iksir']}**"
+            f"Kalan can iksiri: **{dungeon['iksir']}**"
         ),
         color=discord.Color.teal(),
     )
     await ctx.send(embed=embed)
 
 
-@bot.command(name="iksirsat", aliases=["buypotion", "iksirsatınal"])
+@bot.command(name="manaiksir", aliases=["manapotion", "mp"])
+async def mana_iksiri(ctx):
+    """Mana iksiri kullan."""
+    user_id = ctx.author.id
+    dungeon = get_dungeon(user_id)
+
+    if dungeon.get("mana_iksiri", 0) <= 0:
+        embed = discord.Embed(
+            description="Mana iksirin yok! `!dukkan` ile satın al.",
+            color=discord.Color.red()
+        )
+        return await ctx.send(embed=embed)
+
+    statlar = get_karakter_statları(dungeon)
+    if dungeon.get("mana", 0) >= statlar["mana"]:
+        embed = discord.Embed(description="Manan zaten dolu!", color=discord.Color.orange())
+        return await ctx.send(embed=embed)
+
+    yenileme = int(statlar["mana"] * 0.5)  # %50 mana yenileme
+    dungeon["mana_iksiri"] -= 1
+    dungeon["mana"] = min(statlar["mana"], dungeon.get("mana", 0) + yenileme)
+    save_dungeon(dungeon)
+
+    embed = discord.Embed(
+        title="Mana İksiri Kullanıldı!",
+        description=(
+            f"**+{yenileme}** mana yeniledin!\n\n"
+            f"Mana: **{dungeon['mana']}/{statlar['mana']}**\n"
+            f"Kalan mana iksiri: **{dungeon['mana_iksiri']}**"
+        ),
+        color=discord.Color.blue(),
+    )
+    await ctx.send(embed=embed)
+
+
+@bot.command(name="dukkan", aliases=["shop", "market", "iksirdukkan"])
+async def dukkan(ctx):
+    """İksir dükkanını göster."""
+    embed = discord.Embed(
+        title="İksir Dükkanı",
+        description="İksir satın almak için aşağıdaki komutları kullan:",
+        color=discord.Color.gold(),
+        timestamp=datetime.now(timezone.utc)
+    )
+    
+    embed.add_field(
+        name="Can İksiri",
+        value=(
+            f"Fiyat: **200 VC**\n"
+            f"Etki: Maksimum canının **%40**'ını yeniler\n"
+            f"Komut: `!iksirsat <adet>`"
+        ),
+        inline=False
+    )
+    
+    embed.add_field(
+        name="Mana İksiri",
+        value=(
+            f"Fiyat: **150 VC**\n"
+            f"Etki: Maksimum mananın **%50**'sini yeniler\n"
+            f"Komut: `!manaiksirsatinal <adet>`"
+        ),
+        inline=False
+    )
+    
+    embed.set_footer(text="Zindan Sistemi | Dükkan")
+    await ctx.send(embed=embed)
+
+
+@bot.command(name="iksirsat", aliases=["buypotion", "iksirsatınal", "caniksir"])
 async def iksir_satın_al(ctx, adet: int = 1):
     """Can iksiri satın al (200 VisoCoin)."""
     user_id = ctx.author.id
@@ -4417,7 +4792,7 @@ async def iksir_satın_al(ctx, adet: int = 1):
     user = get_user(user_id)
 
     if user["money"] < toplam:
-        return await ctx.send(embed=discord.Embed(description=f"Yetersiz bakiye! {adet}x iksir için **{toplam}** VC gerekiyor.", color=discord.Color.red()))
+        return await ctx.send(embed=discord.Embed(description=f"Yetersiz bakiye! {adet}x can iksiri için **{toplam}** VC gerekiyor.", color=discord.Color.red()))
 
     user["money"] -= toplam
     save_user(user)
@@ -4430,41 +4805,176 @@ async def iksir_satın_al(ctx, adet: int = 1):
 
     embed = discord.Embed(
         title="Can İksiri Satın Alındı!",
-        description=f"**{adet}x** can iksiri aldın!\nMaliyet: **{toplam}** VC | Toplam iksir: **{dungeon['iksir']}**\nBakiye: **{user['money']:,}** VC",
+        description=f"**{adet}x** can iksiri aldın!\nMaliyet: **{toplam}** VC | Toplam can iksiri: **{dungeon['iksir']}**\nBakiye: **{user['money']:,}** VC",
         color=discord.Color.teal(),
     )
     await ctx.send(embed=embed)
 
 
+@bot.command(name="manaiksirsatinal", aliases=["buymanapotion", "manaiksirsat", "manasat"])
+async def mana_iksiri_satın_al(ctx, adet: int = 1):
+    """Mana iksiri satın al (150 VisoCoin)."""
+    user_id = ctx.author.id
+    MANA_İKSİR_FİYAT = 150
+
+    if adet <= 0:
+        return await ctx.send(embed=discord.Embed(description="Geçerli adet gir.", color=discord.Color.red()))
+
+    toplam = MANA_İKSİR_FİYAT * adet
+    user = get_user(user_id)
+
+    if user["money"] < toplam:
+        return await ctx.send(embed=discord.Embed(description=f"Yetersiz bakiye! {adet}x mana iksiri için **{toplam}** VC gerekiyor.", color=discord.Color.red()))
+
+    user["money"] -= toplam
+    save_user(user)
+
+    dungeon = get_dungeon(user_id)
+    dungeon["mana_iksiri"] = dungeon.get("mana_iksiri", 0) + adet
+    save_dungeon(dungeon)
+
+    update_quest_progress(user_id, "harca", toplam)
+
+    embed = discord.Embed(
+        title="Mana İksiri Satın Alındı!",
+        description=f"**{adet}x** mana iksiri aldın!\nMaliyet: **{toplam}** VC | Toplam mana iksiri: **{dungeon['mana_iksiri']}**\nBakiye: **{user['money']:,}** VC",
+        color=discord.Color.blue(),
+    )
+    await ctx.send(embed=embed)
+
+
+# ================= BOLGE KOMUTLARI =================
+
+@bot.command(name="bolgeler", aliases=["regions", "adalar", "bolge"])
+async def bolgeler(ctx):
+    """Mevcut bolgeleri goster."""
+    user_id = ctx.author.id
+    dungeon = get_dungeon(user_id)
+    prestij = dungeon.get("prestiж", 0)
+
+    embed = discord.Embed(
+        title="Bolgeler",
+        description="Macera bolgeleri ve gereksinimleri:",
+        color=discord.Color.teal(),
+        timestamp=datetime.now(timezone.utc)
+    )
+
+    for bolge_id, bolge in BOLGELER.items():
+        acik = prestij >= bolge["gerekli_prestij"]
+        aktif = dungeon.get("bolge", "zindan") == bolge_id
+        
+        durum = ""
+        if aktif:
+            durum = " **[AKTIF]**"
+        elif acik:
+            durum = " *(Acik)*"
+        else:
+            durum = f" *(Prestij {bolge['gerekli_prestij']} gerekli)*"
+        
+        if bolge_id == "zindan":
+            kat_bilgi = f"Mevcut Kat: **{dungeon['mevcut_kat']}** | En Yuksek: **{dungeon['en_yüksek_kat']}**"
+        else:
+            kat_bilgi = f"Mevcut Kat: **{dungeon.get('visored_kat', 0)}** | En Yuksek: **{dungeon.get('visored_en_yuksek', 0)}**"
+        
+        embed.add_field(
+            name=f"{bolge['emoji']} {bolge['isim']}{durum}",
+            value=f"{bolge['açıklama']}\n{kat_bilgi}",
+            inline=False
+        )
+
+    embed.add_field(
+        name="Bolge Degistirme",
+        value="`!bolgesec <zindan/visored>` ile bolge degistir.",
+        inline=False
+    )
+    
+    embed.set_footer(text=f"Prestij Seviyen: {prestij}")
+    await ctx.send(embed=embed)
+
+
+@bot.command(name="bolgesec", aliases=["selectregion", "bolgeseç"])
+async def bolge_sec(ctx, bolge_id: str = None):
+    """Bolge sec."""
+    user_id = ctx.author.id
+    dungeon = get_dungeon(user_id)
+
+    if not bolge_id:
+        return await ctx.send(embed=discord.Embed(
+            description="Bolge belirt! `!bolgesec zindan` veya `!bolgesec visored`",
+            color=discord.Color.red()
+        ))
+
+    bolge_id = bolge_id.lower()
+    
+    if bolge_id not in BOLGELER:
+        return await ctx.send(embed=discord.Embed(
+            description=f"Gecersiz bolge! Mevcut bolgeler: {', '.join(BOLGELER.keys())}",
+            color=discord.Color.red()
+        ))
+
+    bolge = BOLGELER[bolge_id]
+    prestij = dungeon.get("prestiж", 0)
+
+    if prestij < bolge["gerekli_prestij"]:
+        return await ctx.send(embed=discord.Embed(
+            description=f"**{bolge['isim']}** icin **Prestij {bolge['gerekli_prestij']}** gerekiyor!\nMevcut prestijin: **{prestij}**",
+            color=discord.Color.red()
+        ))
+
+    # Aktif savas varsa bolge degistiremez
+    if dungeon.get("aktif_savaş"):
+        return await ctx.send(embed=discord.Embed(
+            description="Aktif bir savasin var! Once savasi bitir veya `!kaç` ile kaç.",
+            color=discord.Color.orange()
+        ))
+
+    eski_bolge = dungeon.get("bolge", "zindan")
+    if eski_bolge == bolge_id:
+        return await ctx.send(embed=discord.Embed(
+            description=f"Zaten **{bolge['isim']}** bolgesindesin!",
+            color=discord.Color.orange()
+        ))
+
+    dungeon["bolge"] = bolge_id
+    save_dungeon(dungeon)
+
+    embed = discord.Embed(
+        title=f"{bolge['emoji']} Bolge Degistirildi!",
+        description=(
+            f"Artik **{bolge['isim']}** bolgesindesin!\n\n"
+            f"{bolge['açıklama']}\n\n"
+            f"`!gir` ile maceraya basla!"
+        ),
+        color=discord.Color.green(),
+        timestamp=datetime.now(timezone.utc)
+    )
+    embed.set_footer(text="Zindan Sistemi | Bolge Sistemi")
+    await ctx.send(embed=embed)
+
+
 @bot.command(name="zindanenvanteri", aliases=["zenv", "ze", "ekipman"])
-async def envanter(ctx):
-    """Ekipman envanterini göster."""
+async def envanter(ctx, sayfa: int = 1):
+    """Ekipman envanterini goster (sayfa sistemi)."""
     user_id = ctx.author.id
     dungeon = get_dungeon(user_id)
 
     if dungeon["sınıf"] is None:
-        return await ctx.send(embed=discord.Embed(description="Önce sınıf seç! `!sınıfseç <sınıf>`", color=discord.Color.red()))
+        return await ctx.send(embed=discord.Embed(description="Once sinif sec! `!sınıfseç <sınıf>`", color=discord.Color.red()))
 
-    envanter = dungeon.get("envanter", [])
+    envanter_liste = dungeon.get("envanter", [])
     kuşanılmış = dungeon.get("kuşanılmış", {})
 
-    if not envanter:
-        return await ctx.send(embed=discord.Embed(description="Envanterin boş!", color=discord.Color.dark_grey()))
+    if not envanter_liste:
+        return await ctx.send(embed=discord.Embed(description="Envanterin bos!", color=discord.Color.dark_grey()))
 
-    embed = discord.Embed(
-        title=f"Envanter — {ctx.author.display_name}",
-        color=discord.Color.dark_purple(),
-        timestamp=datetime.now(timezone.utc)
-    )
-
-    # Gruplanmış ekipmanlar
+    # Gruplanmis ekipmanlar
     silahlar = []
     zırhlar = []
     yüzükler = []
 
     envanter_güncellendi = False
-    for item in envanter:
-        # Yeni ve eski format uyumluluğu
+    for item in envanter_liste:
+        # Yeni ve eski format uyumlulugu
         item_id = item.get("id")
         eşya_tipi = item.get("eşya_tipi") or item.get("eşya_id")
         
@@ -4485,16 +4995,16 @@ async def envanter(ctx):
         # ID'yi her zaman goster
         satır = f"`{item_id}` {eşya['emoji']} **{eşya['isim']}** ({NADİRLİK_RENKLERİ[eşya['nadirlik']]} {eşya['nadirlik']})"
         if kuşanılmış_mı:
-            satır += " **[KUŞANILMIŞ]**"
+            satır += " **[K]**"
         stat_text = []
         if eşya.get("saldırı", 0) > 0:
-            stat_text.append(f"+{eşya['saldırı']} Sld")
+            stat_text.append(f"+{eşya['saldırı']}S")
         if eşya.get("savunma", 0) > 0:
-            stat_text.append(f"+{eşya['savunma']} Svn")
+            stat_text.append(f"+{eşya['savunma']}D")
         if eşya.get("can", 0) > 0:
-            stat_text.append(f"+{eşya['can']} Can")
+            stat_text.append(f"+{eşya['can']}C")
         if eşya.get("şans", 0) > 0:
-            stat_text.append(f"+%{eşya['şans']} Krt")
+            stat_text.append(f"+{eşya['şans']}%")
         satır += f" ({', '.join(stat_text)})" if stat_text else ""
 
         if eşya["tür"] == "silah":
@@ -4504,18 +5014,86 @@ async def envanter(ctx):
         elif eşya["tür"] == "yüzük":
             yüzükler.append(satır)
 
-    if silahlar:
-        embed.add_field(name="Silahlar", value="\n".join(silahlar), inline=False)
-    if zırhlar:
-        embed.add_field(name="Zırhlar", value="\n".join(zırhlar), inline=False)
-    if yüzükler:
-        embed.add_field(name="Yüzükler", value="\n".join(yüzükler), inline=False)
-
     # Eski formattaki esyalar guncellendiyse kaydet
     if envanter_güncellendi:
         save_dungeon(dungeon)
 
-    embed.set_footer(text="Kuşanmak: !kuşan <ID> | Satmak: !eşyasat <ID>")
+    # Sayfa sistemi - her sayfada maksimum 8 esya goster
+    ESYA_PER_SAYFA = 8
+    tum_esyalar = []
+    
+    if silahlar:
+        tum_esyalar.append(("Silahlar", silahlar))
+    if zırhlar:
+        tum_esyalar.append(("Zirhlar", zırhlar))
+    if yüzükler:
+        tum_esyalar.append(("Yuzukler", yüzükler))
+    
+    # Toplam esya sayisi
+    toplam_esya = len(silahlar) + len(zırhlar) + len(yüzükler)
+    toplam_sayfa = max(1, (toplam_esya + ESYA_PER_SAYFA - 1) // ESYA_PER_SAYFA)
+    
+    # Sayfa kontrolu
+    if sayfa < 1:
+        sayfa = 1
+    if sayfa > toplam_sayfa:
+        sayfa = toplam_sayfa
+    
+    # Sayfa icin esyalari hesapla
+    baslangic_idx = (sayfa - 1) * ESYA_PER_SAYFA
+    bitis_idx = sayfa * ESYA_PER_SAYFA
+    
+    # Tum esyalari duz liste yap
+    duz_liste = []
+    for kategori, esyalar in tum_esyalar:
+        for esya in esyalar:
+            duz_liste.append((kategori, esya))
+    
+    # Bu sayfadaki esyalar
+    sayfa_esyalari = duz_liste[baslangic_idx:bitis_idx]
+    
+    # Kategorilere gore grupla
+    sayfa_gruplu = {}
+    for kategori, esya in sayfa_esyalari:
+        if kategori not in sayfa_gruplu:
+            sayfa_gruplu[kategori] = []
+        sayfa_gruplu[kategori].append(esya)
+    
+    embed = discord.Embed(
+        title=f"Envanter - {ctx.author.display_name}",
+        description=f"Toplam **{toplam_esya}** esya | Sayfa **{sayfa}/{toplam_sayfa}**",
+        color=discord.Color.dark_purple(),
+        timestamp=datetime.now(timezone.utc)
+    )
+    
+    # Her kategori icin field ekle (1024 karakter limitini asma)
+    for kategori, esyalar in sayfa_gruplu.items():
+        # Her field max 1024 karakter olmali
+        field_text = "\n".join(esyalar)
+        if len(field_text) > 1020:
+            # Cok uzunsa bol
+            parcalar = []
+            mevcut_parca = ""
+            for esya in esyalar:
+                if len(mevcut_parca) + len(esya) + 1 > 1020:
+                    parcalar.append(mevcut_parca)
+                    mevcut_parca = esya
+                else:
+                    mevcut_parca += ("\n" if mevcut_parca else "") + esya
+            if mevcut_parca:
+                parcalar.append(mevcut_parca)
+            
+            for i, parca in enumerate(parcalar):
+                field_name = f"{kategori}" if i == 0 else f"{kategori} (devam)"
+                embed.add_field(name=field_name, value=parca, inline=False)
+        else:
+            embed.add_field(name=kategori, value=field_text, inline=False)
+    
+    # Navigasyon bilgisi
+    nav_text = "Kusan: `!kuşan <ID>` | Sat: `!eşyasat <ID>`"
+    if toplam_sayfa > 1:
+        nav_text += f"\nSayfa: `!zenv <sayfa>` (1-{toplam_sayfa})"
+    embed.set_footer(text=nav_text)
     await ctx.send(embed=embed)
 
 
@@ -4738,26 +5316,35 @@ async def prestij_yap(ctx):
     dungeon["seviye"] = 1
     dungeon["xp"] = 0
     dungeon["mevcut_kat"] = 0
+    dungeon["visored_kat"] = 0  # Visored kati da sifirla
+    dungeon["bolge"] = "zindan"  # Bolgeyi zindana cevir
     dungeon["sınıf"] = None  # Yeni sınıf seçebilir
     dungeon["envanter"] = []
     dungeon["kuşanılmış"] = {"silah": None, "zırh": None, "yüzük": None}
     dungeon["can"] = 0
+    dungeon["mana"] = 0
     dungeon["aktif_savaş"] = None
     save_dungeon(dungeon)
 
+    # Prestij 5 ise Visored Adasi acildi mesaji
+    visored_mesaj = ""
+    if sonraki_prestij >= 5:
+        visored_mesaj = "\n**VISORED ADASI ACILDI!** `!bolgesec visored` ile yeni maceraya basla!\n"
+
     embed = discord.Embed(
-        title=f"PRESTİJ {sonraki_prestij}!",
+        title=f"PRESTIJ {sonraki_prestij}!",
         description=(
             f"{'━' * 30}\n\n"
             f"{prestij_bilgi['emoji']} **{prestij_bilgi['isim']}** oldun!\n\n"
-            f"**Kalıcı Bonuslar:**\n"
-            f"Saldırı: **+{prestij_bilgi['bonus_saldırı']}**\n"
+            f"**Kalici Bonuslar:**\n"
+            f"Saldiri: **+{prestij_bilgi['bonus_saldırı']}**\n"
             f"Can: **+{prestij_bilgi['bonus_can']}**\n"
-            f"Altın: **+%{prestij_bilgi['bonus_altın']}**\n\n"
-            f"**Ödül:** +{ödül:,} VisoCoin\n\n"
-            f"**Sıfırlanan:** Seviye, kat, ekipman, sınıf\n"
-            f"**Korunan:** Prestij bonusları, istatistikler, en yüksek kat\n\n"
-            f"Yeni sınıf seçmek için: `!sınıfseç <sınıf>`"
+            f"Altin: **+%{prestij_bilgi['bonus_altın']}**\n\n"
+            f"**Odul:** +{ödül:,} VisoCoin\n"
+            f"{visored_mesaj}\n"
+            f"**Sifirlanan:** Seviye, kat, ekipman, sinif\n"
+            f"**Korunan:** Prestij bonuslari, istatistikler, en yuksek kat\n\n"
+            f"Yeni sinif secmek icin: `!sınıfseç <sınıf>`"
         ),
         color=discord.Color.gold(),
         timestamp=datetime.now(timezone.utc)
@@ -4765,6 +5352,7 @@ async def prestij_yap(ctx):
     embed.set_thumbnail(url=ctx.author.display_avatar.url)
     embed.set_footer(text="Zindan Sistemi | Prestij")
     await ctx.send(embed=embed)
+
 
 
 
@@ -7193,5 +7781,6 @@ async def bilmece_cevap(ctx, *, cevap: str = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
