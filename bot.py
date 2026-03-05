@@ -6065,7 +6065,7 @@ async def gemial(ctx, gemi_id: str = None):
     await ctx.send(embed=embed)
 
 
-@bot.command(name="denizler", aliases=["regions", "denizler", "harita"])
+@bot.command(name="harita", aliases=["regions", "harita"])
 async def bölgeler(ctx):
     """Sefere çıkılabilecek bölgeleri listele."""
     pirate = get_pirate(ctx.author.id)
@@ -7781,6 +7781,7 @@ async def bilmece_cevap(ctx, *, cevap: str = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
