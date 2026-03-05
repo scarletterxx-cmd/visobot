@@ -1443,7 +1443,7 @@ async def kabul(ctx):
     embed = discord.Embed(
         title="🤺 Düello Sonucu!",
         description=(
-            f"{winner_member.mention} düelloyu kazand��!\n\n"
+            f"{winner_member.mention} düelloyu kazandın!\n"
             f"Kazanc: **+{kazanc} VisoCoin**\n"
             f"{loser_member.mention} **{miktar} VisoCoin** kaybetti."
         ),
@@ -5069,7 +5069,7 @@ async def özel_saldırı(ctx):
             f"{'━' * 30}\n\n"
             f"**{savaş['emoji']} {savaş['isim']}**\n"
             f"Can: {can_bar_düşman} **{savaş['can']}/{savaş['maks_can']}**\n\n"
-            f"**{sın��f['emoji']} {ctx.author.display_name}**\n"
+            f"**{sınıf['emoji']} {ctx.author.display_name}**\n"
             f"Can: {can_bar_sen} **{dungeon['can']}/{statlar['can']}**{kalkan_text}\n"
             f"Mana: {mana_bar_sen} **{dungeon['mana']}/{MAKS_MANA}**{mana_hazır}\n\n"
             f"`!saldır` (+{sınıf['vuruş_mana_kazanç']}) | `!özel` (Mana dolunca) | `!iksir` | `!kaç`"
@@ -8514,6 +8514,7 @@ async def bilmece_cevap(ctx, *, cevap: str = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
