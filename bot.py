@@ -6058,11 +6058,11 @@ async def indeks(ctx, kategori: str = None):
                 value=(
                     f"*{scarlet_set.get('pasif_açıklama', '')}*\n\n"
                     f"**Bonus Detayları:**\n"
-                    f"• Tüm statlar **+%100**\n"
-                    f"• Hasarın **%50**'si kadar can çalma\n"
+                    f"• Tüm statlar **+%50**\n"
+                    f"• Hasarın **%30**'u kadar can çalma\n"
                     f"• Her turda **%5** can yenilenme\n"
-                    f"• **3 kez** ölümden kurtulma\n"
-                    f"• Verilen hasar **2 katına** çıkar"
+                    f"• **2 kez** ölümden kurtulma\n"
+                    f"• Verilen hasar **%10** artar"
                 ),
                 inline=False,
             )
@@ -8514,6 +8514,7 @@ async def bilmece_cevap(ctx, *, cevap: str = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
