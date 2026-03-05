@@ -4845,8 +4845,8 @@ async def mana_iksiri_satın_al(ctx, adet: int = 1):
 
 # ================= BOLGE KOMUTLARI =================
 
-@bot.command(name="bölgeler", aliases=["bölge"])
-async def bölgeler(ctx):
+@bot.command(name="zbölgeler", aliases=["zbölge"])
+async def zbölgeler(ctx):
     """Mevcut bölgeleri goster."""
     user_id = ctx.author.id
     dungeon = get_dungeon(user_id)
@@ -7781,6 +7781,7 @@ async def bilmece_cevap(ctx, *, cevap: str = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
