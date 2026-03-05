@@ -1378,7 +1378,7 @@ async def kabul(ctx):
     # Zaman asimi
     if now - duel["timestamp"] > 30:
         del active_duels[user_id]
-        return await ctx.send("Düello daveti zamanaşımına uğradı.")
+        return await ctx.send("Düello daveti zaşımına uğradı.")
 
     if duel["channel_id"] != ctx.channel.id:
         return await ctx.send("Düelloyu başlanan kanalda kabul etmelisin.")
@@ -3228,9 +3228,6 @@ async def gübresat(ctx, gübre_türü: str = None, adet: int = 1):
     )
     await ctx.send(embed=embed)
 
-
-# ================= SINIF TANIMLARI =================
-
 # ================= SINIF TANIMLARI =================
 
 SINIFLAR = {
@@ -3255,7 +3252,7 @@ SINIFLAR = {
         "temel_saldırı": 25,
         "temel_savunma": 8,
         "temel_şans": 12,
-        "vuruş_mana_kazanç": 8,  # Her vuruşta kazanılan mana (en güçlü özel = en düşük)
+        "vuruş_mana_kazanç": 20,  # Her vuruşta kazanılan mana (en güçlü özel = en düşük)
         "özel_yetenek": "Ateş Topu",
         "özel_açıklama": "Düşmana %80 ekstra hasar veren büyü fırlatır. (Mana dolunca)",
         "özel_çarpan": 1.8,
@@ -3303,22 +3300,23 @@ SINIFLAR = {
     "doktor": {
         "isim": "Doktor",
         "emoji": "💉",
-        "açıklama": "Şifa uzmanı. Kendini iyileştirebilir ve saldırıya devam edebilir.",
+        "açıklama": "Şifa uzmanı. Kendini iyileştirebilir ve kalkan kazanabilir.",
         "temel_can": 100,
         "temel_saldırı": 15,
         "temel_savunma": 12,
         "temel_şans": 8,
-        "vuruş_mana_kazanç": 16,  # Her vuruşta kazanılan mana (destek = yüksek)
+        "vuruş_mana_kazanç": 35,  # Her vuruşta kazanılan mana (destek = yüksek)
         "özel_yetenek": "Acil Müdahale",
-        "özel_açıklama": "Maksimum canının %40'ı kadar iyileşir ve hasar verir. (Mana dolunca)",
+        "özel_açıklama": "Canı tamamen doldurur ve maksimum canın %25'i kadar kalkan kazanır. (Mana dolunca)",
         "özel_çarpan": 1.0,
-        "iyileşme": 40,  # Maks canın yüzdesi olarak iyileşme
+        "iyileşme": 100,  # Maks canın yüzdesi olarak iyileşme
+        "kalkan": 25,  # Maks canın yüzdesi olarak kalkan
     },
 }
 
 # Sabit mana değerleri
 MAKS_MANA = 100  # Tüm sınıflar için sabit maksimum mana
-KAT_BASLANGIC_MANA = 0  # Kat başında mana sıfırlanır
+KAT_BAŞLANGIÇ_MANA = 0  # Kat başında mana sıfırlanır
 
 
 # ================= EKİPMAN SİSTEMİ =================
@@ -3462,6 +3460,11 @@ PRESTİJ_SEVİYELERİ = {
     3: {"isim": "Efsane Kahraman", "emoji": "⭐⭐⭐", "bonus_saldırı": 20, "bonus_can": 100, "bonus_altın": 35},
     4: {"isim": "Mistik Şampiyon", "emoji": "💫", "bonus_saldırı": 30, "bonus_can": 150, "bonus_altın": 50},
     5: {"isim": "Tanrısal Güç", "emoji": "👑", "bonus_saldırı": 50, "bonus_can": 250, "bonus_altın": 75},
+    6: {"isim": "Antik Koruyucu", "emoji": "🏛️", "bonus_saldırı": 75, "bonus_can": 400, "bonus_altın": 100},
+    7: {"isim": "Kadim Savaş Lordu", "emoji": "⚔️", "bonus_saldırı": 100, "bonus_can": 600, "bonus_altın": 125},
+    8: {"isim": "Ölümsüz Titan", "emoji": "🗿", "bonus_saldırı": 130, "bonus_can": 850, "bonus_altın": 150},
+    9: {"isim": "Evrenin Hakimi", "emoji": "🌌", "bonus_saldırı": 170, "bonus_can": 1150, "bonus_altın": 200},
+    10: {"isim": "Yaratılışın Efendisi", "emoji": "✨", "bonus_saldırı": 220, "bonus_can": 1500, "bonus_altın": 250},
 }
 
 PRESTİJ_GEREKSİNİMLERİ = {
@@ -3470,6 +3473,73 @@ PRESTİJ_GEREKSİNİMLERİ = {
     3: {"kat": 50, "boss": 10, "seviye": 20},
     4: {"kat": 75, "boss": 15, "seviye": 25},
     5: {"kat": 100, "boss": 20, "seviye": 30},
+    6: {"kat": 130, "boss": 28, "seviye": 35},
+    7: {"kat": 165, "boss": 38, "seviye": 40},
+    8: {"kat": 200, "boss": 50, "seviye": 45},
+    9: {"kat": 250, "boss": 65, "seviye": 50},
+    10: {"kat": 300, "boss": 80, "seviye": 55},
+}
+
+
+# ================= SET SİSTEMİ =================
+
+SETLER = {
+    "visored": {
+        "isim": "Visored Seti",
+        "emoji": "💀",
+        "parçalar": ["visored_kılıcı", "visored_zırhı", "visored_yüzüğü"],
+        "pasif_isim": "Ölümün Eli",
+        "pasif_açıklama": "Her saldırıda verilen hasarın %15'i kadar can çalar. Kritik şansı +10%.",
+        "bonus": {"can_çalma": 15, "kritik_bonus": 10},
+    },
+    "kraken": {
+        "isim": "Kraken Seti",
+        "emoji": "🦑",
+        "parçalar": ["kraken_mızrağı", "kraken_zırhı", "kraken_yüzüğü"],
+        "pasif_isim": "Derin Denizin Gazabı",
+        "pasif_açıklama": "Alınan hasarın %20'si düşmana yansır. Savunma +15.",
+        "bonus": {"hasar_yansıtma": 20, "savunma_bonus": 15},
+    },
+    "deniz_tanrısı": {
+        "isim": "Deniz Tanrısı Seti",
+        "emoji": "🔱",
+        "parçalar": ["poseidon_mızrağı", "tanrı_zırhı", "deniz_tanrısı_yüzüğü"],
+        "pasif_isim": "Poseidon'un Lütfu",
+        "pasif_açıklama": "Her 3 turda bir %25 ekstra hasar. Mana kazanımı 2 katına çıkar.",
+        "bonus": {"ekstra_hasar": 25, "mana_çarpanı": 2},
+    },
+    "fırtına": {
+        "isim": "Fırtına Seti",
+        "emoji": "⛈️",
+        "parçalar": ["fırtına_baltası", "şimşek_zırhı", "fırtına_yüzüğü"],
+        "pasif_isim": "Şimşek Çarpması",
+        "pasif_açıklama": "Her saldırıda %20 şansla ekstra şimşek hasarı (saldırının %30'u).",
+        "bonus": {"şimşek_şansı": 20, "şimşek_hasar": 30},
+    },
+    "ejderha": {
+        "isim": "Ejderha Seti",
+        "emoji": "🐉",
+        "parçalar": ["ejderha_kılıcı", "ejderha_zırhı", "ejderha_yüzüğü"],
+        "pasif_isim": "Ejderhanın Nefesi",
+        "pasif_açıklama": "Saldırı gücü %20 artar. Ateş hasarına karşı bağışıklık.",
+        "bonus": {"saldırı_artışı": 20, "ateş_bağışıklık": True},
+    },
+    "vampir": {
+        "isim": "Vampir Seti",
+        "emoji": "🧛",
+        "parçalar": ["karanlık_asa", "elmas_zırh", "vampir_yüzüğü"],
+        "pasif_isim": "Kan Emici",
+        "pasif_açıklama": "Verilen hasarın %10'u kadar can çalar. Gece savaşlarında hasar +25%.",
+        "bonus": {"can_çalma": 10, "gece_bonus": 25},
+    },
+    "tanrısal": {
+        "isim": "Tanrısal Set",
+        "emoji": "👑",
+        "parçalar": ["ruh_kesici", "titan_zırhı", "tanrı_yüzüğü"],
+        "pasif_isim": "İlahi Güç",
+        "pasif_açıklama": "Tüm statlar %15 artar. Ölümden bir kez kurtulma şansı.",
+        "bonus": {"stat_artışı": 15, "ikinci_şans": True},
+    },
 }
 
 
@@ -3665,7 +3735,7 @@ VISORED_LOOT_TABLOSU = {
 def get_loot_zorluk(kat, bolge="zindan"):
     """Kata ve bolgeye göre loot zorluk seviyesi."""
     if bolge == "visored":
-        # Visored Adasi daha yuksek katlarda basliyor gibi davran
+        # Visored Adası daha yüksek katlarda başlıyor gibi davran
         if kat <= 5:
             return "kolay"
         elif kat <= 10:
@@ -3733,17 +3803,18 @@ def get_dungeon(user_id):
             "maks_can": 0,
             "mana": 0,
             "maks_mana": 0,
+            "kalkan": 0,  # Kalkan miktarı
             "iksir": 0,
             "mana_iksiri": 0,
             "aktif_savaş": None,  # aktif canavar savaşı
             "bolge": "zindan",  # aktif bolge
-            "visored_kat": 0,  # Visored Adasi mevcut kati
-            "visored_en_yuksek": 0,  # Visored Adasi en yuksek kati
+            "visored_kat": 0,  # Visored Adası mevcut katı
+            "visored_en_yuksek": 0,  # Visored Adası en yüksek katı
         }
         dungeons_col.insert_one(dungeon)
 
     # Eski veriler için alan kontrolü
-    for alan in ["prestiж", "boss_öldürme", "toplam_ölüm", "iksir", "mana", "maks_mana", "mana_iksiri", "visored_kat", "visored_en_yuksek"]:
+    for alan in ["prestiж", "boss_öldürme", "toplam_ölüm", "iksir", "mana", "maks_mana", "mana_iksiri", "visored_kat", "visored_en_yuksek", "kalkan"]:
         if alan not in dungeon:
             dungeon[alan] = 0
     if "bolge" not in dungeon:
@@ -3798,6 +3869,39 @@ def get_karakter_statları(dungeon):
                         şans += eşya.get("şans", 0)
                     break
 
+    # Set bonuslarını hesapla (kuşanılmış eşyalardan)
+    aktif_setler = []
+    kuşanılmış_tipler = set()
+    for slot, kuşanılmış_id in kuşanılmış.items():
+        if kuşanılmış_id:
+            for item in envanter:
+                if item.get("id") == kuşanılmış_id:
+                    eşya_tipi = item.get("eşya_tipi") or item.get("eşya_id")
+                    if eşya_tipi:
+                        kuşanılmış_tipler.add(eşya_tipi)
+                    break
+    
+    for set_id, set_bilgi in SETLER.items():
+        parçalar = set(set_bilgi["parçalar"])
+        if parçalar.issubset(kuşanılmış_tipler):
+            aktif_setler.append((set_id, set_bilgi))
+            bonus = set_bilgi.get("bonus", {})
+            # Kraken seti savunma bonusu
+            if bonus.get("savunma_bonus"):
+                savunma += bonus["savunma_bonus"]
+            # Ejderha seti saldırı artışı
+            if bonus.get("saldırı_artışı"):
+                saldırı = int(saldırı * (1 + bonus["saldırı_artışı"] / 100))
+            # Tanrısal set stat artışı
+            if bonus.get("stat_artışı"):
+                çarpan = 1 + bonus["stat_artışı"] / 100
+                saldırı = int(saldırı * çarpan)
+                savunma = int(savunma * çarpan)
+                can = int(can * çarpan)
+            # Visored seti kritik bonus
+            if bonus.get("kritik_bonus"):
+                şans += bonus["kritik_bonus"]
+
     return {
         "can": can,
         "mana": mana,
@@ -3805,6 +3909,7 @@ def get_karakter_statları(dungeon):
         "savunma": savunma,
         "şans": şans,
         "vuruş_mana": vuruş_mana,  # Her vuruşta kazanılan mana miktarı
+        "aktif_setler": aktif_setler,  # Aktif set listesi
     }
 
 
@@ -3831,6 +3936,34 @@ def get_canavarlar_for_kat(kat, bolge="zindan"):
     return uygun
 
 
+def get_aktif_setler(dungeon):
+    """Kuşanılmış ekipmanlardan aktif setleri bul.
+    Returns: list of (set_id, set_bilgi) tuples
+    """
+    kuşanılmış = dungeon.get("kuşanılmış", {})
+    envanter = dungeon.get("envanter", [])
+    
+    # Kuşanılmış eşya tiplerini topla
+    kuşanılmış_tipler = set()
+    for slot, kuşanılmış_id in kuşanılmış.items():
+        if kuşanılmış_id:
+            for item in envanter:
+                if item.get("id") == kuşanılmış_id:
+                    eşya_tipi = item.get("eşya_tipi") or item.get("eşya_id")
+                    if eşya_tipi:
+                        kuşanılmış_tipler.add(eşya_tipi)
+                    break
+    
+    # Aktif setleri kontrol et
+    aktif_setler = []
+    for set_id, set_bilgi in SETLER.items():
+        parçalar = set(set_bilgi["parçalar"])
+        if parçalar.issubset(kuşanılmış_tipler):
+            aktif_setler.append((set_id, set_bilgi))
+    
+    return aktif_setler
+
+
 def hasar_hesapla(saldırı, savunma, şans):
     """Hasar hesaplama: saldırı - savunma/3 + rastgele + kritik."""
     temel = max(saldırı - savunma // 3, 1)
@@ -3839,6 +3972,55 @@ def hasar_hesapla(saldırı, savunma, şans):
     if kritik:
         rastgele = int(rastgele * 1.8)
     return rastgele, kritik
+
+
+def can_bar_hesapla(can, maks_can, kalkan=0):
+    """Can barını kalkan ile birlikte hesapla.
+    Görünüm: ⬜⬜🟩🟩🟩🟩🟩🟩⬛⬛ (beyaz=kalkan, yeşil=can, siyah=kayıp)
+    """
+    toplam_kare = 10
+    
+    # Kalkan kareleri (beyaz) - maksimum canın yüzdesine göre
+    kalkan_yuzde = kalkan / maks_can if maks_can > 0 else 0
+    kalkan_kare = min(int(kalkan_yuzde * toplam_kare), toplam_kare)
+    
+    # Kalan karelerden can kareleri (yeşil)
+    kalan_kare = toplam_kare - kalkan_kare
+    can_yuzde = can / maks_can if maks_can > 0 else 0
+    can_kare = min(int(can_yuzde * kalan_kare), kalan_kare)
+    
+    # Boş kareler (siyah)
+    bos_kare = kalan_kare - can_kare
+    
+    return "⬜" * kalkan_kare + "🟩" * can_kare + "⬛" * bos_kare
+
+
+def hasar_al(dungeon, hasar):
+    """Hasar al - önce kalkan absorbe eder, sonra cana gelir.
+    Returns: (alınan_hasar, kalkan_hasarı, kalan_kalkan)
+    """
+    kalkan = dungeon.get("kalkan", 0)
+    kalkan_hasarı = 0
+    can_hasarı = 0
+    
+    if kalkan > 0:
+        if hasar <= kalkan:
+            # Kalkan tüm hasarı absorbe etti
+            kalkan_hasarı = hasar
+            dungeon["kalkan"] = kalkan - hasar
+            can_hasarı = 0
+        else:
+            # Kalkan kırıldı, kalan hasar cana geldi
+            kalkan_hasarı = kalkan
+            can_hasarı = hasar - kalkan
+            dungeon["kalkan"] = 0
+            dungeon["can"] = max(0, dungeon["can"] - can_hasarı)
+    else:
+        # Kalkan yok, direkt cana
+        can_hasarı = hasar
+        dungeon["can"] = max(0, dungeon["can"] - can_hasarı)
+    
+    return can_hasarı, kalkan_hasarı, dungeon.get("kalkan", 0)
 
 
 # ================= ZİNDAN KOMUTLARI =================
@@ -3951,21 +4133,21 @@ async def zindan(ctx):
     aktif_bolge_bilgi = BOLGELER.get(aktif_bolge, BOLGELER["zindan"])
     
     embed.add_field(
-        name=f"{aktif_bolge_bilgi['emoji']} Aktif Bolge: {aktif_bolge_bilgi['isim']}",
+        name=f"{aktif_bolge_bilgi['emoji']} Aktif Bölge: {aktif_bolge_bilgi['isim']}",
         value=(
-            f"**Karanlik Zindan:** Kat **{dungeon['mevcut_kat']}** | En Yuksek: **{dungeon['en_yüksek_kat']}**\n"
-            f"**Visored Adasi:** Kat **{dungeon.get('visored_kat', 0)}** | En Yuksek: **{dungeon.get('visored_en_yuksek', 0)}**"
+            f"**Karanlık Zindan:** Kat **{dungeon['mevcut_kat']}** | En Yüksek: **{dungeon['en_yüksek_kat']}**\n"
+            f"**Visored Adası:** Kat **{dungeon.get('visored_kat', 0)}** | En Yüksek: **{dungeon.get('visored_en_yuksek', 0)}**"
         ),
         inline=False
     )
     
     embed.add_field(
-        name="Istatistikler",
+        name="İstatistikler",
         value=(
-            f"Oldurme: **{dungeon['toplam_öldürme']}** | "
+            f"Öldürme: **{dungeon['toplam_öldürme']}** | "
             f"Boss: **{dungeon['boss_öldürme']}** | "
-            f"Olum: **{dungeon['toplam_ölüm']}**\n"
-            f"Can Iksiri: **{dungeon.get('iksir', 0)}** | Mana Iksiri: **{dungeon.get('mana_iksiri', 0)}**"
+            f"Ölüm: **{dungeon['toplam_ölüm']}**\n"
+            f"Can İksiri: **{dungeon.get('iksir', 0)}** | Mana İksiri: **{dungeon.get('mana_iksiri', 0)}**"
         ),
         inline=False
     )
@@ -4077,7 +4259,7 @@ async def sınıfseç(ctx, sınıf_id: str = None):
 
 @bot.command(name="gir", aliases=["enter", "zindangir", "dalış"])
 async def zindan_gir(ctx):
-    """Bolgenin bir sonraki katina gir."""
+    """Bölgenin bir sonraki katına gir."""
     user_id = ctx.author.id
 
     # Cooldown kontrolü
@@ -4106,21 +4288,20 @@ async def zindan_gir(ctx):
         )
         return await ctx.send(embed=embed)
 
-    # Canı sıfırsa yenile, mana her kat başında 0'dan başlar
+    # Canı sıfırsa yenile, mana artık kata geçince sıfırlanmıyor
     statlar = get_karakter_statları(dungeon)
     if dungeon.get("can", 0) <= 0:
         dungeon["can"] = statlar["can"]
-    # Mana her kat başında sıfırlanır
-    dungeon["mana"] = KAT_BASLANGIC_MANA
+    # Mana kata geçince sıfırlanmıyor - önceki kattan devam ediyor
     save_dungeon(dungeon)
 
     zindan_cd[user_id] = now
 
-    # Bolge kontrolu
+    # Bölge kontrolü
     bolge = dungeon.get("bolge", "zindan")
     bolge_bilgi = BOLGELER.get(bolge, BOLGELER["zindan"])
     
-    # Kat ilerle (bolgeye gore)
+    # Kat ilerle (bölgeye göre)
     if bolge == "visored":
         dungeon["visored_kat"] = dungeon.get("visored_kat", 0) + 1
         kat = dungeon["visored_kat"]
@@ -4162,22 +4343,22 @@ async def zindan_gir(ctx):
                 f"{'━' * 30}\n"
                 f"{boss['emoji']} **{boss['isim']}** yolunu kesiyor!\n"
                 f"{'━' * 30}\n\n"
-                f"**Boss Statlari:**\n"
-                f"Can: **{boss['can']}** | Saldiri: **{boss['saldırı']}** | Savunma: **{boss['savunma']}**\n\n"
+                f"**Boss Statları:**\n"
+                f"Can: **{boss['can']}** | Saldırı: **{boss['saldırı']}** | Savunma: **{boss['savunma']}**\n\n"
                 f"**Senin Durumun:**\n"
                 f"{sınıf['emoji']} Can: **{dungeon['can']}/{statlar['can']}** | Mana: **{dungeon['mana']}/{MAKS_MANA}** {mana_hazır}\n\n"
                 f"`!saldır` — Saldır (+{sınıf['vuruş_mana_kazanç']} mana)\n"
                 f"`!özel` — {sınıf['özel_yetenek']} (Mana dolunca)\n"
                 f"`!iksir` — Can iksiri\n"
-                f"`!kaç` — Kac (kati kaybedersin)"
+                f"`!kaç` — Kaç (katı kaybedersin)"
             ),
             color=discord.Color.dark_red(),
             timestamp=datetime.now(timezone.utc)
         )
-        embed.set_footer(text=f"{bolge_bilgi['isim']} | Boss Savasi")
+        embed.set_footer(text=f"{bolge_bilgi['isim']} | Boss Savaşı")
         return await ctx.send(embed=embed)
 
-    # Hazine odası kontrolü (boss değilse) - sadece zindan icin
+    # Hazine odası kontrolü (boss değilse) - sadece zindan için
     if bolge == "zindan":
         hazine_bulundu = await hazine_odası_kontrol(ctx, dungeon, kat)
         if hazine_bulundu:
@@ -4187,11 +4368,11 @@ async def zindan_gir(ctx):
     uygun_canavarlar = get_canavarlar_for_kat(kat, bolge)
     canavar_id, canavar = random.choice(uygun_canavarlar)
 
-    # Kat bonusu (zorluk artışı) - Visored icin daha yuksek carpan
+    # Kat bonusu (zorluk artışı) - Visored için daha yüksek çarpan
     if bolge == "visored":
-        kat_çarpan = 1 + (kat - 1) * 0.08  # %8 artis per kat
+        kat_çarpan = 1 + (kat - 1) * 0.08  # %8 artış per kat
     else:
-        kat_çarpan = 1 + (kat - 1) * 0.05  # %5 artis per kat
+        kat_çarpan = 1 + (kat - 1) * 0.05  # %5 artış per kat
     canavar_can = int(canavar["can"] * kat_çarpan)
     canavar_saldırı = int(canavar["saldırı"] * kat_çarpan)
     canavar_savunma = int(canavar["savunma"] * kat_çarpan)
@@ -4215,11 +4396,14 @@ async def zindan_gir(ctx):
 
     sınıf = SINIFLAR[dungeon["sınıf"]]
     can_bar_düşman = "🟥" * 10
-    can_bar_sen = "🟩" * int(dungeon["can"] / statlar["can"] * 10) + "⬛" * (10 - int(dungeon["can"] / statlar["can"] * 10))
+    # Kalkan ile can bar hesapla
+    kalkan = dungeon.get("kalkan", 0)
+    can_bar_sen = can_bar_hesapla(dungeon["can"], statlar["can"], kalkan)
     mana_bar_sen = "🟦" * int(dungeon["mana"] / MAKS_MANA * 10) + "⬛" * (10 - int(dungeon["mana"] / MAKS_MANA * 10))
     mana_hazır = " ⚡" if dungeon['mana'] >= MAKS_MANA else ""
+    kalkan_text = f" 🛡️ +{kalkan}" if kalkan > 0 else ""
 
-    # Bolgeye gore renk
+    # Bölgeye göre renk
     embed_renk = discord.Color.teal() if bolge == "visored" else discord.Color.dark_grey()
 
     embed = discord.Embed(
@@ -4228,10 +4412,10 @@ async def zindan_gir(ctx):
             f"{'━' * 30}\n\n"
             f"**{canavar['emoji']} {canavar['isim']}**\n"
             f"Can: {can_bar_düşman} **{canavar_can}/{canavar_can}**\n"
-            f"Saldiri: **{canavar_saldırı}** | Savunma: **{canavar_savunma}**\n\n"
+            f"Saldırı: **{canavar_saldırı}** | Savunma: **{canavar_savunma}**\n\n"
             f"{'━' * 30}\n\n"
             f"**{sınıf['emoji']} {ctx.author.display_name}**\n"
-            f"Can: {can_bar_sen} **{dungeon['can']}/{statlar['can']}**\n"
+            f"Can: {can_bar_sen} **{dungeon['can']}/{statlar['can']}**{kalkan_text}\n"
             f"Mana: {mana_bar_sen} **{dungeon['mana']}/{MAKS_MANA}**{mana_hazır}\n\n"
             f"`!saldır` (+{sınıf['vuruş_mana_kazanç']} mana) | `!özel` (Mana dolunca)\n"
             f"`!iksir` | `!kaç`"
@@ -4246,7 +4430,7 @@ async def zindan_gir(ctx):
     update_quest_progress(user_id, "zindan_kat", 1)
 
 
-@bot.command(name="saldır", aliases=["attack", "vuruş", "saldiri"])
+@bot.command(name="saldır", aliases=["attack", "vuruş", "saldırı"])
 async def zsaldır(ctx):
     """Aktif canavara saldır."""
     user_id = ctx.author.id
@@ -4268,6 +4452,14 @@ async def zsaldır(ctx):
 
     # Her vuruşta mana kazan
     mana_kazanç = statlar["vuruş_mana"]
+    
+    # Deniz Tanrısı seti - Mana çarpanı
+    aktif_setler = statlar.get("aktif_setler", [])
+    for set_id, set_bilgi in aktif_setler:
+        bonus = set_bilgi.get("bonus", {})
+        if bonus.get("mana_çarpanı"):
+            mana_kazanç = int(mana_kazanç * bonus["mana_çarpanı"])
+    
     eski_mana = dungeon.get("mana", 0)
     dungeon["mana"] = min(MAKS_MANA, eski_mana + mana_kazanç)
     
@@ -4283,7 +4475,43 @@ async def zsaldır(ctx):
     else:
         savaş_log += f"{sınıf['emoji']} **{hasar}** hasar verdin.\n"
 
-    savaş["can"] = max(0, savaş["can"] - hasar)
+    # Set pasiflerini uygula
+    aktif_setler = statlar.get("aktif_setler", [])
+    ekstra_hasar = 0
+    can_çalma = 0
+    
+    for set_id, set_bilgi in aktif_setler:
+        bonus = set_bilgi.get("bonus", {})
+        
+        # Visored/Vampir seti - Can çalma
+        if bonus.get("can_çalma"):
+            çalınan = int(hasar * bonus["can_çalma"] / 100)
+            can_çalma += çalınan
+        
+        # Fırtına seti - Şimşek hasarı
+        if bonus.get("şimşek_şansı"):
+            if random.randint(1, 100) <= bonus["şimşek_şansı"]:
+                şimşek = int(statlar["saldırı"] * bonus["şimşek_hasar"] / 100)
+                ekstra_hasar += şimşek
+                savaş_log += f"⚡ **Şimşek Çarpması!** Ekstra **{şimşek}** hasar!\n"
+        
+        # Deniz Tanrısı seti - Her 3 turda ekstra hasar
+        if bonus.get("ekstra_hasar"):
+            tur_sayısı = dungeon.get("savaş_turu", 0) + 1
+            dungeon["savaş_turu"] = tur_sayısı
+            if tur_sayısı % 3 == 0:
+                ekstra = int(hasar * bonus["ekstra_hasar"] / 100)
+                ekstra_hasar += ekstra
+                savaş_log += f"🔱 **Poseidon'un Lütfu!** Ekstra **{ekstra}** hasar!\n"
+    
+    # Can çalma uygula
+    if can_çalma > 0:
+        dungeon["can"] = min(dungeon["can"] + can_çalma, statlar["can"])
+        savaş_log += f"🧛 **Can Çaldın!** +**{can_çalma}** can!\n"
+    
+    # Toplam hasarı uygula
+    toplam_hasar = hasar + ekstra_hasar
+    savaş["can"] = max(0, savaş["can"] - ekstra_hasar)  # Ekstra hasar zaten ana hasar uygulandı
 
     # Canavar öldü mü?
     if savaş["can"] <= 0:
@@ -4380,7 +4608,7 @@ async def zsaldır(ctx):
         return
 
     # Canavar saldırısı
-    # Suikastci kacinma kontrolu
+    # Suikastçi kaçınma kontrolü
     kaçındı = False
     if dungeon["sınıf"] == "suikastçi":
         kaçınma_şansı = SINIFLAR["suikastçi"].get("kaçınma", 10)
@@ -4391,12 +4619,35 @@ async def zsaldır(ctx):
     if not kaçındı:
         düşman_hasar, düşman_kritik = hasar_hesapla(savaş["saldırı"], statlar["savunma"], 8)
 
-        if düşman_kritik:
-            savaş_log += f"**KRİTİK!** {savaş['emoji']} **{düşman_hasar}** hasar verdi!\n"
-        else:
-            savaş_log += f"{savaş['emoji']} **{düşman_hasar}** hasar verdi.\n"
+        # Kalkan sistemi ile hasar al
+        can_hasarı, kalkan_hasarı, kalan_kalkan = hasar_al(dungeon, düşman_hasar)
 
-        dungeon["can"] = max(0, dungeon["can"] - düşman_hasar)
+        if düşman_kritik:
+            if kalkan_hasarı > 0:
+                savaş_log += f"**KRİTİK!** {savaş['emoji']} **{düşman_hasar}** hasar verdi! (🛡️ -{kalkan_hasarı} kalkan"
+                if can_hasarı > 0:
+                    savaş_log += f", ❤️ -{can_hasarı} can)\n"
+                else:
+                    savaş_log += ")\n"
+            else:
+                savaş_log += f"**KRİTİK!** {savaş['emoji']} **{düşman_hasar}** hasar verdi!\n"
+        else:
+            if kalkan_hasarı > 0:
+                savaş_log += f"{savaş['emoji']} **{düşman_hasar}** hasar verdi! (🛡️ -{kalkan_hasarı} kalkan"
+                if can_hasarı > 0:
+                    savaş_log += f", ❤️ -{can_hasarı} can)\n"
+                else:
+                    savaş_log += ")\n"
+            else:
+                savaş_log += f"{savaş['emoji']} **{düşman_hasar}** hasar verdi.\n"
+        
+        # Kraken seti - Hasar yansıtma
+        for set_id, set_bilgi in aktif_setler:
+            bonus = set_bilgi.get("bonus", {})
+            if bonus.get("hasar_yansıtma"):
+                yansıyan = int(düşman_hasar * bonus["hasar_yansıtma"] / 100)
+                savaş["can"] = max(0, savaş["can"] - yansıyan)
+                savaş_log += f"🦑 **Hasar Yansıdı!** Düşmana **{yansıyan}** hasar!\n"
 
     # Doktor pasif iyilesme (her 3 turda bir %10)
     if dungeon["sınıf"] == "doktor" and savaş.get("tur", 0) % 3 == 0 and savaş.get("tur", 0) > 0:
@@ -4411,7 +4662,48 @@ async def zsaldır(ctx):
 
     # Oyuncu öldü mü?
     if dungeon["can"] <= 0:
-        # Ölüm - 5 kat geri at (bolgeye gore)
+        # Tanrısal set - İkinci şans kontrolü
+        ikinci_şans_kullanıldı = dungeon.get("ikinci_şans_kullanıldı", False)
+        for set_id, set_bilgi in aktif_setler:
+            bonus = set_bilgi.get("bonus", {})
+            if bonus.get("ikinci_şans") and not ikinci_şans_kullanıldı:
+                dungeon["can"] = int(statlar["can"] * 0.3)  # %30 can ile diriliş
+                dungeon["ikinci_şans_kullanıldı"] = True
+                savaş_log += f"👑 **İLAHİ GÜÇ!** Ölümden döndün! (%30 can ile)\n"
+                save_dungeon(dungeon)
+                
+                # Savaş devam embed'i göster
+                savas_bolge = savaş.get("bolge", "zindan")
+                bolge_bilgi = BOLGELER.get(savas_bolge, BOLGELER["zindan"])
+                
+                kalkan = dungeon.get("kalkan", 0)
+                can_bar_sen = can_bar_hesapla(dungeon["can"], statlar["can"], kalkan)
+                düşman_can_pct = max(0, savaş["can"] / savaş["maks_can"])
+                düşman_bar_dolu = int(düşman_can_pct * 10)
+                can_bar_düşman = "🟥" * düşman_bar_dolu + "⬛" * (10 - düşman_bar_dolu)
+                mana_pct = max(0, dungeon["mana"] / MAKS_MANA)
+                mana_bar_dolu = int(mana_pct * 10)
+                mana_bar_sen = "🟦" * mana_bar_dolu + "⬛" * (10 - mana_bar_dolu)
+                
+                embed = discord.Embed(
+                    title=f"{bolge_bilgi['emoji']} Kat {savaş['kat']} — İKİNCİ ŞANS!",
+                    description=(
+                        f"{savaş_log}\n"
+                        f"{'━' * 30}\n\n"
+                        f"**{savaş['emoji']} {savaş['isim']}**\n"
+                        f"Can: {can_bar_düşman} **{savaş['can']}/{savaş['maks_can']}**\n\n"
+                        f"**{sınıf['emoji']} {ctx.author.display_name}**\n"
+                        f"Can: {can_bar_sen} **{dungeon['can']}/{statlar['can']}**\n"
+                        f"Mana: {mana_bar_sen} **{dungeon['mana']}/{MAKS_MANA}**\n"
+                    ),
+                    color=discord.Color.gold(),
+                    timestamp=datetime.now(timezone.utc)
+                )
+                embed.set_footer(text=f"{bolge_bilgi['isim']} | Kat {savaş['kat']}")
+                return await ctx.send(embed=embed)
+        
+        # Ölüm - 5 kat geri at (bölgeye göre)
+        dungeon["ikinci_şans_kullanıldı"] = False  # Yeni savaşta sıfırla
         dungeon["toplam_ölüm"] += 1
         savas_bolge = savaş.get("bolge", "zindan")
         
@@ -4425,17 +4717,18 @@ async def zsaldır(ctx):
             mevcut_kat = dungeon["mevcut_kat"]
             
         dungeon["can"] = statlar["can"]  # Canı yenile
-        dungeon["mana"] = 0  # Mana sıfırlanır (kat başında 0 başlar)
+        dungeon["mana"] = 0  # Mana sıfırlanır (ölümde)
+        dungeon["kalkan"] = 0  # Kalkan sıfırlanır
         dungeon["aktif_savaş"] = None
         save_dungeon(dungeon)
 
         bolge_bilgi = BOLGELER.get(savas_bolge, BOLGELER["zindan"])
         embed = discord.Embed(
-            title="YENILDIN!",
+            title="YENİLDİN!",
             description=(
                 f"{savaş_log}\n"
                 f"**{savaş['emoji']} {savaş['isim']}** seni yendi!\n\n"
-                f"**5 kat** geri dustun. Mevcut kat: **{mevcut_kat}**\n"
+                f"**5 kat** geri düştün. Mevcut kat: **{mevcut_kat}**\n"
                 f"Can ve manan yenilendi.\n\n"
                 f"Tekrar denemek icin: `!gir`"
             ),
@@ -4453,14 +4746,17 @@ async def zsaldır(ctx):
     düşman_bar_dolu = int(düşman_can_pct * 10)
     can_bar_düşman = "🟥" * düşman_bar_dolu + "⬛" * (10 - düşman_bar_dolu)
 
-    sen_can_pct = max(0, dungeon["can"] / statlar["can"])
-    sen_bar_dolu = int(sen_can_pct * 10)
-    can_bar_sen = "🟩" * sen_bar_dolu + "⬛" * (10 - sen_bar_dolu)
+    # Kalkan ile can bar hesapla
+    kalkan = dungeon.get("kalkan", 0)
+    can_bar_sen = can_bar_hesapla(dungeon["can"], statlar["can"], kalkan)
 
     mana_pct = max(0, dungeon["mana"] / MAKS_MANA)
     mana_bar_dolu = int(mana_pct * 10)
     mana_bar_sen = "🟦" * mana_bar_dolu + "⬛" * (10 - mana_bar_dolu)
     mana_hazır = " ⚡" if dungeon['mana'] >= MAKS_MANA else ""
+
+    # Kalkan bilgisi
+    kalkan_text = f" 🛡️ +{kalkan}" if kalkan > 0 else ""
 
     embed = discord.Embed(
         title=f"Kat {savaş['kat']} — Savaş Devam Ediyor",
@@ -4470,7 +4766,7 @@ async def zsaldır(ctx):
             f"**{savaş['emoji']} {savaş['isim']}**\n"
             f"Can: {can_bar_düşman} **{savaş['can']}/{savaş['maks_can']}**\n\n"
             f"**{sınıf['emoji']} {ctx.author.display_name}**\n"
-            f"Can: {can_bar_sen} **{dungeon['can']}/{statlar['can']}**\n"
+            f"Can: {can_bar_sen} **{dungeon['can']}/{statlar['can']}**{kalkan_text}\n"
             f"Mana: {mana_bar_sen} **{dungeon['mana']}/{MAKS_MANA}**{mana_hazır}\n\n"
             f"`!saldır` (+{sınıf['vuruş_mana_kazanç']}) | `!özel` (Mana dolunca) | `!iksir` | `!kaç`"
         ),
@@ -4514,9 +4810,42 @@ async def özel_saldırı(ctx):
         düşman_hasar, _ = hasar_hesapla(savaş["saldırı"], int(statlar["savunma"] * 2), 5)
         savaş_log += f"🛡️ **{sınıf['özel_yetenek']}** aktif! Savunma 2 katına çıktı!\n"
         savaş_log += f"{savaş['emoji']} sadece **{düşman_hasar}** hasar verebildi.\n"
-        dungeon["can"] = max(0, dungeon["can"] - düşman_hasar)
+        can_hasarı, kalkan_hasarı, _ = hasar_al(dungeon, düşman_hasar)
+        if kalkan_hasarı > 0:
+            savaş_log += f"(🛡️ -{kalkan_hasarı} kalkan absorbe etti)\n"
+    # Doktor - Acil Müdahale: Can fullenir + %25 kalkan
+    elif dungeon["sınıf"] == "doktor":
+        eski_can = dungeon["can"]
+        dungeon["can"] = statlar["can"]  # Can tamamen dolar
+        iyileşme = statlar["can"] - eski_can
+        
+        # %25 kalkan ver
+        kalkan_miktarı = int(statlar["can"] * 0.25)
+        dungeon["kalkan"] = dungeon.get("kalkan", 0) + kalkan_miktarı
+        
+        savaş_log += f"💉 **{sınıf['özel_yetenek']}!**\n"
+        savaş_log += f"❤️ **+{iyileşme}** can iyileşti! (Can: {dungeon['can']}/{statlar['can']})\n"
+        savaş_log += f"🛡️ **+{kalkan_miktarı}** kalkan kazandın! (Toplam kalkan: {dungeon['kalkan']})\n"
+        
+        # Canavar karşı saldırı (kalkan sistemi ile)
+        düşman_hasar, düşman_kritik = hasar_hesapla(savaş["saldırı"], statlar["savunma"], 8)
+        can_hasarı, kalkan_hasarı, kalan_kalkan = hasar_al(dungeon, düşman_hasar)
+        
+        if düşman_kritik:
+            savaş_log += f"**KRİTİK!** {savaş['emoji']} **{düşman_hasar}** hasar verdi!"
+        else:
+            savaş_log += f"{savaş['emoji']} **{düşman_hasar}** hasar verdi."
+        
+        if kalkan_hasarı > 0:
+            savaş_log += f" (🛡️ -{kalkan_hasarı} kalkan"
+            if can_hasarı > 0:
+                savaş_log += f", ❤️ -{can_hasarı} can)\n"
+            else:
+                savaş_log += ")\n"
+        else:
+            savaş_log += "\n"
     else:
-        # Güçlü saldırı
+        # Güçlü saldırı (diğer sınıflar için)
         güçlü_saldırı = int(statlar["saldırı"] * sınıf["özel_çarpan"])
         hasar, kritik = hasar_hesapla(güçlü_saldırı, savaş["savunma"], statlar["şans"] + 15)
 
@@ -4528,10 +4857,18 @@ async def özel_saldırı(ctx):
 
         savaş["can"] = max(0, savaş["can"] - hasar)
 
-        # Canavar karşı saldırı
+        # Canavar karşı saldırı (kalkan sistemi ile)
         düşman_hasar, düşman_kritik = hasar_hesapla(savaş["saldırı"], statlar["savunma"], 8)
-        savaş_log += f"{savaş['emoji']} **{düşman_hasar}** hasar verdi.\n"
-        dungeon["can"] = max(0, dungeon["can"] - düşman_hasar)
+        can_hasarı, kalkan_hasarı, _ = hasar_al(dungeon, düşman_hasar)
+        
+        if kalkan_hasarı > 0:
+            savaş_log += f"{savaş['emoji']} **{düşman_hasar}** hasar verdi! (🛡️ -{kalkan_hasarı} kalkan"
+            if can_hasarı > 0:
+                savaş_log += f", ❤️ -{can_hasarı} can)\n"
+            else:
+                savaş_log += ")\n"
+        else:
+            savaş_log += f"{savaş['emoji']} **{düşman_hasar}** hasar verdi.\n"
 
     # Canavar öldü mü kontrol et (basitleştirilmiş)
     if savaş["can"] <= 0:
@@ -4576,7 +4913,7 @@ async def özel_saldırı(ctx):
         return await ctx.send(embed=embed)
 
     if dungeon["can"] <= 0:
-        # Olum - 5 kat geri at (bolgeye gore)
+        # Ölüm - 5 kat geri at (bölgeye göre)
         dungeon["toplam_ölüm"] += 1
         savas_bolge = savaş.get("bolge", "zindan")
         
@@ -4589,9 +4926,10 @@ async def özel_saldırı(ctx):
             
         dungeon["can"] = statlar["can"]
         dungeon["mana"] = 0  # Mana sıfırlanır
+        dungeon["kalkan"] = 0  # Kalkan sıfırlanır
         dungeon["aktif_savaş"] = None
         save_dungeon(dungeon)
-        embed = discord.Embed(title="YENILDIN!", description=f"{savaş_log}\n**5 kat** geri dustun. Mevcut kat: **{mevcut_kat}**\nCan yenilendi, mana sıfırlandı.\n`!gir` ile tekrar dene.", color=discord.Color.dark_red())
+        embed = discord.Embed(title="YENİLDİN!", description=f"{savaş_log}\n**5 kat** geri düştün. Mevcut kat: **{mevcut_kat}**\nCan yenilendi, mana ve kalkan sıfırlandı.\n`!gir` ile tekrar dene.", color=discord.Color.dark_red())
         return await ctx.send(embed=embed)
 
     dungeon["aktif_savaş"] = savaş
@@ -4605,14 +4943,17 @@ async def özel_saldırı(ctx):
     düşman_bar_dolu = int(düşman_can_pct * 10)
     can_bar_düşman = "🟥" * düşman_bar_dolu + "⬛" * (10 - düşman_bar_dolu)
 
-    sen_can_pct = max(0, dungeon["can"] / statlar["can"])
-    sen_bar_dolu = int(sen_can_pct * 10)
-    can_bar_sen = "🟩" * sen_bar_dolu + "⬛" * (10 - sen_bar_dolu)
+    # Kalkan ile can bar hesapla
+    kalkan = dungeon.get("kalkan", 0)
+    can_bar_sen = can_bar_hesapla(dungeon["can"], statlar["can"], kalkan)
 
     mana_pct = max(0, dungeon["mana"] / MAKS_MANA)
     mana_bar_dolu = int(mana_pct * 10)
     mana_bar_sen = "🟦" * mana_bar_dolu + "⬛" * (10 - mana_bar_dolu)
     mana_hazır = " ⚡" if dungeon['mana'] >= MAKS_MANA else ""
+
+    # Kalkan bilgisi
+    kalkan_text = f" 🛡️ +{kalkan}" if kalkan > 0 else ""
 
     embed = discord.Embed(
         title=f"{bolge_bilgi['emoji']} Kat {savaş['kat']} — Savaş Devam Ediyor",
@@ -4622,7 +4963,7 @@ async def özel_saldırı(ctx):
             f"**{savaş['emoji']} {savaş['isim']}**\n"
             f"Can: {can_bar_düşman} **{savaş['can']}/{savaş['maks_can']}**\n\n"
             f"**{sınıf['emoji']} {ctx.author.display_name}**\n"
-            f"Can: {can_bar_sen} **{dungeon['can']}/{statlar['can']}**\n"
+            f"Can: {can_bar_sen} **{dungeon['can']}/{statlar['can']}**{kalkan_text}\n"
             f"Mana: {mana_bar_sen} **{dungeon['mana']}/{MAKS_MANA}**{mana_hazır}\n\n"
             f"`!saldır` (+{sınıf['vuruş_mana_kazanç']}) | `!özel` (Mana dolunca) | `!iksir` | `!kaç`"
         ),
@@ -4659,7 +5000,7 @@ async def kaç(ctx):
     save_dungeon(dungeon)
 
     embed = discord.Embed(
-        title="Kacis Basarili!",
+        title="Kaçış Başarılı!",
         description=(
             f"{savaş['emoji']} **{savaş['isim']}** karsisindan kactin!\n\n"
             f"Ayni kattan devam ediyorsun. Mevcut kat: **{mevcut_kat}**\n\n"
@@ -4843,7 +5184,7 @@ async def mana_iksiri_satın_al(ctx, adet: int = 1):
 
 @bot.command(name="zbölgeler", aliases=["zbölge"])
 async def zbölgeler(ctx):
-    """Mevcut bölgeleri goster."""
+    """Mevcut bölgeleri göster."""
     user_id = ctx.author.id
     dungeon = get_dungeon(user_id)
     prestij = dungeon.get("prestiж", 0)
@@ -4856,21 +5197,21 @@ async def zbölgeler(ctx):
     )
 
     for bolge_id, bolge in BOLGELER.items():
-        acik = prestij >= bolge["gerekli_prestij"]
+        açık = prestij >= bolge["gerekli_prestij"]
         aktif = dungeon.get("bolge", "zindan") == bolge_id
         
         durum = ""
         if aktif:
             durum = " **[AKTIF]**"
-        elif acik:
-            durum = " *(Acik)*"
+        elif açık:
+            durum = " *(Açık)*"
         else:
             durum = f" *(Prestij {bolge['gerekli_prestij']} gerekli)*"
         
         if bolge_id == "zindan":
-            kat_bilgi = f"Mevcut Kat: **{dungeon['mevcut_kat']}** | En Yuksek: **{dungeon['en_yüksek_kat']}**"
+            kat_bilgi = f"Mevcut Kat: **{dungeon['mevcut_kat']}** | En Yüksek: **{dungeon['en_yüksek_kat']}**"
         else:
-            kat_bilgi = f"Mevcut Kat: **{dungeon.get('visored_kat', 0)}** | En Yuksek: **{dungeon.get('visored_en_yuksek', 0)}**"
+            kat_bilgi = f"Mevcut Kat: **{dungeon.get('visored_kat', 0)}** | En Yüksek: **{dungeon.get('visored_en_yuksek', 0)}**"
         
         embed.add_field(
             name=f"{bolge['emoji']} {bolge['isim']}{durum}",
@@ -4939,7 +5280,7 @@ async def bolge_sec(ctx, bolge_id: str = None):
         description=(
             f"Artik **{bolge['isim']}** bolgesindesin!\n\n"
             f"{bolge['açıklama']}\n\n"
-            f"`!gir` ile maceraya basla!"
+            f"`!gir` ile maceraya başla!"
         ),
         color=discord.Color.green(),
         timestamp=datetime.now(timezone.utc)
@@ -4950,7 +5291,7 @@ async def bolge_sec(ctx, bolge_id: str = None):
 
 @bot.command(name="zindanenvanteri", aliases=["zenv", "ze", "ekipman"])
 async def envanter(ctx, sayfa: int = 1):
-    """Ekipman envanterini goster (sayfa sistemi)."""
+    """Ekipman envanterini göster (sayfa sistemi)."""
     user_id = ctx.author.id
     dungeon = get_dungeon(user_id)
 
@@ -4974,7 +5315,7 @@ async def envanter(ctx, sayfa: int = 1):
         item_id = item.get("id")
         eşya_tipi = item.get("eşya_tipi") or item.get("eşya_id")
         
-        # Eski formattaki esyalara ID ata
+        # Eski formattaki eşyalara ID ata
         if not item_id:
             item_id = str(uuid.uuid4())[:8]
             item["id"] = item_id
@@ -4988,7 +5329,7 @@ async def envanter(ctx, sayfa: int = 1):
         
         kuşanılmış_mı = item_id in kuşanılmış.values() if item_id else eşya_tipi in kuşanılmış.values()
         
-        # ID'yi her zaman goster
+        # ID'yi her zaman göster
         satır = f"`{item_id}` {eşya['emoji']} **{eşya['isim']}** ({NADİRLİK_RENKLERİ[eşya['nadirlik']]} {eşya['nadirlik']})"
         if kuşanılmış_mı:
             satır += " **[K]**"
@@ -5010,78 +5351,92 @@ async def envanter(ctx, sayfa: int = 1):
         elif eşya["tür"] == "yüzük":
             yüzükler.append(satır)
 
-    # Eski formattaki esyalar guncellendiyse kaydet
+    # Eski formattaki eşyalar güncellendiyse kaydet
     if envanter_güncellendi:
         save_dungeon(dungeon)
 
-    # Sayfa sistemi - her sayfada maksimum 8 esya goster
-    ESYA_PER_SAYFA = 8
-    tum_esyalar = []
+    # Sayfa sistemi - her sayfada maksimum 8 eşya göster
+    EŞYA_PER_SAYFA = 8
+    tüm_eşyalar = []
     
     if silahlar:
-        tum_esyalar.append(("Silahlar", silahlar))
+        tüm_eşyalar.append(("Silahlar", silahlar))
     if zırhlar:
-        tum_esyalar.append(("Zirhlar", zırhlar))
+        tüm_eşyalar.append(("Zırhlar", zırhlar))
     if yüzükler:
-        tum_esyalar.append(("Yuzukler", yüzükler))
-    
-    # Toplam esya sayisi
-    toplam_esya = len(silahlar) + len(zırhlar) + len(yüzükler)
-    toplam_sayfa = max(1, (toplam_esya + ESYA_PER_SAYFA - 1) // ESYA_PER_SAYFA)
-    
-    # Sayfa kontrolu
+        tüm_eşyalar.append(("Yüzükler", yüzükler))
+
+    # Toplam eşya sayısı
+    toplam_eşya = len(silahlar) + len(zırhlar) + len(yüzükler)
+    toplam_sayfa = max(1, (toplam_eşya + EŞYA_PER_SAYFA - 1) // EŞYA_PER_SAYFA)
+
+    # Sayfa kontrolü
     if sayfa < 1:
         sayfa = 1
     if sayfa > toplam_sayfa:
         sayfa = toplam_sayfa
     
-    # Sayfa icin esyalari hesapla
-    baslangic_idx = (sayfa - 1) * ESYA_PER_SAYFA
-    bitis_idx = sayfa * ESYA_PER_SAYFA
-    
-    # Tum esyalari duz liste yap
-    duz_liste = []
-    for kategori, esyalar in tum_esyalar:
-        for esya in esyalar:
-            duz_liste.append((kategori, esya))
-    
-    # Bu sayfadaki esyalar
-    sayfa_esyalari = duz_liste[baslangic_idx:bitis_idx]
+    # Sayfa için eşyaları hesapla
+    başlangıç_idx = (sayfa - 1) * EŞYA_PER_SAYFA
+    bitiş_idx = sayfa * EŞYA_PER_SAYFA
+
+    # Tüm eşyaları düz liste yap
+    düz_liste = []
+    for kategori, eşyalar in tüm_eşyalar:
+        for eşya in eşyalar:
+            düz_liste.append((kategori, eşya))
+
+    # Bu sayfadaki eşyalar
+    sayfa_eşyaları = düz_liste[başlangıç_idx:bitiş_idx]
     
     # Kategorilere gore grupla
     sayfa_gruplu = {}
-    for kategori, esya in sayfa_esyalari:
+    for kategori, eşya in sayfa_eşyaları:
         if kategori not in sayfa_gruplu:
             sayfa_gruplu[kategori] = []
-        sayfa_gruplu[kategori].append(esya)
+        sayfa_gruplu[kategori].append(eşya)
+    
+    # Aktif setleri kontrol et
+    aktif_setler = get_aktif_setler(dungeon)
+    
+    # Embed açıklaması
+    açıklama = f"Toplam **{toplam_eşya}** eşya | Sayfa **{sayfa}/{toplam_sayfa}**"
     
     embed = discord.Embed(
         title=f"Envanter - {ctx.author.display_name}",
-        description=f"Toplam **{toplam_esya}** esya | Sayfa **{sayfa}/{toplam_sayfa}**",
-        color=discord.Color.dark_purple(),
+        description=açıklama,
+        color=discord.Color.gold() if aktif_setler else discord.Color.dark_purple(),
         timestamp=datetime.now(timezone.utc)
     )
     
+    # Aktif set pasiflerini göster
+    if aktif_setler:
+        set_text = ""
+        for set_id, set_bilgi in aktif_setler:
+            set_text += f"{set_bilgi['emoji']} **{set_bilgi['isim']}** - *{set_bilgi['pasif_isim']}*\n"
+            set_text += f"└ {set_bilgi['pasif_açıklama']}\n\n"
+        embed.add_field(name="Aktif Set Pasifleri", value=set_text.strip(), inline=False)
+    
     # Her kategori icin field ekle (1024 karakter limitini asma)
-    for kategori, esyalar in sayfa_gruplu.items():
-        # Her field max 1024 karakter olmali
-        field_text = "\n".join(esyalar)
+    for kategori, eşyalar in sayfa_gruplu.items():
+        if len(eşyalar) == 1:
+            field_text = "\n".join(eşyalar)
         if len(field_text) > 1020:
-            # Cok uzunsa bol
-            parcalar = []
-            mevcut_parca = ""
-            for esya in esyalar:
-                if len(mevcut_parca) + len(esya) + 1 > 1020:
-                    parcalar.append(mevcut_parca)
-                    mevcut_parca = esya
+            # Çok uzunsa böl
+            parçalar = []
+            mevcut_parça = ""
+            for eşya in eşyalar:
+                if len(mevcut_parça) + len(eşya) + 1 > 1020:
+                    parçalar.append(mevcut_parça)
+                    mevcut_parça = eşya
                 else:
-                    mevcut_parca += ("\n" if mevcut_parca else "") + esya
-            if mevcut_parca:
-                parcalar.append(mevcut_parca)
+                    mevcut_parça += ("\n" if mevcut_parça else "") + eşya
+            if mevcut_parça:
+                parçalar.append(mevcut_parça)
             
-            for i, parca in enumerate(parcalar):
+            for i, parça in enumerate(parçalar):
                 field_name = f"{kategori}" if i == 0 else f"{kategori} (devam)"
-                embed.add_field(name=field_name, value=parca, inline=False)
+                embed.add_field(name=field_name, value=parça, inline=False)
         else:
             embed.add_field(name=kategori, value=field_text, inline=False)
     
@@ -5322,10 +5677,10 @@ async def prestij_yap(ctx):
     dungeon["aktif_savaş"] = None
     save_dungeon(dungeon)
 
-    # Prestij 5 ise Visored Adasi acildi mesaji
+    # Prestij 5 ise Visored Adası açıldı mesajı
     visored_mesaj = ""
     if sonraki_prestij >= 5:
-        visored_mesaj = "\n**VISORED ADASI ACILDI!** `!bolgesec visored` ile yeni maceraya basla!\n"
+        visored_mesaj = "\n**VISORED ADASI AÇILDI!** `!bolgesec visored` ile yeni maceraya başla!\n"
 
     embed = discord.Embed(
         title=f"PRESTIJ {sonraki_prestij}!",
@@ -5333,13 +5688,13 @@ async def prestij_yap(ctx):
             f"{'━' * 30}\n\n"
             f"{prestij_bilgi['emoji']} **{prestij_bilgi['isim']}** oldun!\n\n"
             f"**Kalici Bonuslar:**\n"
-            f"Saldiri: **+{prestij_bilgi['bonus_saldırı']}**\n"
+            f"Saldırı: **+{prestij_bilgi['bonus_saldırı']}**\n"
             f"Can: **+{prestij_bilgi['bonus_can']}**\n"
-            f"Altin: **+%{prestij_bilgi['bonus_altın']}**\n\n"
-            f"**Odul:** +{ödül:,} VisoCoin\n"
+            f"Altın: **+%{prestij_bilgi['bonus_altın']}**\n\n"
+            f"**Ödül:** +{ödül:,} VisoCoin\n"
             f"{visored_mesaj}\n"
             f"**Sifirlanan:** Seviye, kat, ekipman, sinif\n"
-            f"**Korunan:** Prestij bonuslari, istatistikler, en yuksek kat\n\n"
+            f"**Korunan:** Prestij bonusları, istatistikler, en yüksek kat\n\n"
             f"Yeni sinif secmek icin: `!sınıfseç <sınıf>`"
         ),
         color=discord.Color.gold(),
@@ -5348,7 +5703,6 @@ async def prestij_yap(ctx):
     embed.set_thumbnail(url=ctx.author.display_avatar.url)
     embed.set_footer(text="Zindan Sistemi | Prestij")
     await ctx.send(embed=embed)
-
 
 
 # ================= GEMİ TİPLERİ =================
@@ -7776,6 +8130,7 @@ async def bilmece_cevap(ctx, *, cevap: str = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
