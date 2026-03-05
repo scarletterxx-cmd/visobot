@@ -3239,14 +3239,12 @@ SINIFLAR = {
         "emoji": "⚔️",
         "açıklama": "Yüksek saldırı ve dayanıklılık. Yakın dövüş uzmanı.",
         "temel_can": 120,
-        "temel_mana": 50,
         "temel_saldırı": 18,
         "temel_savunma": 14,
         "temel_şans": 5,
-        "saldırı_mana": 5,  # Normal saldırı mana maliyeti
+        "vuruş_mana_kazanç": 12,  # Her vuruşta kazanılan mana (güçlü sınıf = düşük)
         "özel_yetenek": "Öfke Darbesi",
-        "özel_açıklama": "Saldırı gücünü %50 artırarak tek vuruş yapar. (25 Mana)",
-        "özel_mana": 25,  # Özel yetenek mana maliyeti
+        "özel_açıklama": "Saldırı gücünü %50 artırarak tek vuruş yapar. (Mana dolunca)",
         "özel_çarpan": 1.5,
     },
     "büyücü": {
@@ -3254,14 +3252,12 @@ SINIFLAR = {
         "emoji": "🧙",
         "açıklama": "Güçlü büyüler ve kritik hasar. Düşük dayanıklılık.",
         "temel_can": 80,
-        "temel_mana": 120,
         "temel_saldırı": 25,
         "temel_savunma": 8,
         "temel_şans": 12,
-        "saldırı_mana": 8,  # Normal saldırı mana maliyeti
+        "vuruş_mana_kazanç": 8,  # Her vuruşta kazanılan mana (en güçlü özel = en düşük)
         "özel_yetenek": "Ateş Topu",
-        "özel_açıklama": "Düşmana %80 ekstra hasar veren büyü fırlatır. (40 Mana)",
-        "özel_mana": 40,  # Özel yetenek mana maliyeti
+        "özel_açıklama": "Düşmana %80 ekstra hasar veren büyü fırlatır. (Mana dolunca)",
         "özel_çarpan": 1.8,
     },
     "okçu": {
@@ -3269,14 +3265,12 @@ SINIFLAR = {
         "emoji": "🏹",
         "açıklama": "Dengeli saldırı, yüksek kritik şansı. Uzak mesafe.",
         "temel_can": 95,
-        "temel_mana": 70,
         "temel_saldırı": 20,
         "temel_savunma": 10,
         "temel_şans": 18,
-        "saldırı_mana": 6,  # Normal saldırı mana maliyeti
+        "vuruş_mana_kazanç": 14,  # Her vuruşta kazanılan mana (dengeli)
         "özel_yetenek": "Zehirli Ok",
-        "özel_açıklama": "3 tur boyunca her tur ekstra hasar verir. (30 Mana)",
-        "özel_mana": 30,  # Özel yetenek mana maliyeti
+        "özel_açıklama": "3 tur boyunca her tur ekstra hasar verir. (Mana dolunca)",
         "özel_çarpan": 1.3,
     },
     "şövalye": {
@@ -3284,14 +3278,12 @@ SINIFLAR = {
         "emoji": "🛡️",
         "açıklama": "En yüksek savunma ve can. Tank sınıfı.",
         "temel_can": 150,
-        "temel_mana": 40,
         "temel_saldırı": 14,
         "temel_savunma": 22,
         "temel_şans": 3,
-        "saldırı_mana": 4,  # Normal saldırı mana maliyeti
+        "vuruş_mana_kazanç": 18,  # Her vuruşta kazanılan mana (tank = yüksek)
         "özel_yetenek": "Kalkan Duvarı",
-        "özel_açıklama": "Savunmayı 2 katına çıkararak 2 tur boyunca hasar azaltır. (20 Mana)",
-        "özel_mana": 20,  # Özel yetenek mana maliyeti
+        "özel_açıklama": "Savunmayı 2 katına çıkararak 2 tur boyunca hasar azaltır. (Mana dolunca)",
         "özel_çarpan": 0.5,  # hasar çarpanı (savunma modu)
     },
     "suikastçi": {
@@ -3299,14 +3291,12 @@ SINIFLAR = {
         "emoji": "🗡️",
         "açıklama": "Gölgelerde hareket eden, düşmana ıskalattırma şansı veren sınıf.",
         "temel_can": 85,
-        "temel_mana": 80,
         "temel_saldırı": 22,
         "temel_savunma": 9,
         "temel_şans": 20,
-        "saldırı_mana": 7,  # Normal saldırı mana maliyeti
+        "vuruş_mana_kazanç": 10,  # Her vuruşta kazanılan mana (güçlü = düşük)
         "özel_yetenek": "Gölge Adımı",
-        "özel_açıklama": "3 tur boyunca %25 kaçınma şansı kazanır. (35 Mana)",
-        "özel_mana": 35,  # Özel yetenek mana maliyeti
+        "özel_açıklama": "3 tur boyunca %25 kaçınma şansı kazanır. (Mana dolunca)",
         "özel_çarpan": 1.4,
         "kaçınma": 10,  # Pasif kaçınma şansı (%)
     },
@@ -3315,18 +3305,20 @@ SINIFLAR = {
         "emoji": "💉",
         "açıklama": "Şifa uzmanı. Kendini iyileştirebilir ve saldırıya devam edebilir.",
         "temel_can": 100,
-        "temel_mana": 90,
         "temel_saldırı": 15,
         "temel_savunma": 12,
         "temel_şans": 8,
-        "saldırı_mana": 6,  # Normal saldırı mana maliyeti
+        "vuruş_mana_kazanç": 16,  # Her vuruşta kazanılan mana (destek = yüksek)
         "özel_yetenek": "Acil Müdahale",
-        "özel_açıklama": "Maksimum canının %40'ı kadar iyileşir ve hasar verir. (35 Mana)",
-        "özel_mana": 35,  # Özel yetenek mana maliyeti
+        "özel_açıklama": "Maksimum canının %40'ı kadar iyileşir ve hasar verir. (Mana dolunca)",
         "özel_çarpan": 1.0,
         "iyileşme": 40,  # Maks canın yüzdesi olarak iyileşme
     },
 }
+
+# Sabit mana değerleri
+MAKS_MANA = 100  # Tüm sınıflar için sabit maksimum mana
+KAT_BASLANGIC_MANA = 0  # Kat başında mana sıfırlanır
 
 
 # ================= EKİPMAN SİSTEMİ =================
@@ -3783,10 +3775,11 @@ def get_karakter_statları(dungeon):
 
     # Temel statlar + seviye bonusu
     can = sınıf["temel_can"] + (seviye - 1) * 8 + prestij_bonus["bonus_can"]
-    mana = sınıf["temel_mana"] + (seviye - 1) * 5  # Her seviye +5 mana
+    mana = MAKS_MANA  # Mana artık sabit 100
     saldırı = sınıf["temel_saldırı"] + (seviye - 1) * 3 + prestij_bonus["bonus_saldırı"]
     savunma = sınıf["temel_savunma"] + (seviye - 1) * 2
     şans = sınıf["temel_şans"]
+    vuruş_mana = sınıf.get("vuruş_mana_kazanç", 10)  # Her vuruşta kazanılan mana
 
     # Ekipman bonusları (kuşanılmış eşyaların ID'leri tutulur)
     kuşanılmış = dungeon.get("kuşanılmış", {})
@@ -3811,6 +3804,7 @@ def get_karakter_statları(dungeon):
         "saldırı": saldırı,
         "savunma": savunma,
         "şans": şans,
+        "vuruş_mana": vuruş_mana,  # Her vuruşta kazanılan mana miktarı
     }
 
 
@@ -3938,10 +3932,10 @@ async def zindan(ctx):
         name="Statlar",
         value=(
             f"Can: **{statlar['can']}** | "
-            f"Mana: **{statlar['mana']}** | "
             f"Saldırı: **{statlar['saldırı']}** | "
             f"Savunma: **{statlar['savunma']}** | "
-            f"Kritik: **%{statlar['şans']}**"
+            f"Kritik: **%{statlar['şans']}**\n"
+            f"Vuruş Mana Kazancı: **+{statlar['vuruş_mana']}** (Maks: {MAKS_MANA})"
         ),
         inline=False
     )
@@ -3997,11 +3991,10 @@ async def sınıflar(ctx):
             value=(
                 f"{sınıf['açıklama']}\n\n"
                 f"Can: **{sınıf['temel_can']}** | "
-                f"Mana: **{sınıf['temel_mana']}** | "
                 f"Saldırı: **{sınıf['temel_saldırı']}** | "
                 f"Savunma: **{sınıf['temel_savunma']}** | "
                 f"Kritik: **%{sınıf['temel_şans']}**\n"
-                f"Saldırı Mana: **{sınıf['saldırı_mana']}** | Yetenek Mana: **{sınıf['özel_mana']}**\n"
+                f"Vuruş Mana Kazancı: **+{sınıf['vuruş_mana_kazanç']}** (Maks: 100)\n"
                 f"Yetenek: **{sınıf['özel_yetenek']}** — {sınıf['özel_açıklama']}"
             ),
             inline=False
@@ -4048,8 +4041,8 @@ async def sınıfseç(ctx, sınıf_id: str = None):
     dungeon["xp"] = 0
     dungeon["can"] = sınıf["temel_can"]
     dungeon["maks_can"] = sınıf["temel_can"]
-    dungeon["mana"] = sınıf["temel_mana"]
-    dungeon["maks_mana"] = sınıf["temel_mana"]
+    dungeon["mana"] = 0  # Mana başlangıçta 0
+    dungeon["maks_mana"] = MAKS_MANA  # Mana hep 100
     dungeon["mevcut_kat"] = 0
     dungeon["envanter"] = [
         {"eşya_id": "paslı_kılıç", "kuşanılmış": True},
@@ -4063,11 +4056,12 @@ async def sınıfseç(ctx, sınıf_id: str = None):
         description=(
             f"{ctx.author.mention}, **{sınıf['isim']}** olarak yolculuğun başlıyor!\n\n"
             f"**Statların:**\n"
-            f"Can: **{sınıf['temel_can']}** | Mana: **{sınıf['temel_mana']}** | "
+            f"Can: **{sınıf['temel_can']}** | "
             f"Saldırı: **{sınıf['temel_saldırı']}** | "
             f"Savunma: **{sınıf['temel_savunma']}** | Kritik: **%{sınıf['temel_şans']}**\n\n"
-            f"**Mana Maliyetleri:**\n"
-            f"Saldırı: **{sınıf['saldırı_mana']}** | {sınıf['özel_yetenek']}: **{sınıf['özel_mana']}**\n\n"
+            f"**Mana Sistemi:**\n"
+            f"Her vuruşta **+{sınıf['vuruş_mana_kazanç']}** mana kazanırsın (Maks: 100)\n"
+            f"Mana dolunca özel yeteneğini kullanabilirsin!\n\n"
             f"**Başlangıç Ekipmanı:**\n"
             f"🗡️ Paslı Kılıç | 🦺 Deri Zırh\n\n"
             f"**Yetenek:** {sınıf['özel_yetenek']} — {sınıf['özel_açıklama']}\n\n"
@@ -4112,12 +4106,12 @@ async def zindan_gir(ctx):
         )
         return await ctx.send(embed=embed)
 
-    # Canı veya manası sıfırsa yenile
+    # Canı sıfırsa yenile, mana her kat başında 0'dan başlar
     statlar = get_karakter_statları(dungeon)
     if dungeon.get("can", 0) <= 0:
         dungeon["can"] = statlar["can"]
-    if dungeon.get("mana", 0) <= 0:
-        dungeon["mana"] = statlar["mana"]
+    # Mana her kat başında sıfırlanır
+    dungeon["mana"] = KAT_BASLANGIC_MANA
     save_dungeon(dungeon)
 
     zindan_cd[user_id] = now
@@ -4161,6 +4155,7 @@ async def zindan_gir(ctx):
         save_dungeon(dungeon)
 
         sınıf = SINIFLAR[dungeon["sınıf"]]
+        mana_hazır = "⚡ ÖZEL HAZIR!" if dungeon['mana'] >= MAKS_MANA else ""
         embed = discord.Embed(
             title=f"{bolge_bilgi['emoji']} Kat {kat} — BOSS SAVAŞI!",
             description=(
@@ -4170,10 +4165,10 @@ async def zindan_gir(ctx):
                 f"**Boss Statlari:**\n"
                 f"Can: **{boss['can']}** | Saldiri: **{boss['saldırı']}** | Savunma: **{boss['savunma']}**\n\n"
                 f"**Senin Durumun:**\n"
-                f"{sınıf['emoji']} Can: **{dungeon['can']}/{statlar['can']}** | Mana: **{dungeon['mana']}/{statlar['mana']}**\n\n"
-                f"`!saldır` — Normal saldırı ({sınıf['saldırı_mana']} mana)\n"
-                f"`!özel` — {sınıf['özel_yetenek']} ({sınıf['özel_mana']} mana)\n"
-                f"`!iksir` — Can iksiri | `!manaiksir` — Mana iksiri\n"
+                f"{sınıf['emoji']} Can: **{dungeon['can']}/{statlar['can']}** | Mana: **{dungeon['mana']}/{MAKS_MANA}** {mana_hazır}\n\n"
+                f"`!saldır` — Saldır (+{sınıf['vuruş_mana_kazanç']} mana)\n"
+                f"`!özel` — {sınıf['özel_yetenek']} (Mana dolunca)\n"
+                f"`!iksir` — Can iksiri\n"
                 f"`!kaç` — Kac (kati kaybedersin)"
             ),
             color=discord.Color.dark_red(),
@@ -4221,7 +4216,8 @@ async def zindan_gir(ctx):
     sınıf = SINIFLAR[dungeon["sınıf"]]
     can_bar_düşman = "🟥" * 10
     can_bar_sen = "🟩" * int(dungeon["can"] / statlar["can"] * 10) + "⬛" * (10 - int(dungeon["can"] / statlar["can"] * 10))
-    mana_bar_sen = "🟦" * int(dungeon["mana"] / statlar["mana"] * 10) + "⬛" * (10 - int(dungeon["mana"] / statlar["mana"] * 10))
+    mana_bar_sen = "🟦" * int(dungeon["mana"] / MAKS_MANA * 10) + "⬛" * (10 - int(dungeon["mana"] / MAKS_MANA * 10))
+    mana_hazır = " ⚡" if dungeon['mana'] >= MAKS_MANA else ""
 
     # Bolgeye gore renk
     embed_renk = discord.Color.teal() if bolge == "visored" else discord.Color.dark_grey()
@@ -4236,9 +4232,9 @@ async def zindan_gir(ctx):
             f"{'━' * 30}\n\n"
             f"**{sınıf['emoji']} {ctx.author.display_name}**\n"
             f"Can: {can_bar_sen} **{dungeon['can']}/{statlar['can']}**\n"
-            f"Mana: {mana_bar_sen} **{dungeon['mana']}/{statlar['mana']}**\n\n"
-            f"`!saldır` ({sınıf['saldırı_mana']} mana) | `!özel` ({sınıf['özel_mana']} mana)\n"
-            f"`!iksir` | `!manaiksir` | `!kaç`"
+            f"Mana: {mana_bar_sen} **{dungeon['mana']}/{MAKS_MANA}**{mana_hazır}\n\n"
+            f"`!saldır` (+{sınıf['vuruş_mana_kazanç']} mana) | `!özel` (Mana dolunca)\n"
+            f"`!iksir` | `!kaç`"
         ),
         color=embed_renk,
         timestamp=datetime.now(timezone.utc)
@@ -4267,22 +4263,21 @@ async def zsaldır(ctx):
     statlar = get_karakter_statları(dungeon)
     sınıf = SINIFLAR[dungeon["sınıf"]]
 
-    # Mana kontrolü
-    mana_gerekli = sınıf["saldırı_mana"]
-    if dungeon.get("mana", 0) < mana_gerekli:
-        embed = discord.Embed(
-            description=f"Yetersiz mana! Saldırı için **{mana_gerekli}** mana gerekiyor.\nMevcut manan: **{dungeon.get('mana', 0)}**\n\n`!manaiksir` ile mana iksiri kullan.",
-            color=discord.Color.blue()
-        )
-        return await ctx.send(embed=embed)
-
-    # Mana harca
-    dungeon["mana"] = dungeon.get("mana", 0) - mana_gerekli
-
     # Oyuncu saldırısı
     hasar, kritik = hasar_hesapla(statlar["saldırı"], savaş["savunma"], statlar["şans"])
 
-    savaş_log = f"*-{mana_gerekli} mana*\n"
+    # Her vuruşta mana kazan
+    mana_kazanç = statlar["vuruş_mana"]
+    eski_mana = dungeon.get("mana", 0)
+    dungeon["mana"] = min(MAKS_MANA, eski_mana + mana_kazanç)
+    
+    # Mana bar gösterimi
+    mana_dolumu = dungeon["mana"] >= MAKS_MANA
+    mana_text = f"*+{mana_kazanç} mana ({dungeon['mana']}/{MAKS_MANA})*"
+    if mana_dolumu:
+        mana_text += " **⚡ ÖZEL HAZIR!**"
+
+    savaş_log = f"{mana_text}\n"
     if kritik:
         savaş_log += f"**KRİTİK VURUŞ!** {sınıf['emoji']} **{hasar}** hasar verdin!\n"
     else:
@@ -4430,7 +4425,7 @@ async def zsaldır(ctx):
             mevcut_kat = dungeon["mevcut_kat"]
             
         dungeon["can"] = statlar["can"]  # Canı yenile
-        dungeon["mana"] = statlar["mana"]  # Manayı yenile
+        dungeon["mana"] = 0  # Mana sıfırlanır (kat başında 0 başlar)
         dungeon["aktif_savaş"] = None
         save_dungeon(dungeon)
 
@@ -4462,9 +4457,10 @@ async def zsaldır(ctx):
     sen_bar_dolu = int(sen_can_pct * 10)
     can_bar_sen = "🟩" * sen_bar_dolu + "⬛" * (10 - sen_bar_dolu)
 
-    mana_pct = max(0, dungeon["mana"] / statlar["mana"])
+    mana_pct = max(0, dungeon["mana"] / MAKS_MANA)
     mana_bar_dolu = int(mana_pct * 10)
     mana_bar_sen = "🟦" * mana_bar_dolu + "⬛" * (10 - mana_bar_dolu)
+    mana_hazır = " ⚡" if dungeon['mana'] >= MAKS_MANA else ""
 
     embed = discord.Embed(
         title=f"Kat {savaş['kat']} — Savaş Devam Ediyor",
@@ -4475,8 +4471,8 @@ async def zsaldır(ctx):
             f"Can: {can_bar_düşman} **{savaş['can']}/{savaş['maks_can']}**\n\n"
             f"**{sınıf['emoji']} {ctx.author.display_name}**\n"
             f"Can: {can_bar_sen} **{dungeon['can']}/{statlar['can']}**\n"
-            f"Mana: {mana_bar_sen} **{dungeon['mana']}/{statlar['mana']}**\n\n"
-            f"`!saldır` ({sınıf['saldırı_mana']}) | `!özel` ({sınıf['özel_mana']}) | `!iksir` | `!manaiksir` | `!kaç`"
+            f"Mana: {mana_bar_sen} **{dungeon['mana']}/{MAKS_MANA}**{mana_hazır}\n\n"
+            f"`!saldır` (+{sınıf['vuruş_mana_kazanç']}) | `!özel` (Mana dolunca) | `!iksir` | `!kaç`"
         ),
         color=discord.Color.orange(),
         timestamp=datetime.now(timezone.utc)
@@ -4499,18 +4495,18 @@ async def özel_saldırı(ctx):
     statlar = get_karakter_statları(dungeon)
     sınıf = SINIFLAR[dungeon["sınıf"]]
 
-    # Mana kontrolü
-    mana_gerekli = sınıf["özel_mana"]
-    if dungeon.get("mana", 0) < mana_gerekli:
+    # Mana kontrolü - özel yetenek için mana tamamen dolu olmalı (100)
+    mevcut_mana = dungeon.get("mana", 0)
+    if mevcut_mana < MAKS_MANA:
         embed = discord.Embed(
-            description=f"Yetersiz mana! **{sınıf['özel_yetenek']}** için **{mana_gerekli}** mana gerekiyor.\nMevcut manan: **{dungeon.get('mana', 0)}**\n\n`!manaiksir` ile mana iksiri kullan.",
+            description=f"⚡ **{sınıf['özel_yetenek']}** için mana tamamen dolu olmalı!\nMevcut manan: **{mevcut_mana}/{MAKS_MANA}**\n\nSaldırı yaparak mana kazan!",
             color=discord.Color.blue()
         )
         return await ctx.send(embed=embed)
 
-    # Mana harca
-    dungeon["mana"] = dungeon.get("mana", 0) - mana_gerekli
-    savaş_log = f"*-{mana_gerekli} mana*\n"
+    # Mana sıfırla (özel yetenek kullanıldı)
+    dungeon["mana"] = 0
+    savaş_log = f"⚡ *Mana harcandı (100 → 0)*\n"
 
     # Şövalye kalkan modu
     if dungeon["sınıf"] == "şövalye":
@@ -4592,10 +4588,10 @@ async def özel_saldırı(ctx):
             mevcut_kat = dungeon["mevcut_kat"]
             
         dungeon["can"] = statlar["can"]
-        dungeon["mana"] = statlar["mana"]
+        dungeon["mana"] = 0  # Mana sıfırlanır
         dungeon["aktif_savaş"] = None
         save_dungeon(dungeon)
-        embed = discord.Embed(title="YENILDIN!", description=f"{savaş_log}\n**5 kat** geri dustun. Mevcut kat: **{mevcut_kat}**\nCan ve manan yenilendi.\n`!gir` ile tekrar dene.", color=discord.Color.dark_red())
+        embed = discord.Embed(title="YENILDIN!", description=f"{savaş_log}\n**5 kat** geri dustun. Mevcut kat: **{mevcut_kat}**\nCan yenilendi, mana sıfırlandı.\n`!gir` ile tekrar dene.", color=discord.Color.dark_red())
         return await ctx.send(embed=embed)
 
     dungeon["aktif_savaş"] = savaş
@@ -4613,9 +4609,10 @@ async def özel_saldırı(ctx):
     sen_bar_dolu = int(sen_can_pct * 10)
     can_bar_sen = "🟩" * sen_bar_dolu + "⬛" * (10 - sen_bar_dolu)
 
-    mana_pct = max(0, dungeon["mana"] / statlar["mana"])
+    mana_pct = max(0, dungeon["mana"] / MAKS_MANA)
     mana_bar_dolu = int(mana_pct * 10)
     mana_bar_sen = "🟦" * mana_bar_dolu + "⬛" * (10 - mana_bar_dolu)
+    mana_hazır = " ⚡" if dungeon['mana'] >= MAKS_MANA else ""
 
     embed = discord.Embed(
         title=f"{bolge_bilgi['emoji']} Kat {savaş['kat']} — Savaş Devam Ediyor",
@@ -4626,8 +4623,8 @@ async def özel_saldırı(ctx):
             f"Can: {can_bar_düşman} **{savaş['can']}/{savaş['maks_can']}**\n\n"
             f"**{sınıf['emoji']} {ctx.author.display_name}**\n"
             f"Can: {can_bar_sen} **{dungeon['can']}/{statlar['can']}**\n"
-            f"Mana: {mana_bar_sen} **{dungeon['mana']}/{statlar['mana']}**\n\n"
-            f"`!saldır` ({sınıf['saldırı_mana']}) | `!özel` ({sınıf['özel_mana']}) | `!iksir` | `!manaiksir` | `!kaç`"
+            f"Mana: {mana_bar_sen} **{dungeon['mana']}/{MAKS_MANA}**{mana_hazır}\n\n"
+            f"`!saldır` (+{sınıf['vuruş_mana_kazanç']}) | `!özel` (Mana dolunca) | `!iksir` | `!kaç`"
         ),
         color=discord.Color.orange(),
         timestamp=datetime.now(timezone.utc)
@@ -4712,7 +4709,7 @@ async def iksir(ctx):
 
 @bot.command(name="manaiksir", aliases=["manapotion", "mp"])
 async def mana_iksiri(ctx):
-    """Mana iksiri kullan."""
+    """Mana iksiri kullan - Mana tamamen doldurur."""
     user_id = ctx.author.id
     dungeon = get_dungeon(user_id)
 
@@ -4723,21 +4720,20 @@ async def mana_iksiri(ctx):
         )
         return await ctx.send(embed=embed)
 
-    statlar = get_karakter_statları(dungeon)
-    if dungeon.get("mana", 0) >= statlar["mana"]:
+    if dungeon.get("mana", 0) >= MAKS_MANA:
         embed = discord.Embed(description="Manan zaten dolu!", color=discord.Color.orange())
         return await ctx.send(embed=embed)
 
-    yenileme = int(statlar["mana"] * 0.5)  # %50 mana yenileme
+    eski_mana = dungeon.get("mana", 0)
     dungeon["mana_iksiri"] -= 1
-    dungeon["mana"] = min(statlar["mana"], dungeon.get("mana", 0) + yenileme)
+    dungeon["mana"] = MAKS_MANA  # Mana tamamen dolar
     save_dungeon(dungeon)
 
     embed = discord.Embed(
-        title="Mana İksiri Kullanıldı!",
+        title="⚡ Mana İksiri Kullanıldı!",
         description=(
-            f"**+{yenileme}** mana yeniledin!\n\n"
-            f"Mana: **{dungeon['mana']}/{statlar['mana']}**\n"
+            f"Mana tamamen doldu! ({eski_mana} → {MAKS_MANA})\n\n"
+            f"**ÖZEL YETENEĞİN HAZIR!**\n"
             f"Kalan mana iksiri: **{dungeon['mana_iksiri']}**"
         ),
         color=discord.Color.blue(),
@@ -4766,10 +4762,10 @@ async def dukkan(ctx):
     )
     
     embed.add_field(
-        name="Mana İksiri",
+        name="⚡ Mana İksiri",
         value=(
             f"Fiyat: **150 VC**\n"
-            f"Etki: Maksimum mananın **%50**'sini yeniler\n"
+            f"Etki: Mana tamamen doldurur (100) - Özel yeteneğini hemen kullanabilirsin!\n"
             f"Komut: `!manaiksirsatinal <adet>`"
         ),
         inline=False
@@ -5352,7 +5348,6 @@ async def prestij_yap(ctx):
     embed.set_thumbnail(url=ctx.author.display_avatar.url)
     embed.set_footer(text="Zindan Sistemi | Prestij")
     await ctx.send(embed=embed)
-
 
 
 
@@ -7781,6 +7776,7 @@ async def bilmece_cevap(ctx, *, cevap: str = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
