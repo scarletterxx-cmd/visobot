@@ -3408,6 +3408,12 @@ EKİPMANLAR = {
     "deniz_tanrısı_yüzüğü": {"isim": "Deniz Tanrısı Yüzüğü", "emoji": "🔱", "tür": "yüzük", "saldırı": 55, "savunma": 35, "can": 120, "nadirlik": "Tanrısal", "şans": 35, "fiyat": 65000},
     "visored_yüzüğü": {"isim": "Visored Yüzüğü", "emoji": "💀", "tür": "yüzük", "saldırı": 75, "savunma": 50, "can": 180, "nadirlik": "Tanrısal", "şans": 45, "fiyat": 110000},
     "mercan_yüzüğü": {"isim": "Mercan Yüzüğü", "emoji": "🪸", "tür": "yüzük", "saldırı": 8, "savunma": 6, "can": 18, "nadirlik": "Nadir", "şans": 8, "fiyat": 6000},
+
+    # ================= SCARLET SETİ EKİPMANLARI (ZİNDANA) =================
+    # %0.001 düşme şansı - Oyundaki en nadir ekipmanlar
+    "scarlet_kılıcı": {"isim": "Scarlet Kılıcı", "emoji": "🩸", "tür": "silah", "saldırı": 250, "savunma": 60, "can": 200, "nadirlik": "Zindana", "fiyat": 999999},
+    "scarlet_zırhı": {"isim": "Scarlet Zırhı", "emoji": "🩸", "tür": "zırh", "saldırı": 80, "savunma": 300, "can": 500, "nadirlik": "Zindana", "fiyat": 999999},
+    "scarlet_yüzüğü": {"isim": "Scarlet Yüzüğü", "emoji": "🩸", "tür": "yüzük", "saldırı": 120, "savunma": 80, "can": 300, "nadirlik": "Zindana", "şans": 50, "fiyat": 999999},
 }
 
 NADİRLİK_RENKLERİ = {
@@ -3417,6 +3423,7 @@ NADİRLİK_RENKLERİ = {
     "Epik": "🟪",
     "Efsanevi": "🟧",
     "Tanrısal": "🟥",
+    "Zindana": "❓",  # Ultra-nadir enderlik - %0.001 düşme şansı
 }
 
 # ================= CANAVAR TANIMLARI =================
@@ -3542,6 +3549,14 @@ SETLER = {
         "pasif_isim": "İlahi Güç",
         "pasif_açıklama": "Tüm statlar %15 artar. Ölümden bir kez kurtulma şansı.",
         "bonus": {"stat_artışı": 15, "ikinci_şans": True},
+    },
+    "scarlet": {
+        "isim": "Scarlet Seti",
+        "emoji": "🩸",
+        "parçalar": ["scarlet_kılıcı", "scarlet_zırhı", "scarlet_yüzüğü"],
+        "pasif_isim": "Kanlı İntikam",
+        "pasif_açıklama": "Tüm statlar %50 artar. Verilen hasarın %30'u kadar can çalar. Her turda %5 can yenilenir. Ölümden 2 kez kurtulma şansı. Düşmana verilen hasar %10 artar.",
+        "bonus": {"stat_artışı": 50, "can_çalma": 30, "can_yenilenme": 5, "ölümsüzlük": 2, "hasar_çarpanı": 1.10},
     },
 }
 
@@ -3670,6 +3685,14 @@ LOOT_TABLOSU = {
         {"eşya": "sonsuzluk_yüzüğü", "şans": 2},
         {"eşya": "kader_yüzüğü", "şans": 1},
         {"eşya": None, "şans": 78},
+    ],
+    # ================= ZİNDANA NADİRLİĞİ =================
+    # %0.001 düşme şansı - Götünüz tutuşsun diye
+    "zindana": [
+        {"eşya": "scarlet_kılıcı", "şans": 0.001},   # 1/100.000 şans
+        {"eşya": "scarlet_zırhı", "şans": 0.001},   # 1/100.000 şans
+        {"eşya": "scarlet_yüzüğü", "şans": 0.001}, # 1/100.000 şans
+        {"eşya": None, "şans": 99.997},
     ],
 }
 
@@ -5766,19 +5789,19 @@ async def prestij_yap(ctx):
         visored_mesaj = "\n**VISORED ADASI AÇILDI!** `!bolgesec visored` ile yeni maceraya başla!\n"
 
     embed = discord.Embed(
-        title=f"PRESTIJ {sonraki_prestij}!",
+        title=f"PRESTİJ {sonraki_prestij}!",
         description=(
             f"{'━' * 30}\n\n"
             f"{prestij_bilgi['emoji']} **{prestij_bilgi['isim']}** oldun!\n\n"
-            f"**Kalici Bonuslar:**\n"
+            f"**Kalıcı Bonuslar:**\n"
             f"Saldırı: **+{prestij_bilgi['bonus_saldırı']}**\n"
             f"Can: **+{prestij_bilgi['bonus_can']}**\n"
             f"Altın: **+%{prestij_bilgi['bonus_altın']}**\n\n"
             f"**Ödül:** +{ödül:,} VisoCoin\n"
             f"{visored_mesaj}\n"
-            f"**Sifirlanan:** Seviye, kat, ekipman, sinif\n"
+            f"**Sıfırlanan:** Seviye, kat, ekipman, sınıf\n"
             f"**Korunan:** Prestij bonusları, istatistikler, en yüksek kat\n\n"
-            f"Yeni sinif secmek icin: `!sınıfseç <sınıf>`"
+            f"Yeni sınıf seçmek için: `!sınıfseç <sınıf>`"
         ),
         color=discord.Color.gold(),
         timestamp=datetime.now(timezone.utc)
@@ -5786,7 +5809,6 @@ async def prestij_yap(ctx):
     embed.set_thumbnail(url=ctx.author.display_avatar.url)
     embed.set_footer(text="Zindan Sistemi | Prestij")
     await ctx.send(embed=embed)
-
 
 # ================= GEMİ TİPLERİ =================
 
@@ -8213,6 +8235,7 @@ async def bilmece_cevap(ctx, *, cevap: str = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
