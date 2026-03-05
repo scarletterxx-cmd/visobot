@@ -4718,7 +4718,7 @@ async def mana_iksiri(ctx):
 
     if dungeon.get("mana_iksiri", 0) <= 0:
         embed = discord.Embed(
-            description="Mana iksirin yok! `!dukkan` ile satın al.",
+            description="Mana iksirin yok! `!dükkan` ile satın al.",
             color=discord.Color.red()
         )
         return await ctx.send(embed=embed)
@@ -4745,7 +4745,7 @@ async def mana_iksiri(ctx):
     await ctx.send(embed=embed)
 
 
-@bot.command(name="dukkan", aliases=["shop", "market", "iksirdukkan"])
+@bot.command(name="dükkan", aliases=["iksirdukkan"])
 async def dukkan(ctx):
     """İksir dükkanını göster."""
     embed = discord.Embed(
@@ -7781,6 +7781,7 @@ async def bilmece_cevap(ctx, *, cevap: str = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
