@@ -4296,7 +4296,12 @@ async def zindan_gir(ctx):
             description=f"Dinleniyorsun... **{kalan}** saniye bekle.",
             color=discord.Color.orange()
         )
-        return await ctx.send(embed=embed)
+        try:
+            await ctx.send(embed=embed)
+        except discord.HTTPException as e:
+            if e.status == 429:
+                await asyncio.sleep(3)
+                await ctx.send(embed=embed)
 
     dungeon = get_dungeon(user_id)
 
@@ -8514,6 +8519,7 @@ async def bilmece_cevap(ctx, *, cevap: str = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
+
 
 
 
