@@ -66,7 +66,34 @@ intents.members = True
 intents.message_content = True
 intents.voice_states = True
 
-bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
+bot = commands.Bot(command_prefix="!", intents=intents, help_command=None, max_messages=1000)
+
+# ================= RATE LIMIT KORUMALARI =================
+async def safe_send(channel, content=None, **kwargs):
+    """Rate limit korumali mesaj gonderme."""
+    for attempt in range(3):
+        try:
+            return await channel.send(content, **kwargs)
+        except discord.errors.HTTPException as e:
+            if e.status == 429:
+                retry_after = getattr(e, 'retry_after', 5)
+                await asyncio.sleep(retry_after)
+            else:
+                raise
+    return None
+
+async def safe_edit(message, content=None, **kwargs):
+    """Rate limit korumali mesaj duzenleme."""
+    for attempt in range(3):
+        try:
+            return await message.edit(content=content, **kwargs)
+        except discord.errors.HTTPException as e:
+            if e.status == 429:
+                retry_after = getattr(e, 'retry_after', 5)
+                await asyncio.sleep(retry_after)
+            else:
+                raise
+    return None
 
 GUILD_ID = 1289651738046890086
 VOICE_CHANNEL_ID = 1289652557244792833
@@ -438,84 +465,107 @@ async def on_ready():
 
 @bot.event
 async def on_message(message):
-    if message.author == bot.user:
+    # Tum botlari engelle (sadece kendi botunu degil)
+    if message.author.bot:
         return
 
     content = message.content.lower().strip()
 
-    if content == "selam":
-        await message.channel.send(f"Selam, {message.author.mention}!")
-    elif content == "sa":
-        await message.channel.send(f"Selam, {message.author.mention}!")
+    # Basit cevaplar - erken return ile gereksiz islemleri atla
+    if content in ("selam", "sa"):
+        try:
+            await message.channel.send(f"Selam, {message.author.mention}!")
+        except discord.errors.HTTPException:
+            pass  # Rate limit varsa sessizce gec
+        await bot.process_commands(message)
+        return
 
+    # Daily message kontrolu
     if message.author.id == DAILY_MESSAGE_USER_ID:
         if should_send_daily_message(DAILY_MESSAGE_USER_ID):
-            await message.channel.send(f"<@{DAILY_MESSAGE_USER_ID}> mal")
+            try:
+                await message.channel.send(f"<@{DAILY_MESSAGE_USER_ID}> mal")
+            except discord.errors.HTTPException:
+                pass
 
-    # ================= GOREV ILERLEME (MESAJ) =================
-    update_quest_progress(message.author.id, "mesaj", 1)
+    # XP ve gorev islemlerini background task olarak calistir (non-blocking)
+    asyncio.create_task(process_xp_and_quests(message))
 
-    # ================= SEVIYE / XP SISTEMI =================
-    user_id = message.author.id
-    now_ts = int(time.time())
+    await bot.process_commands(message)
 
-    if user_id not in xp_cd or xp_cd[user_id] <= now_ts:
-        xp_cd[user_id] = now_ts + XP_COOLDOWN
 
-        user = get_user(user_id)
-        old_level = user.get("level", 1)
-        user["xp"] = user.get("xp", 0) + XP_PER_MESSAGE
-        new_level = get_level_from_xp(user["xp"])
+async def process_xp_and_quests(message):
+    """XP ve gorev islemlerini ayri bir task olarak yap - rate limit azaltir."""
+    try:
+        user_id = message.author.id
+        now_ts = int(time.time())
 
-        if new_level > old_level:
-            user["level"] = new_level
-            bonus = get_level_bonus(new_level)
-            user["money"] += bonus
-            save_user(user)
+        # Gorev ilerlemesi
+        update_quest_progress(user_id, "mesaj", 1)
 
-            embed = discord.Embed(
-                title="⏫ Seviye Atladın!",
-                description=(
-                    f"{message.author.mention}, **{new_level} Seviye** oldu!\n\n"
-                    f"Bonus: **+{bonus} VisoCoin**\n"
-                    f"Toplam XP: **{user['xp']}**\n"
-                    f"Bakiye: **{user['money']}** VisoCoin"
-                ),
-                color=discord.Color.gold(),
-                timestamp=datetime.now(timezone.utc)
-            )
-            await message.channel.send(embed=embed)
-        else:
-            user["level"] = new_level
-            save_user(user)
+        # XP sistemi
+        if user_id not in xp_cd or xp_cd[user_id] <= now_ts:
+            xp_cd[user_id] = now_ts + XP_COOLDOWN
 
-    # ================= SOHBET PARA ODULU =================
-    if message.channel.id == CHAT_REWARD_CHANNEL_ID:
-        uid = message.author.id
-        now = int(time.time())
+            user = get_user(user_id)
+            old_level = user.get("level", 1)
+            user["xp"] = user.get("xp", 0) + XP_PER_MESSAGE
+            new_level = get_level_from_xp(user["xp"])
 
-        if uid not in chat_reward_cd or chat_reward_cd[uid] <= now:
-            chat_reward_cd[uid] = now + CHAT_REWARD_COOLDOWN
-
-            if random.random() < CHAT_REWARD_CHANCE:
-                kazanc = random.randint(CHAT_REWARD_MIN, CHAT_REWARD_MAX)
-                user = get_user(uid)
-                user["money"] += kazanc
+            if new_level > old_level:
+                user["level"] = new_level
+                bonus = get_level_bonus(new_level)
+                user["money"] += bonus
                 save_user(user)
 
                 embed = discord.Embed(
-                    title="🍀 Şanslı Mesaj!",
+                    title="⏫ Seviye Atladın!",
                     description=(
-                        f"{message.author.mention}, sohbet ederken **{kazanc} VisoCoin** buldun!\n"
-                        f"Yeni bakiyen: **{user['money']}** VisoCoin"
+                        f"{message.author.mention}, **{new_level} Seviye** oldu!\n\n"
+                        f"Bonus: **+{bonus} VisoCoin**\n"
+                        f"Toplam XP: **{user['xp']}**\n"
+                        f"Bakiye: **{user['money']}** VisoCoin"
                     ),
-                    color=discord.Color.green(),
+                    color=discord.Color.gold(),
                     timestamp=datetime.now(timezone.utc)
                 )
-                embed.set_footer(text="Sohbet et, şansını dene!")
-                await message.channel.send(embed=embed)
+                try:
+                    await message.channel.send(embed=embed)
+                except discord.errors.HTTPException:
+                    pass  # Rate limit varsa sessizce gec
+            else:
+                user["level"] = new_level
+                save_user(user)
 
-    await bot.process_commands(message)
+        # Sohbet para odulu
+        if message.channel.id == CHAT_REWARD_CHANNEL_ID:
+            now = int(time.time())
+
+            if user_id not in chat_reward_cd or chat_reward_cd[user_id] <= now:
+                chat_reward_cd[user_id] = now + CHAT_REWARD_COOLDOWN
+
+                if random.random() < CHAT_REWARD_CHANCE:
+                    kazanc = random.randint(CHAT_REWARD_MIN, CHAT_REWARD_MAX)
+                    user = get_user(user_id)
+                    user["money"] += kazanc
+                    save_user(user)
+
+                    embed = discord.Embed(
+                        title="🍀 Şanslı Mesaj!",
+                        description=(
+                            f"{message.author.mention}, sohbet ederken **{kazanc} VisoCoin** buldun!\n"
+                            f"Yeni bakiyen: **{user['money']}** VisoCoin"
+                        ),
+                        color=discord.Color.green(),
+                        timestamp=datetime.now(timezone.utc)
+                    )
+                    embed.set_footer(text="Sohbet et, şansını dene!")
+                    try:
+                        await message.channel.send(embed=embed)
+                    except discord.errors.HTTPException:
+                        pass  # Rate limit varsa sessizce gec
+    except Exception as e:
+        print(f"XP/Quest error: {e}")
 
 
 # ======================================================================
@@ -636,10 +686,13 @@ async def coinflip(ctx, choice: str = None, miktar: int = None):
     msg = await ctx.send(embed=anim_embed)
 
     for frame_text, frame_color in anim_frames:
-        await asyncio.sleep(0.7)
+        await asyncio.sleep(0.5)  # 0.7 -> 0.5 (daha az API cagrisi)
         anim_embed.description = f"Bahis: **{miktar:,}** VisoCoin\n{'━' * 20}\n\n{frame_text}"
         anim_embed.color = frame_color
-        await msg.edit(embed=anim_embed)
+        try:
+            await msg.edit(embed=anim_embed)
+        except discord.errors.HTTPException:
+            pass
 
     result = random.choice(["yazı", "tura"])
     coinflip_cd[user_id] = now + COINFLIP_COOLDOWN
@@ -1090,16 +1143,19 @@ async def slot(ctx, miktar: int = None):
     anim_embed.set_footer(text=f"{ctx.author.display_name}", icon_url=ctx.author.display_avatar.url)
     msg = await ctx.send(embed=anim_embed)
 
-    for _ in range(3):
+    for _ in range(2):  # 3 -> 2 (daha az API cagrisi)
         r1, r2, r3 = random.choice(SLOT_SYMBOLS), random.choice(SLOT_SYMBOLS), random.choice(SLOT_SYMBOLS)
-        await asyncio.sleep(0.6)
+        await asyncio.sleep(0.5)  # 0.6 -> 0.5
         anim_embed.description = (
             f"Bahis: **{miktar:,}** VisoCoin\n"
             f"{'━' * 25}\n\n"
             f"[ **{r1}** | **{r2}** | **{r3}** ]\n\n"
             f"Çevriliyor..."
         )
-        await msg.edit(embed=anim_embed)
+        try:
+            await msg.edit(embed=anim_embed)
+        except discord.errors.HTTPException:
+            pass
 
     # Gercek sonuc
     reel1 = random.choice(SLOT_SYMBOLS)
@@ -1238,11 +1294,9 @@ async def rulet(ctx, secim: str = None, miktar: int = None):
     update_quest_progress(user_id, "rulet", 1)
     update_quest_progress(user_id, "harca", miktar)
 
-    # Animasyon
-    msg = await ctx.send("🎱 Rulet çevriliyor...")
-    await asyncio.sleep(1)
-    await msg.edit(content="Top yuvarlanıyor...")
-    await asyncio.sleep(1)
+    # Animasyon - kisaltildi
+    msg = await ctx.send("🎱 Rulet çevriliyor... Top yuvarlanıyor...")
+    await asyncio.sleep(1.5)  # Tek bekleme, tek edit
 
     # Sonuc
     result_number = random.randint(0, 36)
@@ -1406,21 +1460,10 @@ async def kabul(ctx):
 
     del active_duels[user_id]
 
-    # Animasyon
+    # Animasyon - kisaltildi (daha az API cagrisi)
     challenger_member = ctx.guild.get_member(challenger_id)
-    msg = await ctx.send(f"Düello başlıyor! {challenger_member.mention} vs {ctx.author.mention}")
-
-    frames = [
-        "Kılıçlar çekildi...",
-        "Savas kızışıyor...",
-        "Son darbe vuruluyor...",
-    ]
-
-    for frame in frames:
-        await asyncio.sleep(1)
-        await msg.edit(content=frame)
-
-    await asyncio.sleep(1)
+    msg = await ctx.send(f"⚔️ Düello başlıyor! {challenger_member.mention} vs {ctx.author.mention}\nKılıçlar çekildi... Son darbe vuruluyor...")
+    await asyncio.sleep(2)  # Tek bekleme
 
     # Kazanan belirle
     winner_id = random.choice([challenger_id, user_id])
@@ -4298,10 +4341,9 @@ async def zindan_gir(ctx):
         )
         try:
             await ctx.send(embed=embed)
-        except discord.HTTPException as e:
-            if e.status == 429:
-                await asyncio.sleep(3)
-                await ctx.send(embed=embed)
+        except discord.errors.HTTPException:
+            pass  # Rate limit varsa sessizce gec
+        return
 
     dungeon = get_dungeon(user_id)
 
@@ -8519,20 +8561,3 @@ async def bilmece_cevap(ctx, *, cevap: str = None):
 # ================== RUN ==================
 
 bot.run(TOKEN)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
